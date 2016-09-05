@@ -72,4 +72,4 @@ register_activation_hook( __FILE__, 'lsx_currency_activate_plugin' );
 
 /* ======================= Below is the Plugin Class init ========================= */
 
-require_once( LSX_CURRENCY_PATH . '/classes/lsx-currency-class.php' );
+require_once( LSX_CURRENCY_PATH . '/classes/class-currency.php' );
