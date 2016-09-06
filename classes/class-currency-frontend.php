@@ -19,7 +19,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 		if('price' === $meta_key){
 
-			$prefix = '<span class="amount" data-base-currency="'.$this->base_currency.'"';
+			$prefix = '<span class="amount lsx-currency" data-base-currency="'.$this->base_currency.'"';
 
 			if(true === $this->multi_prices && !empty($this->additional_currencies)){
 

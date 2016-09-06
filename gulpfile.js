@@ -42,3 +42,23 @@ gulp.task('wordpress-pot', function () {
 		}))
 		.pipe(gulp.dest('languages'));
 });
+
+gulp.task('reload-node-js-min', function() {
+	gulp.src('node_modules/accounting/accounting.min.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+
+	gulp.src('node_modules/money/money.js')
+	.pipe(concat('money.min.js'))
+	.pipe(uglify())
+	.pipe(gulp.dest('assets/js'));
+
+	gulp.src('node_modules/open-exchange-rates/open-exchange-rates.js')
+	.pipe(concat('open-exchange-rates.min.js'))
+	.pipe(uglify())
+	.pipe(gulp.dest('assets/js'));
+});
+
+gulp.task('reload-node-js', function() {
+	gulp.src('node_modules/accounting/accounting.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+	gulp.src('node_modules/money/money.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+	gulp.src('node_modules/open-exchange-rates/open-exchange-rates.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+});
