@@ -6,19 +6,36 @@ LSX_Currency = {
 		lsx_Money.rates           = lsx_currency_params.rates;
 		lsx_Money.base            = 'USD';
 
+		this.current_currency = lsx_currency_params.current_currency;
+
 		console.log(lsx_Money);
-		if('USD' !== lsx_currency_params.base){
+		/*if('USD' !== lsx_currency_params.base){
 			this.baseConvert();
 		}
-		this.checkAmounts();
+		this.checkAmounts();*/
 
 		this.watchMenuSwitcher();
 	},
 
-	checkAmounts: function() {
+	checkAmounts: function(from) {
+		var $this = this;
 		if('undefined' != jQuery('.amount.lsx-currency')){
 			jQuery('.amount.lsx-currency').each(function() {
-				console.log(jQuery(this));
+
+				var amount = '';
+
+				var basePrice = jQuery(this).find('.value').attr('data-base-price');
+				if (typeof basePrice !== typeof undefined && basePrice !== false) {
+					amount = basePrice;
+					from = lsx_currency_params.base;
+				}else{
+					amount = jQuery(this).find('.value').html();
+					jQuery(this).find('.value').attr('data-base-price',amount);
+				}
+				var new_price = $this.switchCurrency(from,$this.current_currency,amount);
+
+				jQuery(this).find('.value').html(new_price);
+				jQuery(this).find('.currency-icon').removeClass(from.toLowerCase()).addClass($this.current_currency.toLowerCase()).html($this.current_currency);				
 			});
 		}
 	},	
@@ -52,9 +69,12 @@ LSX_Currency = {
 	},
 
 	watchMenuSwitcher: function() {
+		var $this = this;
 		jQuery('.menu-item-currency a').on('click',function(event) {
 			event.preventDefault();
-			console.log('hello');
+			from = $this.current_currency;
+			$this.current_currency = jQuery(this).attr('href').replace('#','').toUpperCase();
+			$this.checkAmounts(from,$this.current_currency);
 		});
 	},	
 
