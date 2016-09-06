@@ -29,15 +29,16 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 		wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCY_URL.'/assets/js/money'.$min.'.js' , array( 'jquery' ), '0.2.0', true );
 		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCY_URL.'/assets/js/accounting'.$min.'.js', array( 'jquery' ), '0.4.1', true );
+		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCY_URL.'/assets/js/cookie'.$min.'.js', array( 'jquery' ), '2.1.3', true );
 		wp_enqueue_script( 'lsx_currency', LSX_CURRENCY_URL.'/assets/js/lsx-currency'.$min.'.js', array(
 			'jquery',
 			'lsx-moneyjs',
 			'lsx-accountingjs',
-			//'jquery-cookie'
+			'lsx-jquery-cookie'
 		), '1.0.0', true );
 
 		$params = apply_filters( 'lsx_currency_js_params', array(
-			'current_currency'       => isset( $_COOKIE['lsx_current_currency'] ) ? $_COOKIE['lsx_current_currency'] : '',
+			'current_currency'       => $this->current_currency,
 			'rates'                  => $this->rates,
 			'base'                   => $this->base_currency
 		));
@@ -120,9 +121,9 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		$items = '';
 		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a href="#">';
+		$items .= '<a href="#'.strtolower($this->base_currency).'">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
-		$items .= $this->base_currency.'<span class="currency-icon '.strtolower($this->base_currency).'"></span>';
+		$items .= $this->current_currency.'<span class="currency-icon '.strtolower($this->current_currency).'"></span>';
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
 		$items .= '<span class="caret"></span></a>';
 		$items .= isset( $args->after ) ? $args->after : '';
@@ -142,8 +143,9 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 		$sub_items = '';
 		foreach ( $this->additional_currencies as $key => $currency ) {
+			if($this->current_currency === $key){ continue; }
 			$sub_items .= '<li class="menu-item menu-item-currency">';
-			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.$key.'">';
+			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.strtolower($key).'">';
 			$sub_items .= ucwords($key);
 			$sub_items .= '</a></li>';
 		}

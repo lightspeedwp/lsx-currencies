@@ -26,6 +26,9 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		/** @var obj  */
 		public $rates = false;
 
+		/** @var string  */
+		public $current_currency = false;		
+
 		/**
 		 * Constructor
 		 */
@@ -86,6 +89,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 					}
 				//}							
 			}
+			$this->current_currency = isset( $_COOKIE['lsx_currency_choice'] ) ? $_COOKIE['lsx_currency_choice'] : $this->base_currency;
 
 		}
 	}

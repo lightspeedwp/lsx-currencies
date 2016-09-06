@@ -17,6 +17,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sort = require('gulp-sort');
 var wppot = require('gulp-wp-pot');
+var rename = require('gulp-rename');
 
 gulp.task('js', function () {
 	gulp.src('assets/js/lsx-currency.js')
@@ -46,4 +47,10 @@ gulp.task('wordpress-pot', function () {
 gulp.task('reload-node-js', function() {
 	gulp.src('node_modules/accounting/accounting.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
 	gulp.src('node_modules/money/money.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+
+	gulp.src('node_modules/js-cookie/src/js.cookie.js')
+		.pipe(rename('cookie.js'))
+		.pipe(gulp.dest('assets/js')
+			.on('error', function (err) {console.log('Error!', err);})
+		);
 });
