@@ -12,6 +12,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 		add_action('lsx_framework_dashboard_tab_content',array($this,'settings'),11);
 		add_action('lsx_framework_dashboard_tab_bottom',array($this,'settings_scripts'),11);
 		
+		add_filter('lsx_price_field_pattern',array($this,'fields'),10,1);
 	}
 	/**
 	 * outputs the dashboard tabs settings
@@ -33,7 +34,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 					foreach($this->available_currencies as $currency_id => $currency_label ){ 
 
 						$selected = '';
-						if(in_array($currency_id,$this->additional_currencies)){
+						if($currency_id === $this->base_currency){
 							$selected='selected="selected"';
 						}
 						echo '<option value="'.$currency_id.'" '.$selected.'>'.$currency_label.'</option>';
@@ -49,12 +50,12 @@ class LSX_Currency_Admin extends LSX_Currency{
 			<?php 	
 			foreach($this->available_currencies as $slug => $label){
 				$checked = $hidden = '';
-				if(in_array($slug,$this->additional_currencies) || $slug === $this->base_currency){
+				if(array_key_exists($slug,$this->additional_currencies) || $slug === $this->base_currency){
 					$checked='checked="checked"';
 				}
 				
 				if($slug === $this->base_currency){
-					$hidden = 'style="display:none;"';
+					$hidden = 'style="display:none;" class="hidden"';
 				}
 				?>
 				<li <?php echo $hidden; ?>>
@@ -64,6 +65,15 @@ class LSX_Currency_Admin extends LSX_Currency{
 			?>
 			</ul></td>
 		</tr>
+		<tr class="form-field">
+			<th scope="row">
+				<label for="multi_price"><?php _e('Enable Multiple Prices',$this->plugin_slug); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if multi_price}} checked="checked" {{/if}} name="multi_price" />
+				<small><?php _e('Allowing you to add specific prices per active currency.',$this->plugin_slug); ?></small>
+			</td>
+		</tr>		
 		<?php	
 	}
 
@@ -85,8 +95,8 @@ class LSX_Currency_Admin extends LSX_Currency{
 						event.preventDefault();
 						var name = jQuery(this).attr('name');
 						var value = jQuery(this).val();
-						jQuery('[data-trigger="'+name+'"] input[checked="checked"]').removeAttr("checked").parents('li').show();
-						jQuery('[data-trigger="'+name+'"] input[name="additional_currencies['+value+']"]').attr('checked','checked').parents('li').hide();
+						jQuery('[data-trigger="'+name+'"] li.hidden input[checked="checked"]').removeAttr("checked").parents('li').show().removeClass('hidden');
+						jQuery('[data-trigger="'+name+'"] input[name="additional_currencies['+value+']"]').attr('checked','checked').parents('li').hide().addClass('hidden');
 					});
 				},
 				watchCheckbox: function() {
@@ -106,6 +116,37 @@ class LSX_Currency_Admin extends LSX_Currency{
 			});
 		</script>
 		<?php
+	}	
+
+	/**
+	 * outputs the dashboard tabs settings
+	 */
+	public function fields($field) {
+		if(true === $this->multi_prices && !empty($this->additional_currencies)){
+			$currency_options = array();
+			foreach($this->additional_currencies as $key => $values){
+				$currency_options[$key] = $this->available_currencies[$key];
+			}
+
+			return array(
+				array( 'id' => 'price_title',  'name' => __('Prices',$this->plugin_slug), 'type' => 'title' ),
+				array( 'id' => 'price',  'name' => 'Base Price', 'type' => 'text' ),
+				array(
+						'id' => 'additional_prices',
+						'name' => '',
+						'single_name' => 'Additional Prices',
+						'type' => 'group',
+						'repeatable' => true,
+						'sortable' => true,
+						'fields' => array(
+								array( 'id' => 'amount',  'name' => 'Amount', 'type' => 'text' ),
+								array( 'id' => 'currency', 'name' => 'Currency', 'type' => 'select', 'options' => $currency_options ),
+						)
+				)			
+			);	
+		}else{
+			return $field;
+		}	
 	}	
 }
 new LSX_Currency_Admin();

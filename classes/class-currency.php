@@ -18,7 +18,10 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public $additional_currencies = array();			
 
 		/** @var array */
-		public $available_currencies = array();					
+		public $available_currencies = array();	
+
+		/** @var array boolean */
+		public $multi_prices = false;						
 
 		/**
 		 * Constructor
@@ -32,16 +35,16 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		 */
 		public function set_defaults() {
 			$this->available_currencies = array(
-				'USD'	=> __('United States Dollar',$this->plugin_slug),
+				'AUD'	=> __('Australian Dollar',$this->plugin_slug),
 				'GBP'	=> __('British Pound',$this->plugin_slug),
-				'ZAR'	=> __('South African Rand',$this->plugin_slug),
-				'NAD'	=> __('Namibian Dollar',$this->plugin_slug),
 				'CAD'	=> __('Canadian Dollar',$this->plugin_slug),
 				'EUR'	=> __('Euro',$this->plugin_slug),
 				'HKD'	=> __('Hong Kong Dollar',$this->plugin_slug),
-				'SGD'	=> __('Singapore Dollar',$this->plugin_slug),
+				'NAD'	=> __('Namibian Dollar',$this->plugin_slug),
 				'NZD'	=> __('New Zealand Dollar',$this->plugin_slug),
-				'AUD'	=> __('Australian Dollar',$this->plugin_slug)
+				'SGD'	=> __('Singapore Dollar',$this->plugin_slug),
+				'ZAR'	=> __('South African Rand',$this->plugin_slug),
+				'USD'	=> __('United States Dollar',$this->plugin_slug)
 			);			
 			$options = get_option('_lsx_lsx-settings',false);
 			if(false !== $options){
@@ -54,6 +57,10 @@ if (!class_exists( 'LSX_Currency' ) ) {
 				if(isset($this->options['general']['additional_currencies']) && is_array($this->options['general']['additional_currencies']) && !empty($this->options['general']['additional_currencies'])){
 					$this->additional_currencies = $this->options['general']['additional_currencies'];
 				}
+
+				if(isset($this->options['general']['multi_price']) && 'on' === $this->options['general']['multi_price']){
+					$this->multi_prices = true;
+				}				
 			}
 		}
 	}
