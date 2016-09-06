@@ -125,16 +125,17 @@ class LSX_Currency_Admin extends LSX_Currency{
 		if(true === $this->multi_prices && !empty($this->additional_currencies)){
 			$currency_options = array();
 			foreach($this->additional_currencies as $key => $values){
+				if($key === $this->base_currency){continue;}
 				$currency_options[$key] = $this->available_currencies[$key];
 			}
 
 			return array(
 				array( 'id' => 'price_title',  'name' => __('Prices',$this->plugin_slug), 'type' => 'title' ),
-				array( 'id' => 'price',  'name' => 'Base Price', 'type' => 'text' ),
+				array( 'id' => 'price',  'name' => 'Base Price ('.$this->base_currency.')', 'type' => 'text' ),
 				array(
 						'id' => 'additional_prices',
 						'name' => '',
-						'single_name' => 'Additional Prices',
+						'single_name' => 'Price',
 						'type' => 'group',
 						'repeatable' => true,
 						'sortable' => true,
