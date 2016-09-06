@@ -1,4 +1,3 @@
-var base_currency = 'USD';
 var lsx_Money = fx.noConflict();
 LSX_Currency = {
 	initThis: function() {
@@ -8,12 +7,10 @@ LSX_Currency = {
 
 		this.current_currency = lsx_currency_params.current_currency;
 
-		console.log(lsx_Money);
-		/*if('USD' !== lsx_currency_params.base){
-			this.baseConvert();
+		//If the user has a previous selection, then change the amounts to that base
+		if(this.current_currency != lsx_currency_params.base){
+			this.checkAmounts(lsx_currency_params.base);
 		}
-		this.checkAmounts();*/
-
 		this.watchMenuSwitcher();
 	},
 
@@ -47,22 +44,6 @@ LSX_Currency = {
 		return amount;
 	},	
 
-	baseConvert: function() {
-		var $this = this;
-		//set the base to be 
-
-		jQuery('.amount.lsx-currency').each(function() {
-			
-			var amount = jQuery(this).find('.value').html();
-			console.log(amount);
-			var new_price = $this.switchCurrency(lsx_currency_params.base,'USD',amount);
-			console.log(new_price);
-
-			jQuery(this).find('.value').html(new_price);
-			jQuery(this).find('.currency-icon').removeClass(lsx_currency_params.base.toLowerCase()).addClass('usd').html('USD');
-		});		
-	},
-
 	formatAmount: function(amount) {
 		amount = accounting.formatNumber(amount,2,',','.');	
 		return amount;	
@@ -74,6 +55,7 @@ LSX_Currency = {
 			event.preventDefault();
 			from = $this.current_currency;
 			$this.current_currency = jQuery(this).attr('href').replace('#','').toUpperCase();
+			Cookies.set('lsx_currency_choice', $this.current_currency);
 			$this.checkAmounts(from,$this.current_currency);
 		});
 	},	
