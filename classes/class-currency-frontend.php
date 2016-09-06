@@ -12,6 +12,8 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		add_filter('lsx_custom_field_query',array($this,'price_filter'),20,5);
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
+
+		add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
 	}
 
 	/**
@@ -87,5 +89,68 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		}
 		return $return_html;
 	}	
+
+	/**
+	 * Filter on the 'wp_nav_menu_items' hook, that potentially adds a language switcher to the item of some menus.
+	 *
+	 * @param string $items
+	 * @param object $args
+	 *
+	 * @return string
+	 */
+	function wp_nav_menu_items_filter( $items, $args ) {
+		if ( $args->theme_location === 'primary' && false !== $this->options['general'] && isset($this->options['general']['currency_menu_switcher']) ) {
+			$items .= $this->get_menu_html( $args );
+		}
+		return $items;
+	}
+
+	/**
+	 * Returns the HTML string of the language switcher for a given menu.
+	 *
+	 * @param object $args
+	 *
+	 * @return string
+	 */
+	private function get_menu_html( $args ) {
+
+		if ( empty( $this->additional_currencies ) ) {
+			return '';
+		}
+
+		$items = '';
+		$items .= '<li class="menu-item menu-item-language menu-item-language-current menu-item-has-children">';
+		$items .= isset( $args->before ) ? $args->before : '';
+		$items .= '<a href="#" onclick="return false">';
+		$items .= isset( $args->link_before ) ? $args->link_before : '';
+		$items .= $this->base_currency;
+		$items .= isset( $args->link_after ) ? $args->link_after : '';
+		$items .= '</a>';
+		$items .= isset( $args->after ) ? $args->after : '';
+		//unset( $languages[ $current_language ] );
+		$items .= $this->render_sub_items();
+		$items .= '</li>';
+		return $items;
+	}
+	/**
+	 * Returns the HTML string of the language switcher for a given menu.
+	 *
+	 * @param object $args
+	 *
+	 * @return string
+	 */
+	private function render_sub_items() {
+
+		$sub_items = '';
+		foreach ( $this->additional_currencies as $key => $currency ) {
+			$sub_items .= '<li class="menu-item menu-item-currency">';
+			$sub_items .= '<a href="#'.$key.'">';
+			$sub_items .= ucwords($key);
+			$sub_items .= '</a></li>';
+		}
+
+		$sub_items = '<ul class="sub-menu submenu-currency dropdown-menu">' . $sub_items . '</ul>';
+		return $sub_items;		
+	}			
 }
 new LSX_Currency_Frontend();
