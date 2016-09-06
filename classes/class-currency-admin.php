@@ -146,7 +146,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 				)			
 			);	
 		}else{
-			return $field;
+			return array(array( 'id' => 'price',  'name' => 'Price ('.$this->base_currency.')', 'type' => 'text' ));
 		}	
 	}	
 }
