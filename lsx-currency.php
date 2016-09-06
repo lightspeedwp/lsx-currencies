@@ -34,7 +34,7 @@ function lsx_currency_options_pages_filter($pages){
 }
 add_filter('lsx_api_manager_options_pages','lsx_currency_options_pages_filter',10,1);
 
-function lsx_currency_get_api_details(){
+function lsx_currency_api_admin_init(){
 	$options = get_option('_lsx_lsx-settings',false);
 	$data = array('api_key'=>'','email'=>'');
 

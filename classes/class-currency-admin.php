@@ -8,66 +8,104 @@ class LSX_Currency_Admin extends LSX_Currency{
 	 * Constructor
 	 */
 	public function __construct() {
+		$this->set_defaults();
+		add_action('lsx_framework_dashboard_tab_content',array($this,'settings'),11);
+		add_action('lsx_framework_dashboard_tab_bottom',array($this,'settings_scripts'),11);
 		
-		add_action('lsx_framework_dashboard_tab_content',array($this,'settings'));
-
 	}
 	/**
 	 * outputs the dashboard tabs settings
 	 */
 	public function settings() {
 	?>	
-		<tr class="heading-wrap">
-			<th scope="row">
-				<label for="modules"> Currency</label>
+		<tr class="form-field banner-wrap">
+			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
+			<label><h3 style="margin-bottom:0px;"><?php _e('Currency',$this->plugin_slug); ?></h3></label>			
 			</th>
-		</tr>	
-		<tr class="form-field-wrap">
+		</tr>
+		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
 			<th scope="row">
-				<label for="currency"> Base Currency</label>
+				<label for="currency"><?php _e('Base Currency',$this->plugin_slug);?></label>
 			</th>
 			<td>
 				<select value="{{currency}}" name="currency">
-					<option value="USD" {{#is currency value=""}}selected="selected"{{/is}} {{#is currency value="USD"}} selected="selected"{{/is}}>USD (united states dollar)</option>
-					<option value="GBP" {{#is currency value="GBP"}} selected="selected"{{/is}}>GBP (british pound)</option>
-					<option value="ZAR" {{#is currency value="ZAR"}} selected="selected"{{/is}}>ZAR (south african rand)</option>
-					<option value="NAD" {{#is currency value="NAD"}} selected="selected"{{/is}}>NAD (namibian dollar)</option>
-					<option value="CAD" {{#is currency value="CAD"}} selected="selected"{{/is}}>CAD (canadian dollar)</option>
-					<option value="EUR" {{#is currency value="EUR"}} selected="selected"{{/is}}>EUR (euro)</option>
-					<option value="HKD" {{#is currency value="HKD"}} selected="selected"{{/is}}>HKD (hong kong dollar)</option>
-					<option value="SGD" {{#is currency value="SGD"}} selected="selected"{{/is}}>SGD (singapore dollar)</option>
-					<option value="NZD" {{#is currency value="NZD"}} selected="selected"{{/is}}>NZD (new zealand dollar)</option>
-					<option value="AUD" {{#is currency value="AUD"}} selected="selected"{{/is}}>AUD (australian dollar)</option>
+					<?php
+					foreach($this->available_currencies as $currency_id => $currency_label ){ 
+
+						$selected = '';
+						if(in_array($currency_id,$this->additional_currencies)){
+							$selected='selected="selected"';
+						}
+						echo '<option value="'.$currency_id.'" '.$selected.'>'.$currency_label.'</option>';
+					} ?>
 				</select>
 			</td>
 		</tr>
-		<tr class="form-field-wrap">
+		<tr data-trigger="currency" class="lsx-checkbox-action form-field-wrap">
 			<th scope="row">
-				<label for="modules"> Modules</label>
+				<label for="modules"><?php _e('Additional Currencies',$this->plugin_slug);?></label>
 			</th>
 			<td><ul>
 			<?php 	
-
-			if(is_array($this->post_types) && !empty($this->post_types)){
-
-				foreach($this->post_types as $slug => $label){
-					if('envira' === $slug){ continue; }
-					?>
-					<li>
-						<input type="checkbox" <?php if(in_array($slug,$this->active_post_types)){ echo 'checked="checked"'; } ?> name="post_types[<?php echo $slug; ?>]" /> <label for="post_types"><?php echo $label; ?></label> 
-					</li>
-				<?php }
-			}else{
+			foreach($this->available_currencies as $slug => $label){
+				$checked = $hidden = '';
+				if(in_array($slug,$this->additional_currencies) || $slug === $this->base_currency){
+					$checked='checked="checked"';
+				}
+				
+				if($slug === $this->base_currency){
+					$hidden = 'style="display:none;"';
+				}
 				?>
-					<li>
-						You have no modules active. 
-					</li>
-				<?php
-			}
+				<li <?php echo $hidden; ?>>
+					<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label> 
+				</li>
+			<?php }
 			?>
 			</ul></td>
-		</tr>		
-		?>
+		</tr>
+		<?php	
 	}
+
+	/**
+	 * outputs the dashboard tabs settings scripts
+	 */
+	public function settings_scripts() {
+		?>
+		<script>
+			var LSX_Select_Checkbox = {
+				initThis: function() {
+					if('undefined' != jQuery('.lsx-select-trigger') && 'undefined' != jQuery('.lsx-checkbox-action') ){
+						this.watchSelect();
+						//this.watchCheckbox();
+					}
+				},
+				watchSelect: function() {
+					jQuery('.lsx-select-trigger select').change(function(event){
+						event.preventDefault();
+						var name = jQuery(this).attr('name');
+						var value = jQuery(this).val();
+						jQuery('[data-trigger="'+name+'"] input[checked="checked"]').removeAttr("checked").parents('li').show();
+						jQuery('[data-trigger="'+name+'"] input[name="additional_currencies['+value+']"]').attr('checked','checked').parents('li').hide();
+					});
+				},
+				watchCheckbox: function() {
+					jQuery('.lsx-checkbox-action input').change(function(event){
+						event.preventDefault();
+						var name = jQuery(this).attr('data-name');
+						var value = jQuery(this).attr('data-value');
+						console.log(value);
+
+						jQuery('[data-trigger="'+name+'"] option[selected="selected"]').removeAttr('selected');
+						jQuery('[data-trigger="'+name+'"] option[value="'+value+'"]').attr('selected','selected');
+					});					
+				}
+			};	
+			jQuery(document).ready(function() {
+				LSX_Select_Checkbox.initThis();
+			});
+		</script>
+		<?php
+	}	
 }
 new LSX_Currency_Admin();
