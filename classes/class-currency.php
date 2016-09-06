@@ -29,6 +29,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public function __construct() {
 			$this->set_defaults();
 			require_once(LSX_CURRENCY_PATH . '/classes/class-currency-admin.php');
+			require_once(LSX_CURRENCY_PATH . '/classes/class-currency-frontend.php');
 		}
 		/**
 		 * Get the options
