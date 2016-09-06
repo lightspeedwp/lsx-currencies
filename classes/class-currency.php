@@ -109,10 +109,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 						set_transient( 'lsx_currency_rates', $rates, 60 * 60 * 2 );
 						$this->rates = $decoded_rates->rates;
 					}
-				}
-
-				print_r(json_decode( $this->rates ));	
-				die();						
+				}					
 			}
 			$this->current_currency = isset( $_COOKIE['lsx_currency_choice'] ) ? $_COOKIE['lsx_currency_choice'] : $this->base_currency;
 

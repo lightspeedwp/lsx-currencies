@@ -10,6 +10,7 @@ gulp.task('default', function() {
 	console.log('gulp compile-js		to compile both JS files above');
 	console.log('gulp watch				to continue watching all files for changes, and build when changed');
 	console.log('gulp wordpress-pot		to compile the lsx-mega-menus.pot');
+	console.log('gulp reload-node-js	Copy over the .js files from teh various node modules');
 });
 
 var sass = require('gulp-sass');
@@ -45,7 +46,7 @@ gulp.task('wordpress-pot', function () {
 });
 
 gulp.task('reload-node-js', function() {
-	gulp.src('node_modules/accounting/accounting.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
+	gulp.src('node_modules/flag-icon-css/accounting.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
 	gulp.src('node_modules/money/money.js').pipe(gulp.dest('assets/js').on('error', function (err) {console.log('Error!', err);}));
 
 	gulp.src('node_modules/js-cookie/src/js.cookie.js')
