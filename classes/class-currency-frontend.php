@@ -121,7 +121,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		$items = '';
 		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a href="#'.strtolower($this->base_currency).'">';
+		$items .= '<a class="current" href="#'.strtolower($this->base_currency).'">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 		$items .= $this->current_currency.'<span class="currency-icon '.strtolower($this->current_currency).'"></span>';
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
@@ -143,8 +143,13 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 		$sub_items = '';
 		foreach ( $this->additional_currencies as $key => $currency ) {
-			if($this->current_currency === $key){ continue; }
-			$sub_items .= '<li class="menu-item menu-item-currency">';
+			$hidden = '';
+			$class='';
+			if($this->current_currency === $key){
+				$hidden='style="display:none";';
+				$class='hidden';
+			}
+			$sub_items .= '<li '.$hidden.' class="menu-item menu-item-currency '.$class.'">';
 			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.strtolower($key).'">';
 			$sub_items .= ucwords($key);
 			$sub_items .= '</a></li>';

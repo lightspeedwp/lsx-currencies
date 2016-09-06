@@ -54,11 +54,33 @@ LSX_Currency = {
 		jQuery('.menu-item-currency a').on('click',function(event) {
 			event.preventDefault();
 			from = $this.current_currency;
-			$this.current_currency = jQuery(this).attr('href').replace('#','').toUpperCase();
+			var currency_class = jQuery(this).attr('href').replace('#','');
+			$this.current_currency = currency_class.toUpperCase();
+
+			//Find the UL submenu from which ever button was clicked, and insert a new currency option.
+			var selector = '';
+			if(!jQuery(this).hasClass('current')){
+				//move the new labels up to the current selector
+				jQuery(this).parents('li.menu-item-currency-current')
+					.find('a.current').attr('href','#'+currency_class)
+					.html($this.current_currency+'<span class="currency-icon '+currency_class+'"></span><span class="caret"></span>');
+				//show the old selection from the drop down and 
+				jQuery(this).parents('li.menu-item-currency-current').find('li.hidden').show().removeClass('hidden');
+				//Hide the new one
+				jQuery(this).parent().hide().addClass('hidden');
+			}
+
+				//Set the COokie with your currency selection
 			Cookies.set('lsx_currency_choice', $this.current_currency);
+			//Cycle through the divs and convert the amounts.
 			$this.checkAmounts(from,$this.current_currency);
 		});
-	},	
+	},
+
+	menuLabelToggle: function(amount) {
+		amount = accounting.formatNumber(amount,2,',','.');	
+		return amount;	
+	},		
 
 };
 
