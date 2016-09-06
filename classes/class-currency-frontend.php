@@ -117,15 +117,14 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		if ( empty( $this->additional_currencies ) ) {
 			return '';
 		}
-
 		$items = '';
-		$items .= '<li class="menu-item menu-item-language menu-item-language-current menu-item-has-children">';
+		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a href="#" onclick="return false">';
+		$items .= '<a href="#">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
-		$items .= $this->base_currency;
+		$items .= $this->base_currency.'<span class="currency-icon '.strtolower($this->base_currency).'"></span>';
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
-		$items .= '</a>';
+		$items .= '<span class="caret"></span></a>';
 		$items .= isset( $args->after ) ? $args->after : '';
 		//unset( $languages[ $current_language ] );
 		$items .= $this->render_sub_items();
@@ -144,7 +143,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		$sub_items = '';
 		foreach ( $this->additional_currencies as $key => $currency ) {
 			$sub_items .= '<li class="menu-item menu-item-currency">';
-			$sub_items .= '<a href="#'.$key.'">';
+			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.$key.'">';
 			$sub_items .= ucwords($key);
 			$sub_items .= '</a></li>';
 		}
