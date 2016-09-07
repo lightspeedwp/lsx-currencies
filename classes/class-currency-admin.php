@@ -21,7 +21,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 	?>	
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-			<label><h3 style="margin-bottom:0px;"><?php _e('Currency',$this->plugin_slug); ?></h3></label>			
+			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Settings',$this->plugin_slug); ?></h3></label>			
 			</th>
 		</tr>
 		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
@@ -59,12 +59,13 @@ class LSX_Currency_Admin extends LSX_Currency{
 				}
 				?>
 				<li <?php echo $hidden; ?>>
-					<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label> 
+					<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag($slug).$label; ?></label> 
 				</li>
 			<?php }
 			?>
 			</ul></td>
 		</tr>
+		<?php /* 
 		<tr class="form-field">
 			<th scope="row">
 				<label for="multi_price"><?php _e('Enable Multiple Prices',$this->plugin_slug); ?></label>
@@ -74,15 +75,30 @@ class LSX_Currency_Admin extends LSX_Currency{
 				<small><?php _e('Allowing you to add specific prices per active currency.',$this->plugin_slug); ?></small>
 			</td>
 		</tr>	
+		*/ ?>
+		<tr class="form-field banner-wrap">
+			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
+			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Switcher',$this->plugin_slug); ?></h3></label>			
+			</th>
+		</tr>	
 		<tr class="form-field">
 			<th scope="row">
-				<label for="currency_menu_switcher"><?php _e('Currency Switcher',$this->plugin_slug); ?></label>
+				<label for="currency_menu_switcher"><?php _e('Display in Menu',$this->plugin_slug); ?></label>
 			</th>
 			<td>
 				<input type="checkbox" {{#if currency_menu_switcher}} checked="checked" {{/if}} name="currency_menu_switcher" />
 				<small><?php _e('Adds the currency switcher to the "Primary" menu.',$this->plugin_slug); ?></small>
 			</td>
-		</tr>			
+		</tr>	
+		<tr class="form-field">
+			<th scope="row">
+				<label for="display_flags"><?php _e('Display Flags',$this->plugin_slug); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if display_flags}} checked="checked" {{/if}} name="display_flags" />
+				<small><?php _e('Displays a small flag in front of the name.',$this->plugin_slug); ?></small>
+			</td>
+		</tr>				
 		<?php	
 	}
 

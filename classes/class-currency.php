@@ -11,7 +11,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		/** @var array */
 		public $options = false;	
 
-		/** @var array string */
+		/** @var string */
 		public $base_currency = 'USD';		
 
 		/** @var array */
@@ -27,7 +27,10 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public $rates = false;
 
 		/** @var string  */
-		public $current_currency = false;		
+		public $current_currency = false;	
+
+		/** @var boolean */
+		public $display_flags = false;				
 
 		/**
 		 * Constructor
@@ -73,7 +76,39 @@ if (!class_exists( 'LSX_Currency' ) ) {
 				'AED'	=> __('United Arab Emirates Dirham',$this->plugin_slug),
 				'ZMW'	=> __('Zambian Kwacha',$this->plugin_slug),
 				'ZWL'	=> __('Zimbabwean Dollar',$this->plugin_slug)
-			);			
+			);	
+			$this->flag_relations = array(
+				'AUD'	=> 'au',
+				'BRL'	=> 'br',
+				'GBP'	=> 'gb',
+				'BWP'	=> 'bw',
+				'CAD'	=> 'ca',
+				'CNY'	=> 'cn',
+				'EUR'	=> 'eu',
+				'HKD'	=> 'hk',
+				'INR'	=> 'in',
+				'IDR'	=> 'id',
+				'ILS'	=> 'il',
+				'JPY'	=> 'jp',
+				'KES'	=> 'ke',
+				'LAK'	=> 'la',
+				'MWK'	=> 'my',
+				'MYR'	=> 'my',
+				'MZN'	=> 'mz',				
+				'NAD'	=> 'na',
+				'NZD'	=> 'nz',
+				'NOK'	=> 'no',
+				'RUB'	=> 'ru',				
+				'SGD'	=> 'sg',
+				'ZAR'	=> 'za',
+				'SEK'	=> 'se',
+				'CHF'	=> 'ch',
+				'TZS'	=> 'tz',				
+				'USD'	=> 'us',
+				'AED'	=> 'ae',
+				'ZMW'	=> 'zm',
+				'ZWL'	=> 'zw'			
+			);					
 
 			$options = get_option('_lsx_lsx-settings',false);
 			if(false !== $options){
@@ -97,6 +132,10 @@ if (!class_exists( 'LSX_Currency' ) ) {
 					$this->app_id = '756634695a6344e78adae48a6ba25a9d';
 				}
 
+				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
+					$this->display_flags = true;
+				}				
+
 				if ( false === ( $this->rates = get_transient( 'lsx_currency_rates' ) ) ) {
 					$rates = wp_remote_retrieve_body( wp_safe_remote_get( 'http://openexchangerates.org/api/latest.json?app_id=' . $this->app_id ) );
 					$decoded_rates = json_decode( $rates );	
@@ -114,6 +153,17 @@ if (!class_exists( 'LSX_Currency' ) ) {
 			$this->current_currency = isset( $_COOKIE['lsx_currency_choice'] ) ? $_COOKIE['lsx_currency_choice'] : $this->base_currency;
 
 		}
+
+		/**
+		 * Returns Currency Flag for currency code provided
+		 *
+		 * @param string $key
+		 *
+		 * @return string
+		 */
+		public function get_currency_flag($key='USD') {
+			return '<span class="flag-icon flag-icon-'.$this->flag_relations[$key].'"></span> ';
+		}		
 	}
 	new LSX_Currency();
 }

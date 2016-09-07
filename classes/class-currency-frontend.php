@@ -9,52 +9,9 @@ class LSX_Currency_Frontend extends LSX_Currency{
 	 */
 	public function __construct() {
 		$this->set_defaults();
-
-
 		add_filter('lsx_custom_field_query',array($this,'price_filter'),20,5);
 		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
 		add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
-
-
-	}
-
-	/**
-	 * Enques the assets
-	 */
-	public function set_defaults() {
-		$this->flag_relations = array(
-			'AUD'	=> 'au',
-			'BRL'	=> 'br',
-			'GBP'	=> 'gb',
-			'BWP'	=> 'bw',
-			'CAD'	=> 'cs',
-			'CNY'	=> 'cn',
-			'EUR'	=> 'eu',
-			'HKD'	=> 'hk',
-			'INR'	=> 'in',
-			'IDR'	=> 'id',
-			'ILS'	=> 'il',
-			'JPY'	=> 'jp',
-			'KES'	=> 'ke',
-			'LAK'	=> 'la',
-			'MWK'	=> 'my',
-			'MYR'	=> 'my',
-			'MZN'	=> 'mz',				
-			'NAD'	=> 'na',
-			'NZD'	=> 'nz',
-			'NOK'	=> 'no',
-			'RUB'	=> 'ru',				
-			'SGD'	=> 'sg',
-			'ZAR'	=> 'za',
-			'SEK'	=> 'se',
-			'CHF'	=> 'ch',
-			'TZS'	=> 'tz',				
-			'USD'	=> 'us',
-			'AED'	=> 'ae',
-			'ZMW'	=> 'zm',
-			'ZWL'	=> 'zw'			
-		);
-		parent::set_defaults();
 	}
 
 	/**
@@ -162,7 +119,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		$items = '';
 		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a class="current" href="#'.strtolower($this->current_currency).'"><span class="flag-icon flag-icon-'.$this->get_currency_flag($this->current_currency).'"></span> ';
+		$items .= '<a class="current" href="#'.strtolower($this->current_currency).'">'.$this->get_currency_flag($this->current_currency);
 
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 		$items .= $this->current_currency.'<span class="currency-icon '.strtolower($this->current_currency).'"></span>';
@@ -192,24 +149,26 @@ class LSX_Currency_Frontend extends LSX_Currency{
 				$class='hidden';
 			}
 			$sub_items .= '<li '.$hidden.' class="menu-item menu-item-currency '.$class.'">';
-			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.strtolower($key).'"><span class="flag-icon flag-icon-'.$this->get_currency_flag($key).'"></span> ';
+			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.strtolower($key).'">'.$this->get_currency_flag($key);
 			$sub_items .= ucwords($key);
 			$sub_items .= '</a></li>';
 		}
 
 		$sub_items = '<ul class="sub-menu submenu-currency dropdown-menu">' . $sub_items . '</ul>';
 		return $sub_items;		
-	}	
+	}
+
 	/**
-	 * Returns Currency Flag for the switcher
+	 * Returns Currency Flag for currency code provided
 	 *
-	 * @param object $args
+	 * @param string $key
 	 *
 	 * @return string
 	 */
-	private function get_currency_flag($key='USD') {
-		return $this->flag_relations[$key];
+	public function get_currency_flag($key='USD') {
+		if(true === $this->display_flags){
+			return '<span class="flag-icon flag-icon-'.$this->flag_relations[$key].'"></span> ';
+		}
 	}
-
 }
 new LSX_Currency_Frontend();
