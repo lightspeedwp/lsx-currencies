@@ -32,7 +32,8 @@ LSX_Currency = {
 				var new_price = $this.switchCurrency(from,$this.current_currency,amount);
 
 				jQuery(this).find('.value').html(new_price);
-				jQuery(this).find('.currency-icon').removeClass(from.toLowerCase()).addClass($this.current_currency.toLowerCase()).html($this.current_currency);				
+				console.log(from);
+				jQuery(this).find('.currency-icon').prop('class',"").addClass('currency-icon').addClass($this.current_currency.toLowerCase()).html($this.current_currency);				
 			});
 		}
 	},	

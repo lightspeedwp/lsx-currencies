@@ -54,7 +54,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 				'IDR'	=> __('Indonesia Rupiah',$this->plugin_slug),
 				'ILS'	=> __('Israeli Shekel',$this->plugin_slug),
 				'JPY'	=> __('Japanese Yen',$this->plugin_slug),
-				'KES'	=> __('Kenyan shilling',$this->plugin_slug),
+				'KES'	=> __('Kenyan Shilling',$this->plugin_slug),
 				'LAK'	=> __('Laos Kip',$this->plugin_slug),
 				'MWK'	=> __('Malawian Kwacha',$this->plugin_slug),
 				'MYR'	=> __('Malaysia Ringgit',$this->plugin_slug),
