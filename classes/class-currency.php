@@ -21,16 +21,13 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public $available_currencies = array();	
 
 		/** @var boolean */
-		public $multi_prices = false;	
-
-		/** @var obj  */
-		public $rates = false;
-
-		/** @var string  */
-		public $current_currency = false;	
+		public $multi_prices = false;		
 
 		/** @var boolean */
-		public $display_flags = false;				
+		public $display_flags = false;
+
+		/** @var boolean */
+		public $app_id = false;						
 
 		/**
 		 * Constructor
@@ -128,30 +125,12 @@ if (!class_exists( 'LSX_Currency' ) ) {
 
 				if(isset($this->options['general']['openexchange_api']) && '' !== $this->options['general']['openexchange_api']){
 					$this->app_id = $this->options['general']['openexchange_api'];
-				}else{
-					$this->app_id = '756634695a6344e78adae48a6ba25a9d';
 				}
 
 				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
 					$this->display_flags = true;
-				}				
-
-				if ( false === ( $this->rates = get_transient( 'lsx_currency_rates' ) ) ) {
-					$rates = wp_remote_retrieve_body( wp_safe_remote_get( 'http://openexchangerates.org/api/latest.json?app_id=' . $this->app_id ) );
-					$decoded_rates = json_decode( $rates );	
-
-					if ( is_wp_error( $rates ) || ! empty( $decoded_rates->error ) || empty( $rates ) ) {
-						if ( 401 == $decoded_rates->status ) {
-							$this->message = __('Your API key is incorrect.',$this->plugin_slug);
-						}
-					} else {
-						set_transient( 'lsx_currency_rates', $rates, 60 * 60 * 2 );
-						$this->rates = $decoded_rates->rates;
-					}
 				}					
 			}
-			$this->current_currency = isset( $_COOKIE['lsx_currency_choice'] ) ? $_COOKIE['lsx_currency_choice'] : $this->base_currency;
-
 		}
 
 		/**

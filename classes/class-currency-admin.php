@@ -24,6 +24,15 @@ class LSX_Currency_Admin extends LSX_Currency{
 			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Settings',$this->plugin_slug); ?></h3></label>			
 			</th>
 		</tr>
+		<tr class="form-field">
+			<th scope="row">
+				<label for="openexchange_api">Open Exchange Rate API Key</label>
+			</th>
+			<td>
+				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
+				<br /><small><?php _e('Get your free API key here',$this->plugin_slug); ?> - <a target="_blank" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
+			</td>
+		</tr>			
 		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
 			<th scope="row">
 				<label for="currency"><?php _e('Base Currency',$this->plugin_slug);?></label>
