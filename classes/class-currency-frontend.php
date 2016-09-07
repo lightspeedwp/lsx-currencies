@@ -28,7 +28,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 	public function set_defaults() {
 		parent::set_defaults();
 		if(false !== $this->app_id){
-			if ( false === ( $this->rates = get_transient( 'lsx_currency_rates' ) ) ) {
+			//if ( false === ( $this->rates = get_transient( 'lsx_currency_rates' ) ) ) {
 				$rates = wp_remote_retrieve_body( wp_safe_remote_get( 'http://openexchangerates.org/api/latest.json?app_id=' . $this->app_id ) );
 				$decoded_rates = json_decode( $rates );	
 
@@ -37,10 +37,10 @@ class LSX_Currency_Frontend extends LSX_Currency{
 						$this->message = __('Your API key is incorrect.',$this->plugin_slug);
 					}
 				} else {
-					set_transient( 'lsx_currency_rates', $rates, 60 * 60 * 2 );
+					set_transient( 'lsx_currency_rates', $decoded_rates->rates, 60 * 60 * 2 );
 					$this->rates = $decoded_rates->rates;
 				}
-			}	
+			//}	
 		}
 		$this->current_currency = isset( $_COOKIE['lsx_currency_choice'] ) ? $_COOKIE['lsx_currency_choice'] : $this->base_currency;	
 	}					
