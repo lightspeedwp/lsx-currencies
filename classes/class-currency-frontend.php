@@ -147,17 +147,26 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		if ( empty( $this->additional_currencies ) ) {
 			return '';
 		}
+
 		$items = '';
 		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a class="current" href="#'.strtolower($this->current_currency).'">'.$this->get_currency_flag($this->current_currency);
-
+		$items .= '<a class="current symbol-'.$this->switcher_symbol_position.'" href="#'.strtolower($this->current_currency).'">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
-		$items .= $this->current_currency.'<span class="currency-icon '.strtolower($this->current_currency).'"></span>';
+
+		if(true === $this->display_flags && 'left' === $this->flag_position){$items .= $this->get_currency_flag($this->current_currency);}
+		if('left' === $this->switcher_symbol_position){ $items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }
+
+		$items .= $this->current_currency;
+
+		if('right' === $this->switcher_symbol_position){ $items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }
+		if(true === $this->display_flags && 'right' === $this->flag_position){$items .= $this->get_currency_flag($this->current_currency);}
+
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
 		$items .= '<span class="caret"></span></a>';
 		$items .= isset( $args->after ) ? $args->after : '';
 		//unset( $languages[ $current_language ] );
+		//
 		$items .= $this->render_sub_items();
 		$items .= '</li>';
 		return $items;
@@ -179,9 +188,15 @@ class LSX_Currency_Frontend extends LSX_Currency{
 				$hidden='style="display:none";';
 				$class='hidden';
 			}
-			$sub_items .= '<li '.$hidden.' class="menu-item menu-item-currency '.$class.'">';
-			$sub_items .= '<a class="currency-icon '.strtolower($key).'" href="#'.strtolower($key).'">'.$this->get_currency_flag($key);
+
+			$sub_items .= '<li '.$hidden.' class="menu-item menu-item-currency '.$this->switcher_symbol_position.'">';
+
+			$sub_items .= '<a class=" symbol-'.$this->switcher_symbol_position.'" href="#'.strtolower($key).'">';
+			if(true === $this->display_flags && 'left' === $this->flag_position){$sub_items .= $this->get_currency_flag($key);}
+			if('left' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }		
 			$sub_items .= ucwords($key);
+			if('right' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }
+			if(true === $this->display_flags && 'right' === $this->flag_position){$sub_items .= $this->get_currency_flag($key);}
 			$sub_items .= '</a></li>';
 		}
 

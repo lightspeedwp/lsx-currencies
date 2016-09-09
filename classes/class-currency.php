@@ -24,13 +24,22 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public $multi_prices = false;		
 
 		/** @var boolean */
-		public $display_flags = false;
-
-		/** @var boolean */
 		public $app_id = false;		
 
+		/*  Currency Switcher Options */
+
 		/** @var array */
-		public $menus = false;							
+		public $menus = false;		
+
+		/** @var boolean */
+		public $display_flags = false;
+		/** @var string */
+		public $flag_position = 'left';
+
+		/** @var string */
+		public $switcher_symbol_position = 'right';		
+
+									
 
 		/**
 		 * Constructor
@@ -130,13 +139,22 @@ if (!class_exists( 'LSX_Currency' ) ) {
 					$this->app_id = $this->options['general']['openexchange_api'];
 				}
 
-				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
-					$this->display_flags = true;
-				}
 
 				if(isset($this->options['general']['currency_menu_switcher']) && is_array($this->options['general']['currency_menu_switcher']) && !empty($this->options['general']['currency_menu_switcher'])){
 					$this->menus = $this->options['general']['currency_menu_switcher'];
-				}									
+				}
+
+				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
+					$this->display_flags = true;
+				}
+				if(isset($this->options['general']['flag_position']) && 'on' === $this->options['general']['flag_position']){
+					$this->flag_position = 'right';
+				}
+				if(isset($this->options['general']['currency_switcher_position']) && 'on' === $this->options['general']['currency_switcher_position']){
+					$this->switcher_symbol_position = 'left';
+				}					
+
+												
 			}
 		}
 

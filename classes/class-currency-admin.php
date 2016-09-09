@@ -124,7 +124,26 @@ class LSX_Currency_Admin extends LSX_Currency{
 				<input type="checkbox" {{#if display_flags}} checked="checked" {{/if}} name="display_flags" />
 				<small><?php _e('Displays a small flag in front of the name.',$this->plugin_slug); ?></small>
 			</td>
+		</tr>
+		<tr class="form-field">
+			<th scope="row">
+				<label for="flag_position"><?php _e('Flag Position',$this->plugin_slug); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if flag_position}} checked="checked" {{/if}} name="flag_position" />
+				<small><?php _e('This moves the flag to the right (after the symbol).',$this->plugin_slug); ?></small>
+			</td>
 		</tr>				
+
+		<tr class="form-field">
+			<th scope="row">
+				<label for="currency_switcher_position"><?php _e('Symbol Position',$this->plugin_slug); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if currency_switcher_position}} checked="checked" {{/if}} name="currency_switcher_position" />
+				<small><?php _e('This moves the symbol for the switcher to the left (before the flag).',$this->plugin_slug); ?></small>
+			</td>
+		</tr>
 		<?php	
 	}
 
