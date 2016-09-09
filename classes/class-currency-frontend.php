@@ -121,7 +121,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 	}	
 
 	/**
-	 * Filter on the 'wp_nav_menu_items' hook, that potentially adds a language switcher to the item of some menus.
+	 * Filter on the 'wp_nav_menu_items' hook, that potentially adds a currency switcher to the item of some menus.
 	 *
 	 * @param string $items
 	 * @param object $args
