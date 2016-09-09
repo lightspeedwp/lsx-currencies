@@ -90,15 +90,32 @@ class LSX_Currency_Admin extends LSX_Currency{
 			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Switcher',$this->plugin_slug); ?></h3></label>			
 			</th>
 		</tr>	
-		<tr class="form-field">
+
+		<tr class="form-field-wrap">
 			<th scope="row">
 				<label for="currency_menu_switcher"><?php _e('Display in Menu',$this->plugin_slug); ?></label>
 			</th>
-			<td>
-				<input type="checkbox" {{#if currency_menu_switcher}} checked="checked" {{/if}} name="currency_menu_switcher" />
-				<small><?php _e('Adds the currency switcher to the "Primary" menu.',$this->plugin_slug); ?></small>
-			</td>
-		</tr>	
+			<td><ul>
+			<?php 	
+			$all_menus = get_registered_nav_menus();
+			if(is_array($all_menus) && !empty($all_menus)){
+				foreach($all_menus as $slug => $label){
+					$checked = $hidden = '';
+					if(is_array($this->menus) && array_key_exists($slug,$this->menus)){
+						$checked='checked="checked"';
+					}
+					?>
+					<li>
+						<input type="checkbox" <?php echo $checked; ?> name="currency_menu_switcher[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label> 
+					</li>
+				<?php }
+			}else{
+				echo '<li><p>'.__('You have no menus set up.',$this->plugin_slug).'</p></li>';
+			}
+			?>
+			</ul></td>
+		</tr>
+
 		<tr class="form-field">
 			<th scope="row">
 				<label for="display_flags"><?php _e('Display Flags',$this->plugin_slug); ?></label>

@@ -129,7 +129,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 	 * @return string
 	 */
 	function wp_nav_menu_items_filter( $items, $args ) {
-		if ( $args->theme_location === 'primary' && false !== $this->options['general'] && isset($this->options['general']['currency_menu_switcher']) ) {
+		if ( false !== $this->options['general'] && false !== $this->menus && array_key_exists($args->theme_location,$this->menus) ) {
 			$items .= $this->get_menu_html( $args );
 		}
 		return $items;

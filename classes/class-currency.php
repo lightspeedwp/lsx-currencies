@@ -27,7 +27,10 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		public $display_flags = false;
 
 		/** @var boolean */
-		public $app_id = false;						
+		public $app_id = false;		
+
+		/** @var array */
+		public $menus = false;							
 
 		/**
 		 * Constructor
@@ -129,7 +132,11 @@ if (!class_exists( 'LSX_Currency' ) ) {
 
 				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
 					$this->display_flags = true;
-				}					
+				}
+
+				if(isset($this->options['general']['currency_menu_switcher']) && is_array($this->options['general']['currency_menu_switcher']) && !empty($this->options['general']['currency_menu_switcher'])){
+					$this->menus = $this->options['general']['currency_menu_switcher'];
+				}									
 			}
 		}
 
