@@ -91,6 +91,14 @@ class LSX_Currency_Frontend extends LSX_Currency{
 				}
 			}
 
+			$value = preg_replace('/[^0-9.]+/', '', $value);
+			$decimals = substr_count($value, '.');
+			if(false !== $decimals && $decimals > 1){
+				$decimals--;
+				$decimals = (int)$decimals;
+				$value = preg_replace('/'.preg_quote('.', '/').'/', '', $value, $decimals);
+			}
+
 			$prefix .= '>';
 			$suffix = '</span>';
 
