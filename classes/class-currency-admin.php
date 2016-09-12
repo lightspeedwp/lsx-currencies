@@ -73,8 +73,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 			<?php }
 			?>
 			</ul></td>
-		</tr>
-		<?php /* 
+		</tr> 
 		<tr class="form-field">
 			<th scope="row">
 				<label for="multi_price"><?php _e('Enable Multiple Prices',$this->plugin_slug); ?></label>
@@ -84,7 +83,6 @@ class LSX_Currency_Admin extends LSX_Currency{
 				<small><?php _e('Allowing you to add specific prices per active currency.',$this->plugin_slug); ?></small>
 			</td>
 		</tr>	
-		*/ ?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
 			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Switcher',$this->plugin_slug); ?></h3></label>			

@@ -20,17 +20,15 @@ LSX_Currency = {
 			jQuery('.amount.lsx-currency').each(function() {
 
 				var amount = '';
+				var new_price = '';
 
-				var basePrice = jQuery(this).find('.value').attr('data-base-price');
-				if (typeof basePrice !== typeof undefined && basePrice !== false) {
-					amount = basePrice;
-					from = lsx_currency_params.base;
+				var strict_amount = jQuery(this).find('.value').attr('data-price-'+$this.current_currency);
+				console.log(strict_amount);
+				if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
+					new_price = strict_amount;
 				}else{
-					amount = jQuery(this).find('.value').html();
-					jQuery(this).find('.value').attr('data-base-price',amount);
+					new_price = $this.switchCurrency(from,$this.current_currency,jQuery(this).find('.value').html());
 				}
-				var new_price = $this.switchCurrency(from,$this.current_currency,amount);
-
 				jQuery(this).find('.value').html(new_price);
 				console.log(from);
 				jQuery(this).find('.currency-icon').prop('class',"").addClass('currency-icon').addClass($this.current_currency.toLowerCase()).html($this.current_currency);				

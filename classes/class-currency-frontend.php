@@ -81,10 +81,14 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 		if('price' === $meta_key){
 
-			$prefix = '<span class="amount lsx-currency" data-base-currency="'.$this->base_currency.'"';
+			$additional_html = '';
+			$additional_prices = get_post_meta(get_the_ID(),'additional_prices',false);
+			$prefix = '<span class="amount lsx-currency" ';
 
-			if(true === $this->multi_prices && !empty($this->additional_currencies)){
-
+			if(true === $this->multi_prices && !empty($additional_prices)){
+				foreach($additional_prices as $a_price){
+					$additional_html .= ' data-price-'.$a_price['currency'].'="'.$a_price['amount'].'"';
+				}
 			}
 
 			$prefix .= '>';
@@ -92,7 +96,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 			//work out the other tags
 			$currency = '<span class="currency-icon '. mb_strtolower( $this->base_currency ) .'">'. $this->base_currency .'</span>';
-			$amount = '<span class="value">'.$value.'</span>';
+			$amount = '<span class="value" data-price-'.$this->base_currency.'="'.$value.'" '.$additional_html.'>'.$value.'</span>';
 
 			//Check for a price type and add that in.
 			$price_type = get_post_meta(get_the_ID(),'price_type',true);
@@ -189,7 +193,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 				$class='hidden';
 			}
 
-			$sub_items .= '<li '.$hidden.' class="menu-item menu-item-currency '.$this->switcher_symbol_position.'">';
+			$sub_items .= '<li '.$hidden.' class="'.$class.' menu-item menu-item-currency '.$this->switcher_symbol_position.'">';
 
 			$sub_items .= '<a class=" symbol-'.$this->switcher_symbol_position.'" href="#'.strtolower($key).'">';
 			if(true === $this->display_flags && 'left' === $this->flag_position){$sub_items .= $this->get_currency_flag($key);}
