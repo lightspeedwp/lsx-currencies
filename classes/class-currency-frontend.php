@@ -69,7 +69,8 @@ class LSX_Currency_Frontend extends LSX_Currency{
 		$params = apply_filters( 'lsx_currency_js_params', array(
 			'current_currency'       => $this->current_currency,
 			'rates'                  => $this->rates,
-			'base'                   => $this->base_currency
+			'base'                   => $this->base_currency,
+			'flags'					 => $this->display_flags,
 		));
 		wp_localize_script( 'lsx_currency', 'lsx_currency_params', $params );		
 	}

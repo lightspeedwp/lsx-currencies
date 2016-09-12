@@ -66,12 +66,12 @@ LSX_Currency = {
 
 				//Check if the currency flag should display
 				var currency_flag = '';
-				if('undefined' != jQuery(this).find('span.flag-icon')){
-					currency_icon = '<span class="flag-icon flag-icon-'+currency_class.substring(0, 2)+'"></span> ';
+				if(true == lsx_currency_params.flags){
+					currency_flag = '<span class="flag-icon flag-icon-'+currency_class.substring(0, 2)+'"></span> ';
 				}
 				
 				//move the new labels up to the current selector
-				jQuery(this).parents('li.menu-item-currency-current').find('a.current').attr('href','#'+currency_class).html(currency_icon+$this.current_currency+'<span class="currency-icon '+currency_class+'"></span><span class="caret"></span>');
+				jQuery(this).parents('li.menu-item-currency-current').find('a.current').attr('href','#'+currency_class).html(currency_flag+$this.current_currency+'<span class="currency-icon '+currency_class+'"></span><span class="caret"></span>');
 				
 				//show the old selection from the drop down and 
 				jQuery(this).parents('li.menu-item-currency-current').find('li.hidden').show().removeClass('hidden');
