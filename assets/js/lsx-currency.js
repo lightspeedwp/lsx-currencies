@@ -27,7 +27,7 @@ LSX_Currency = {
 				if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
 					new_price = strict_amount;
 				}else{
-					new_price = $this.switchCurrency(from,$this.current_currency,jQuery(this).find('.value').html());
+					new_price = $this.switchCurrency(lsx_currency_params.base,$this.current_currency,jQuery(this).find('.value').attr('data-price-'+lsx_currency_params.base));
 				}
 				jQuery(this).find('.value').html(new_price);
 				console.log(from);
@@ -39,6 +39,9 @@ LSX_Currency = {
 	switchCurrency: function(from,to,amount) {
 		console.log(from,to);
 		console.log(lsx_currency_params);
+
+		//if the current from price is not the base
+
 		amount = lsx_Money(amount).from(from).to(to);
 		amount = this.formatAmount(amount);
 		return amount;
