@@ -103,9 +103,11 @@ class LSX_Currency_Frontend extends LSX_Currency{
 			$prefix .= '>';
 			$suffix = '</span>';
 
+			setlocale(LC_MONETARY, 'en_US');
+
 			//work out the other tags
 			$currency = '<span class="currency-icon '. mb_strtolower( $this->base_currency ) .'">'. $this->base_currency .'</span>';
-			$amount = '<span class="value" data-price-'.$this->base_currency.'="'.$value.'" '.$additional_html.'>'.$value.'</span>';
+			$amount = '<span class="value" data-price-'.$this->base_currency.'="'.$value.'" '.$additional_html.'>'.str_replace('USD','',money_format('%i',$value)).'</span>';
 
 			//Check for a price type and add that in.
 			$price_type = get_post_meta(get_the_ID(),'price_type',true);
@@ -206,9 +208,9 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 			$sub_items .= '<a class=" symbol-'.$this->switcher_symbol_position.'" href="#'.strtolower($key).'">';
 			if(true === $this->display_flags && 'left' === $this->flag_position){$sub_items .= $this->get_currency_flag($key);}
-			if('left' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }		
+			if('left' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($key).'"></span>'; }		
 			$sub_items .= ucwords($key);
-			if('right' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($this->current_currency).'"></span>'; }
+			if('right' === $this->switcher_symbol_position){ $sub_items .= '<span class="currency-icon '.strtolower($key).'"></span>'; }
 			if(true === $this->display_flags && 'right' === $this->flag_position){$sub_items .= $this->get_currency_flag($key);}
 			$sub_items .= '</a></li>';
 		}
