@@ -107,7 +107,7 @@ class LSX_Currency_Frontend extends LSX_Currency{
 
 			//work out the other tags
 			$currency = '<span class="currency-icon '. mb_strtolower( $this->base_currency ) .'">'. $this->base_currency .'</span>';
-			$amount = '<span class="value" data-price-'.$this->base_currency.'="'.$value.'" '.$additional_html.'>'.str_replace('USD','',money_format('%i',$value)).'</span>';
+			$amount = '<span class="value" data-price-'.$this->base_currency.'="'.$value.'" '.$additional_html.'>'.str_replace('USD','',money_format('%i',ltrim(rtrim($value)))).'</span>';
 
 			//Check for a price type and add that in.
 			$price_type = get_post_meta(get_the_ID(),'price_type',true);
