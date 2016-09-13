@@ -9,7 +9,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 	 */
 	public function __construct() {
 		$this->set_defaults();
-		//add_action('lsx_framework_dashboard_tab_content',array($this,'settings'),11);
+		add_action('lsx_framework_dashboard_tab_content',array($this,'settings'),11);
 		add_action('lsx_framework_dashboard_tab_bottom',array($this,'settings_scripts'),11);
 		
 		add_filter('lsx_price_field_pattern',array($this,'fields'),10,1);
