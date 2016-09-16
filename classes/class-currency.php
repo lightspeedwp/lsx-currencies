@@ -101,7 +101,7 @@ if (!class_exists( 'LSX_Currency' ) ) {
 				'JPY'	=> 'jp',
 				'KES'	=> 'ke',
 				'LAK'	=> 'la',
-				'MWK'	=> 'my',
+				'MWK'	=> 'mw',
 				'MYR'	=> 'my',
 				'MZN'	=> 'mz',				
 				'NAD'	=> 'na',
