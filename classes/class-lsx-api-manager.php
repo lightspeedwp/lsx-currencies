@@ -66,6 +66,13 @@ class LSX_API_Manager {
 	public $file = false;	
 
 	/**
+	 * Holds the activate / deactivate button.
+	 *
+	 * @var      string
+	 */
+	public $button = false;	
+
+	/**
 	 * Holds class instance
 	 *
 	 * @var      string
@@ -97,20 +104,41 @@ class LSX_API_Manager {
 			$this->file = $api_array['file'];
 		}		
 
-		$this->api_url = 'https://www.lsdev.biz/wc-api/product-key-api';
-		$this->products_api_url = 'https://www.lsdev.biz/';
-		$this->license_check_url = 'https://www.lsdev.biz/wc-api/license-status-check';			
+		$this->api_url = 'https://dev.lsdev.biz/wc-api/product-key-api';
+		$this->products_api_url = 'https://dev.lsdev.biz/';
+		$this->license_check_url = 'https://dev.lsdev.biz/wc-api/license-status-check';		
+
+		add_filter( 'plugin_action_links_' . plugin_basename(str_replace('.php','',$this->file).'/'.$this->file), array($this,'add_action_links'));
 
 
 		if(isset($_GET['page']) && in_array($_GET['page'],apply_filters('lsx_api_manager_options_pages',array(false)))){
-			$this->query('activation');
-			$this->status = $this->check_status();
+
+			//Maybe activate the software, do this before the status checks.
+			$this->activate_deactivate();
+
+			$current_status = get_option($this->product_slug.'_status',false);
+			if(false === $current_status){
+				$this->status = $this->check_status();
+				update_option($this->product_slug.'_status',$this->status);
+			}else{
+				$this->status = $current_status;
+			}
+
+			$button_url = '<a data-product="'.$this->product_slug.'" style="margin-top:-5px;" href="';
+			$button_label = '';
+			if('active' !== $this->status){
+				$button_url .= admin_url('options-general.php?page=lsx-lsx-settings&action=activate&product='.$this->product_slug);
+				$button_label = 'Activate';
+			}else{
+				$button_url .= admin_url('options-general.php?page=lsx-lsx-settings&action=deactivate&product='.$this->product_slug);
+				$button_label = 'Deactivate';
+			}
+			$button_url .= '" class="button-secondary activate">'.$button_label.'</a>';
+			$this->button = $button_url;
 		}
 
 		add_filter('site_transient_update_plugins', array($this,'injectUpdate'));
 		add_action( "in_plugin_update_message-".$this->file,array($this,'plugin_update_message'),10,2);
-
-		add_action('init',array($this,'set_update_status'));
 
 		add_action('lsx_framework_dashboard_tab_content_api',array($this,'dashboard_tabs'),1);
 		
@@ -155,8 +183,10 @@ class LSX_API_Manager {
 					<span><?php echo $this->product_id; ?></span> 
 					 - <span><?php echo $this->version; ?></span> 
 					 - <span style="color:<?php echo $colour;?>;"><?php echo $this->status; ?></span>
-					 <?php if(is_array($this->messages)) { ?> - <span class="messages" style="font-weight:normal;"><?php echo implode('. ',$this->messages); ?></span><?php } ?>
+					 - <?php echo $this->button; ?>
 				</h4>
+
+				<?php if(is_array($this->messages)) { ?><p><small class="messages" style="font-weight:normal;"><?php echo implode('. ',$this->messages); ?></small></p><?php } ?>
 		
 			</th>
 		</tr>
@@ -198,6 +228,17 @@ class LSX_API_Manager {
 					}
 					$('.<?php echo $this->product_slug; ?>-wrap').append('<input type="hidden" value="'+action+'" name="<?php echo $this->product_slug; ?>_api_action" />');
 				});
+
+				$( '.activate[data-product="<?php echo $this->product_slug; ?>"]' ).on( 'click', function() {
+
+					var url = $(this).attr('href');
+					$( window ).on('uix.saved',function() { 
+						window.location.href = url;
+					});
+					$('.page-title-action').click();
+				});				
+
+				
 			});
 		{{/script}}				
 	<?php 
@@ -208,25 +249,25 @@ class LSX_API_Manager {
 	 */
 	public function activate_deactivate(){
 
-		if(isset($_POST['trigger']) && 'Activate' === $_POST['trigger'] && 'inactive' === $this->status){
+		if(isset($_GET['action']) && 'activate' === $_GET['action']
+			&& isset($_GET['product']) && $this->product_slug === $_GET['product']
+			&& false !== $this->api_key && '' !== $this->api_key
+			&& false !== $this->email && '' !== $this->email){
+
 			$response = $this->query('activation');
-	
-			if(isset($response->activated)){
-				echo 'Activated '.$response->message;
-			}else{
-				echo false;
+			if(is_object($response) && isset($response->activated) && true === $response->activated){
+				update_option($this->product_slug.'_status','active');
 			}
 		}
-		if(isset($_POST['trigger']) && 'Deactivate' === $_POST['trigger'] && 'active' === $this->status){
-			$response = $this->query('deactivation');
 
-			if(isset($response->deactivated)){
-				echo 'Deactivated '.$response->activations_remaining;
-			}else{
-				echo false;
-			}
+		if(isset($_GET['action']) && 'deactivate' === $_GET['action']
+			&& isset($_GET['product']) && $this->product_slug === $_GET['product']
+			&& false !== $this->api_key && '' !== $this->api_key
+			&& false !== $this->email && '' !== $this->email){
+
+			$response = $this->query('deactivation');
+			update_option($this->product_slug.'_status','inactive');
 		}		
-		die();
 	}
 
 	
@@ -247,8 +288,10 @@ class LSX_API_Manager {
 	 * Checks if the software is activated or deactivated
 	 * @return string
 	 */
-	public function check_status() {
-		$response = $this->query('status');
+	public function check_status($response = false) {
+		if(false === $response){
+			$response = $this->query('status');
+		}
 		$status = 'inactive';
 		if(is_object($response)){
 			if(isset($response->error)){
@@ -281,6 +324,7 @@ class LSX_API_Manager {
 				'instance' 		=> $this->password
 		);
 		$target_url = esc_url_raw( $this->create_software_api_url( $args ) );
+
 		$request = wp_remote_get( $target_url );
 		if( is_wp_error( $request ) || wp_remote_retrieve_response_code( $request ) != 200 ) {
 			// Request failed
@@ -334,8 +378,7 @@ class LSX_API_Manager {
 	}	
 
 	public function set_update_status(){
-		$this->status = $this->check_status();
-		if('active' === $this->status){
+		if(isset($this->status) && 'active' === $this->status){
 			$args = array(
 					'request' 			=> 'pluginupdatecheck',
 					'plugin_name' 		=> $this->product_slug.'/'.$this->file,
@@ -365,8 +408,8 @@ class LSX_API_Manager {
 	 * @return StdClass Modified update list.
 	 */
 	public function injectUpdate($updates=false){
-
-		if('active' === $this->status && null !== $this->upgrade_response && is_object($this->upgrade_response) && isset($this->upgrade_response->new_version) && version_compare ( $this->upgrade_response->new_version , $this->version , '>' )){
+		$this->set_update_status();
+		if(isset($this->status) && 'active' === $this->status && null !== $this->upgrade_response && is_object($this->upgrade_response) && isset($this->upgrade_response->new_version) && version_compare ( $this->upgrade_response->new_version , $this->version , '>' )){
 
 			//setup the response if our plugin is the only one that needs updating.	
 			if ( !is_object($updates) ) {
@@ -376,5 +419,17 @@ class LSX_API_Manager {
 			$updates->response[$this->product_slug.'/'.$this->file] = $this->upgrade_response;		
 		}
 		return $updates;
+	}	
+
+	/**
+	 * Adds in the "settings" link for the plugins.php page
+	 */
+	public function add_action_links ( $links ) {
+		 $mylinks = array(
+		 	'<a href="' . admin_url( 'options-general.php?page=lsx-lsx-settings' ) . '">'.__('Settings',$this->product_slug).'</a>',
+		 	'<a href="https://www.lsdev.biz/documentation/lsx-tour-operator-plugin/" target="_blank">'.__('Documentation',$this->product_slug).'</a>',
+		 	'<a href="https://feedmysupport.zendesk.com/home" target="_blank">'.__('Support',$this->product_slug).'</a>',
+		 );
+		return array_merge( $links, $mylinks );
 	}	
 }

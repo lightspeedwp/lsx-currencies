@@ -50,7 +50,7 @@ function lsx_currency_api_admin_init(){
 	$api_array = array(
 		'product_id'	=>		'LSX Currency',
 		'version'		=>		'1.0.0',
-		'instance'		=>		get_option('lsx_to_api_instance',false),
+		'instance'		=>		get_option('lsx_api_instance',false),
 		'email'			=>		$data['email'],
 		'api_key'		=>		$data['api_key'],
 		'file'			=>		'lsx-currency.php'
@@ -63,9 +63,9 @@ add_action('admin_init','lsx_currency_api_admin_init');
  * Run when the plugin is active, and generate a unique password for the site instance.
  */
 function lsx_currency_activate_plugin() {
-    $lsx_to_password = get_option('lsx_to_api_instance',false);
+    $lsx_to_password = get_option('lsx_api_instance',false);
     if(false === $lsx_to_password){
-    	update_option('lsx_to_api_instance',LSX_API_Manager::generatePassword());
+    	update_option('lsx_api_instance',LSX_API_Manager::generatePassword());
     }
 }
 register_activation_hook( __FILE__, 'lsx_currency_activate_plugin' );
