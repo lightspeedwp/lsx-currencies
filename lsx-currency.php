@@ -1,14 +1,15 @@
 <?php
 /*
- * Plugin Name: LSX Currency
- * Plugin URI: https://www.lsdev.biz/product/lsx-currency-plugin/
- * Description: By integrating with LSX Tourism Operators plugin, LSX Currency brings multi currency support to your WordPress website.
- * Author: LightSpeed
- * Version: 1.0.0
- * Author URI: https://www.lsdev.biz/products/
- * License: GPL2+
- * Text Domain: lsx-currency
- * Domain Path: /languages/
+ * Plugin Name: Tour Operator Currencies 
+ * Plugin URI:  https://www.lsdev.biz/product/tour-operator-currencies/
+ * Description: The Tour Operator Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in. 
+ * Version:     1.0
+ * Author:      LightSpeed WordPress Development
+ * Author URI:  https://www.lsdev.biz/
+ * License:     GPL3
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Text Domain: lsx-currencies
+ * Domain Path: /languages
  */
 
 // If this file is called directly, abort.
