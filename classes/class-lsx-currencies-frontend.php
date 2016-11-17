@@ -232,4 +232,3 @@ class LSX_Currencies_Frontend extends LSX_Currencies{
 		}
 	}
 }
-new LSX_Currencies_Frontend();

@@ -22,9 +22,22 @@ define('LSX_CURRENCY_CORE',  __FILE__ );
 define('LSX_CURRENCY_URL',  plugin_dir_url( __FILE__ ) );
 define('LSX_CURRENCY_VER',  '1.1.0' );
 
+/* ======================= The API Classes ========================= */
+
 if(!class_exists('LSX_API_Manager')){
-	require_once('vendor/lsx-api-manager-class.php');
+	require_once('classes/class-lsx-api-manager.php');
 }
+
+/**
+ * Run when the plugin is active, and generate a unique password for the site instance.
+ */
+function lsx_currencies_activate_plugin() {
+    $lsx_to_password = get_option('lsx_api_instance',false);
+    if(false === $lsx_to_password){
+    	update_option('lsx_api_instance',LSX_API_Manager::generatePassword());
+    }
+}
+register_activation_hook( __FILE__, 'lsx_currencies_activate_plugin' );
 
 /** 
  *	Grabs the email and api key from the LSX Currency Settings.
@@ -60,17 +73,7 @@ function lsx_currencies_api_admin_init(){
 }
 add_action('admin_init','lsx_currencies_api_admin_init');
 
-/**
- * Run when the plugin is active, and generate a unique password for the site instance.
- */
-function lsx_currencies_activate_plugin() {
-    $lsx_to_password = get_option('lsx_api_instance',false);
-    if(false === $lsx_to_password){
-    	update_option('lsx_api_instance',LSX_API_Manager::generatePassword());
-    }
-}
-register_activation_hook( __FILE__, 'lsx_currencies_activate_plugin' );
-
 /* ======================= Below is the Plugin Class init ========================= */
 
-require_once( LSX_CURRENCY_PATH . '/classes/class-currencies.php' );
+require_once( LSX_CURRENCY_PATH . '/classes/class-lsx-currencies.php' );
+$lsx_currencies = new LSX_Currencies();

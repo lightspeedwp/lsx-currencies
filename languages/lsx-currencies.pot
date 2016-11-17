@@ -16,186 +16,202 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/class-currencies-admin.php:24
+#: classes/class-lsx-currencies-admin.php:45, includes/settings/general.php:12
+msgid "General"
+msgstr ""
+
+#: classes/class-lsx-currencies-admin.php:53, classes/class-lsx-currencies-admin.php:54
+msgid "LSX Settings"
+msgstr ""
+
+#: classes/class-lsx-currencies-admin.php:58
+msgid "Save Changes"
+msgstr ""
+
+#: classes/class-lsx-currencies-admin.php:71
 msgid "Currency Settings"
 msgstr ""
 
-#: classes/class-currencies-admin.php:33
+#: classes/class-lsx-currencies-admin.php:80
 msgid "Get your free API key here"
 msgstr ""
 
-#: classes/class-currencies-admin.php:38
+#: classes/class-lsx-currencies-admin.php:85
 msgid "Base Currency"
 msgstr ""
 
-#: classes/class-currencies-admin.php:56
+#: classes/class-lsx-currencies-admin.php:103
 msgid "Additional Currencies"
 msgstr ""
 
-#: classes/class-currencies-admin.php:79
+#: classes/class-lsx-currencies-admin.php:126
 msgid "Enable Multiple Prices"
 msgstr ""
 
-#: classes/class-currencies-admin.php:83
+#: classes/class-lsx-currencies-admin.php:130
 msgid "Allowing you to add specific prices per active currency."
 msgstr ""
 
-#: classes/class-currencies-admin.php:88
+#: classes/class-lsx-currencies-admin.php:135
 msgid "Currency Switcher"
 msgstr ""
 
-#: classes/class-currencies-admin.php:94
+#: classes/class-lsx-currencies-admin.php:141
 msgid "Display in Menu"
 msgstr ""
 
-#: classes/class-currencies-admin.php:111
+#: classes/class-lsx-currencies-admin.php:158
 msgid "You have no menus set up."
 msgstr ""
 
-#: classes/class-currencies-admin.php:119
+#: classes/class-lsx-currencies-admin.php:166
 msgid "Display Flags"
 msgstr ""
 
-#: classes/class-currencies-admin.php:123
+#: classes/class-lsx-currencies-admin.php:170
 msgid "Displays a small flag in front of the name."
 msgstr ""
 
-#: classes/class-currencies-admin.php:128
+#: classes/class-lsx-currencies-admin.php:175
 msgid "Flag Position"
 msgstr ""
 
-#: classes/class-currencies-admin.php:132
+#: classes/class-lsx-currencies-admin.php:179
 msgid "This moves the flag to the right (after the symbol)."
 msgstr ""
 
-#: classes/class-currencies-admin.php:138
+#: classes/class-lsx-currencies-admin.php:185
 msgid "Symbol Position"
 msgstr ""
 
-#: classes/class-currencies-admin.php:142
+#: classes/class-lsx-currencies-admin.php:189
 msgid "This moves the symbol for the switcher to the left (before the flag)."
 msgstr ""
 
-#: classes/class-currencies-admin.php:201
+#: classes/class-lsx-currencies-admin.php:248
 msgid "Prices"
 msgstr ""
 
-#: classes/class-currencies.php:57
+#: classes/class-lsx-currencies.php:62
 msgid "Australian Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:58
+#: classes/class-lsx-currencies.php:63
 msgid "Brazilian Real"
 msgstr ""
 
-#: classes/class-currencies.php:59
+#: classes/class-lsx-currencies.php:64
 msgid "British Pound Sterling"
 msgstr ""
 
-#: classes/class-currencies.php:60
+#: classes/class-lsx-currencies.php:65
 msgid "Botswana Pula"
 msgstr ""
 
-#: classes/class-currencies.php:61
+#: classes/class-lsx-currencies.php:66
 msgid "Canadian Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:62
+#: classes/class-lsx-currencies.php:67
 msgid "Chinese Yuan"
 msgstr ""
 
-#: classes/class-currencies.php:63
+#: classes/class-lsx-currencies.php:68
 msgid "Euro"
 msgstr ""
 
-#: classes/class-currencies.php:64
+#: classes/class-lsx-currencies.php:69
 msgid "Hong Kong Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:65
+#: classes/class-lsx-currencies.php:70
 msgid "Indian Rupee"
 msgstr ""
 
-#: classes/class-currencies.php:66
+#: classes/class-lsx-currencies.php:71
 msgid "Indonesia Rupiah"
 msgstr ""
 
-#: classes/class-currencies.php:67
+#: classes/class-lsx-currencies.php:72
 msgid "Israeli Shekel"
 msgstr ""
 
-#: classes/class-currencies.php:68
+#: classes/class-lsx-currencies.php:73
 msgid "Japanese Yen"
 msgstr ""
 
-#: classes/class-currencies.php:69
+#: classes/class-lsx-currencies.php:74
 msgid "Kenyan Shilling"
 msgstr ""
 
-#: classes/class-currencies.php:70
+#: classes/class-lsx-currencies.php:75
 msgid "Laos Kip"
 msgstr ""
 
-#: classes/class-currencies.php:71
+#: classes/class-lsx-currencies.php:76
 msgid "Malawian Kwacha"
 msgstr ""
 
-#: classes/class-currencies.php:72
+#: classes/class-lsx-currencies.php:77
 msgid "Malaysia Ringgit"
 msgstr ""
 
-#: classes/class-currencies.php:73
+#: classes/class-lsx-currencies.php:78
 msgid "Mozambique Metical"
 msgstr ""
 
-#: classes/class-currencies.php:74
+#: classes/class-lsx-currencies.php:79
 msgid "Namibian Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:75, classes/class-currencies.php:77
+#: classes/class-lsx-currencies.php:80, classes/class-lsx-currencies.php:82
 msgid "New Zealand Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:76
+#: classes/class-lsx-currencies.php:81
 msgid "Norwegian Krone"
 msgstr ""
 
-#: classes/class-currencies.php:78
+#: classes/class-lsx-currencies.php:83
 msgid "Russian Ruble"
 msgstr ""
 
-#: classes/class-currencies.php:79
+#: classes/class-lsx-currencies.php:84
 msgid "Singapore Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:80
+#: classes/class-lsx-currencies.php:85
 msgid "South African Rand"
 msgstr ""
 
-#: classes/class-currencies.php:81
+#: classes/class-lsx-currencies.php:86
 msgid "Swedish Krona"
 msgstr ""
 
-#: classes/class-currencies.php:82
+#: classes/class-lsx-currencies.php:87
 msgid "Swiss Franc"
 msgstr ""
 
-#: classes/class-currencies.php:83
+#: classes/class-lsx-currencies.php:88
 msgid "Tanzania Shilling"
 msgstr ""
 
-#: classes/class-currencies.php:84
+#: classes/class-lsx-currencies.php:89
 msgid "United States Dollar"
 msgstr ""
 
-#: classes/class-currencies.php:85
+#: classes/class-lsx-currencies.php:90
 msgid "United Arab Emirates Dirham"
 msgstr ""
 
-#: classes/class-currencies.php:86
+#: classes/class-lsx-currencies.php:91
 msgid "Zambian Kwacha"
 msgstr ""
 
-#: classes/class-currencies.php:87
+#: classes/class-lsx-currencies.php:92
 msgid "Zimbabwean Dollar"
+msgstr ""
+
+#: includes/settings/general.php:6
+msgid "API Settings"
 msgstr ""

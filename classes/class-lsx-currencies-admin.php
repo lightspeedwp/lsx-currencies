@@ -9,13 +9,60 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	 */
 	public function __construct() {
 		$this->set_defaults();
-		add_action('lsx_framework_dashboard_tab_content',array($this,'settings'),11);
-		add_action('lsx_framework_dashboard_tab_bottom',array($this,'settings_scripts'),11);
+		add_action( 'init', array( $this, 'create_settings_page'), 200 );
+
+		add_action( 'lsx_framework_dashboard_tab_content', array($this, 'settings' ), 200 );
+		add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
 		
-		add_filter('lsx_price_field_pattern',array($this,'fields'),10,1);
+		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
 	}
+
 	/**
-	 * outputs the dashboard tabs settings
+	 * Returns the array of settings to the UIX Class
+	 */
+	public function create_settings_page() {
+		if ( is_admin() ) {
+			if ( ! class_exists( '\lsx\ui\uix' ) && !class_exists( 'Tour_Operator' ) ) {
+				include_once LSX_CURRENCY_PATH.'vendor/uix/uix.php';
+				$pages = $this->settings_page_array();
+				$uix = \lsx\ui\uix::get_instance( 'lsx' );
+				$uix->register_pages( $pages );
+			}
+		}
+	}
+
+	/**
+	 * Returns the array of settings to the UIX Class
+	 */
+	public function settings_page_array() {
+		// This array is for the Admin Pages. each element defines a page that is seen in the admin
+		
+		$tabs = array( // tabs array are for setting the tab / section templates
+			// each array element is a tab with the key as the slug that will be the saved object property
+			'general' => array(
+				'page_title'        => '',
+				'page_description'  => '',
+				'menu_title'        => esc_html__( 'General', 'lsx-currencies' ),
+				'template'          => LSX_CURRENCY_PATH . 'includes/settings/general.php',
+				'default'           => true
+			)
+		);
+
+		return array(
+			'lsx-settings'  => array(                                              // this is the settings array. The key is the page slug
+				'page_title'  =>  esc_html__( 'LSX Settings', 'lsx-currencies' ),  // title of the page
+				'menu_title'  =>  esc_html__( 'LSX Settings', 'lsx-currencies' ),  // title seen on the menu link
+				'capability'  =>  'manage_options',                                // required capability to access page
+				'icon'        =>  'dashicons-book-alt',                            // Icon or image to be used on admin menu
+				'parent'      =>  'options-general.php',                           // Position priority on admin menu)
+				'save_button' =>  esc_html__( 'Save Changes', 'lsx-currencies' ),  // If the page required saving settings, Set the text here.
+				'tabs'        =>  $tabs,
+			),
+		);
+	}
+
+	/**
+	 * Outputs the dashboard tabs settings
 	 */
 	public function settings() {
 	?>	
@@ -146,7 +193,7 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	}
 
 	/**
-	 * outputs the dashboard tabs settings scripts
+	 * Outputs the dashboard tabs settings scripts
 	 */
 	public function settings_scripts() {
 		?>
@@ -187,9 +234,9 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	}	
 
 	/**
-	 * outputs the dashboard tabs settings
+	 * 
 	 */
-	public function fields($field) {
+	public function fields( $field ) {
 		if(true === $this->multi_prices && !empty($this->additional_currencies)){
 			$currency_options = array();
 			foreach($this->additional_currencies as $key => $values){
@@ -201,21 +248,20 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				array( 'id' => 'price_title',  'name' => esc_html__('Prices','lsx-currencies'), 'type' => 'title' ),
 				array( 'id' => 'price',  'name' => 'Base Price ('.$this->base_currency.')', 'type' => 'text' ),
 				array(
-						'id' => 'additional_prices',
-						'name' => '',
-						'single_name' => 'Price',
-						'type' => 'group',
-						'repeatable' => true,
-						'sortable' => true,
-						'fields' => array(
-								array( 'id' => 'amount',  'name' => 'Amount', 'type' => 'text' ),
-								array( 'id' => 'currency', 'name' => 'Currency', 'type' => 'select', 'options' => $currency_options ),
-						)
+					'id' => 'additional_prices',
+					'name' => '',
+					'single_name' => 'Price',
+					'type' => 'group',
+					'repeatable' => true,
+					'sortable' => true,
+					'fields' => array(
+						array( 'id' => 'amount',  'name' => 'Amount', 'type' => 'text' ),
+						array( 'id' => 'currency', 'name' => 'Currency', 'type' => 'select', 'options' => $currency_options ),
+					)
 				)			
-			);	
+			);
 		}else{
 			return array(array( 'id' => 'price',  'name' => 'Price ('.$this->base_currency.')', 'type' => 'text' ));
 		}	
 	}	
 }
-new LSX_Currencies_Admin();

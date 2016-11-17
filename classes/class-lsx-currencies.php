@@ -37,17 +37,22 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 		public $flag_position = 'left';
 
 		/** @var string */
-		public $switcher_symbol_position = 'right';		
-
-									
+		public $switcher_symbol_position = 'right';						
 
 		/**
 		 * Constructor
 		 */
 		public function __construct() {
 			$this->set_defaults();
-			require_once(LSX_CURRENCY_PATH . '/classes/class-currencies-admin.php');
-			require_once(LSX_CURRENCY_PATH . '/classes/class-currencies-frontend.php');
+
+			require_once( LSX_CURRENCY_PATH . 'classes/class-lsx-currencies-admin.php' );
+			if(class_exists('LSX_Currencies_Admin')){
+				$this->admin = new LSX_Currencies_Admin();
+			}
+			require_once( LSX_CURRENCY_PATH . 'classes/class-lsx-currencies-frontend.php' );
+			if(class_exists('LSX_Currencies_Frontend')){
+				$this->frontend = new LSX_Currencies_Frontend();
+			}
 		}
 		/**
 		 * Get the options
@@ -169,5 +174,4 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 			return '<span class="flag-icon flag-icon-'.$this->flag_relations[$key].'"></span> ';
 		}		
 	}
-	new LSX_Currencies();
 }
