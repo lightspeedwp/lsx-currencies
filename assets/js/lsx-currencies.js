@@ -1,23 +1,23 @@
 var lsx_Money = fx.noConflict();
-LSX_Currency = {
+LSX_Currencies = {
 	initThis: function() {
 		//Set the money rates and the base,   we will always be converting first from the base.
-		lsx_Money.rates           = lsx_currency_params.rates;
+		lsx_Money.rates           = lsx_currencies_params.rates;
 		lsx_Money.base            = 'USD';
 
-		this.current_currency = lsx_currency_params.current_currency;
+		this.current_currency = lsx_currencies_params.current_currency;
 
 		//If the user has a previous selection, then change the amounts to that base
-		if(this.current_currency != lsx_currency_params.base){
-			this.checkAmounts(lsx_currency_params.base);
+		if(this.current_currency != lsx_currencies_params.base){
+			this.checkAmounts(lsx_currencies_params.base);
 		}
 		this.watchMenuSwitcher();
 	},
 
 	checkAmounts: function(from) {
 		var $this = this;
-		if('undefined' != jQuery('.amount.lsx-currency')){
-			jQuery('.amount.lsx-currency').each(function() {
+		if('undefined' != jQuery('.amount.lsx-currencies')){
+			jQuery('.amount.lsx-currencies').each(function() {
 
 				var amount = '';
 				var new_price = '';
@@ -27,7 +27,7 @@ LSX_Currency = {
 				if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
 					new_price = strict_amount;
 				}else{
-					new_price = $this.switchCurrency(lsx_currency_params.base,$this.current_currency,jQuery(this).find('.value').attr('data-price-'+lsx_currency_params.base));
+					new_price = $this.switchCurrency(lsx_currencies_params.base,$this.current_currency,jQuery(this).find('.value').attr('data-price-'+lsx_currencies_params.base));
 				}
 				jQuery(this).find('.value').html(new_price);
 				console.log(from);
@@ -38,7 +38,7 @@ LSX_Currency = {
 
 	switchCurrency: function(from,to,amount) {
 		console.log(from,to);
-		console.log(lsx_currency_params);
+		console.log(lsx_currencies_params);
 
 		//if the current from price is not the base
 
@@ -66,7 +66,7 @@ LSX_Currency = {
 
 				//Check if the currency flag should display
 				var currency_flag = '';
-				if(true == lsx_currency_params.flags){
+				if(true == lsx_currencies_params.flags){
 					currency_flag = '<span class="flag-icon flag-icon-'+currency_class.substring(0, 2)+'"></span> ';
 				}
 				
@@ -81,7 +81,7 @@ LSX_Currency = {
 			}
 
 				//Set the COokie with your currency selection
-			Cookies.set('lsx_currency_choice', $this.current_currency);
+			Cookies.set('lsx_currencies_choice', $this.current_currency);
 			//Cycle through the divs and convert the amounts.
 			$this.checkAmounts(from,$this.current_currency);
 		});
@@ -95,5 +95,5 @@ LSX_Currency = {
 };
 
 jQuery(document).ready( function() {
-	LSX_Currency.initThis();
+	LSX_Currencies.initThis();
 });

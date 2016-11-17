@@ -2,7 +2,7 @@
 /**
  * LSX Currency Main Class
  */
-class LSX_Currency_Admin extends LSX_Currency{	
+class LSX_Currencies_Admin extends LSX_Currencies{	
 
 	/**
 	 * Constructor
@@ -21,7 +21,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 	?>	
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Settings',$this->plugin_slug); ?></h3></label>			
+			<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Settings','lsx-currencies'); ?></h3></label>			
 			</th>
 		</tr>
 		<tr class="form-field">
@@ -30,12 +30,12 @@ class LSX_Currency_Admin extends LSX_Currency{
 			</th>
 			<td>
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
-				<br /><small><?php _e('Get your free API key here',$this->plugin_slug); ?> - <a target="_blank" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
+				<br /><small><?php esc_html_e('Get your free API key here','lsx-currencies'); ?> - <a target="_blank" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
 			</td>
 		</tr>			
 		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
 			<th scope="row">
-				<label for="currency"><?php _e('Base Currency',$this->plugin_slug);?></label>
+				<label for="currency"><?php esc_html_e('Base Currency','lsx-currencies');?></label>
 			</th>
 			<td>
 				<select value="{{currency}}" name="currency">
@@ -53,7 +53,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 		</tr>
 		<tr data-trigger="currency" class="lsx-checkbox-action form-field-wrap">
 			<th scope="row">
-				<label for="modules"><?php _e('Additional Currencies',$this->plugin_slug);?></label>
+				<label for="modules"><?php esc_html_e('Additional Currencies','lsx-currencies');?></label>
 			</th>
 			<td><ul>
 			<?php 	
@@ -76,22 +76,22 @@ class LSX_Currency_Admin extends LSX_Currency{
 		</tr> 
 		<tr class="form-field">
 			<th scope="row">
-				<label for="multi_price"><?php _e('Enable Multiple Prices',$this->plugin_slug); ?></label>
+				<label for="multi_price"><?php esc_html_e('Enable Multiple Prices','lsx-currencies'); ?></label>
 			</th>
 			<td>
 				<input type="checkbox" {{#if multi_price}} checked="checked" {{/if}} name="multi_price" />
-				<small><?php _e('Allowing you to add specific prices per active currency.',$this->plugin_slug); ?></small>
+				<small><?php esc_html_e('Allowing you to add specific prices per active currency.','lsx-currencies'); ?></small>
 			</td>
 		</tr>	
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-			<label><h3 style="margin-bottom:0px;"><?php _e('Currency Switcher',$this->plugin_slug); ?></h3></label>			
+			<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Switcher','lsx-currencies'); ?></h3></label>			
 			</th>
 		</tr>	
 
 		<tr class="form-field-wrap">
 			<th scope="row">
-				<label for="currency_menu_switcher"><?php _e('Display in Menu',$this->plugin_slug); ?></label>
+				<label for="currency_menu_switcher"><?php esc_html_e('Display in Menu','lsx-currencies'); ?></label>
 			</th>
 			<td><ul>
 			<?php 	
@@ -108,7 +108,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 					</li>
 				<?php }
 			}else{
-				echo '<li><p>'.__('You have no menus set up.',$this->plugin_slug).'</p></li>';
+				echo '<li><p>'.esc_html__('You have no menus set up.','lsx-currencies').'</p></li>';
 			}
 			?>
 			</ul></td>
@@ -116,30 +116,30 @@ class LSX_Currency_Admin extends LSX_Currency{
 
 		<tr class="form-field">
 			<th scope="row">
-				<label for="display_flags"><?php _e('Display Flags',$this->plugin_slug); ?></label>
+				<label for="display_flags"><?php esc_html_e('Display Flags','lsx-currencies'); ?></label>
 			</th>
 			<td>
 				<input type="checkbox" {{#if display_flags}} checked="checked" {{/if}} name="display_flags" />
-				<small><?php _e('Displays a small flag in front of the name.',$this->plugin_slug); ?></small>
+				<small><?php esc_html_e('Displays a small flag in front of the name.','lsx-currencies'); ?></small>
 			</td>
 		</tr>
 		<tr class="form-field">
 			<th scope="row">
-				<label for="flag_position"><?php _e('Flag Position',$this->plugin_slug); ?></label>
+				<label for="flag_position"><?php esc_html_e('Flag Position','lsx-currencies'); ?></label>
 			</th>
 			<td>
 				<input type="checkbox" {{#if flag_position}} checked="checked" {{/if}} name="flag_position" />
-				<small><?php _e('This moves the flag to the right (after the symbol).',$this->plugin_slug); ?></small>
+				<small><?php esc_html_e('This moves the flag to the right (after the symbol).','lsx-currencies'); ?></small>
 			</td>
 		</tr>				
 
 		<tr class="form-field">
 			<th scope="row">
-				<label for="currency_switcher_position"><?php _e('Symbol Position',$this->plugin_slug); ?></label>
+				<label for="currency_switcher_position"><?php esc_html_e('Symbol Position','lsx-currencies'); ?></label>
 			</th>
 			<td>
 				<input type="checkbox" {{#if currency_switcher_position}} checked="checked" {{/if}} name="currency_switcher_position" />
-				<small><?php _e('This moves the symbol for the switcher to the left (before the flag).',$this->plugin_slug); ?></small>
+				<small><?php esc_html_e('This moves the symbol for the switcher to the left (before the flag).','lsx-currencies'); ?></small>
 			</td>
 		</tr>
 		<?php	
@@ -198,7 +198,7 @@ class LSX_Currency_Admin extends LSX_Currency{
 			}
 
 			return array(
-				array( 'id' => 'price_title',  'name' => __('Prices',$this->plugin_slug), 'type' => 'title' ),
+				array( 'id' => 'price_title',  'name' => esc_html__('Prices','lsx-currencies'), 'type' => 'title' ),
 				array( 'id' => 'price',  'name' => 'Base Price ('.$this->base_currency.')', 'type' => 'text' ),
 				array(
 						'id' => 'additional_prices',
@@ -218,4 +218,4 @@ class LSX_Currency_Admin extends LSX_Currency{
 		}	
 	}	
 }
-new LSX_Currency_Admin();
+new LSX_Currencies_Admin();

@@ -1,12 +1,12 @@
 <?php
-if (!class_exists( 'LSX_Currency' ) ) {
+if (!class_exists( 'LSX_Currencies' ) ) {
 	/**
 	 * LSX Currency Main Class
 	 */
-	class LSX_Currency {
+	class LSX_Currencies {
 		
 		/** @var string */
-		public $plugin_slug = 'lsx-currency';
+		public $plugin_slug = 'lsx-currencies';
 
 		/** @var array */
 		public $options = false;	
@@ -46,45 +46,45 @@ if (!class_exists( 'LSX_Currency' ) ) {
 		 */
 		public function __construct() {
 			$this->set_defaults();
-			require_once(LSX_CURRENCY_PATH . '/classes/class-currency-admin.php');
-			require_once(LSX_CURRENCY_PATH . '/classes/class-currency-frontend.php');
+			require_once(LSX_CURRENCY_PATH . '/classes/class-currencies-admin.php');
+			require_once(LSX_CURRENCY_PATH . '/classes/class-currencies-frontend.php');
 		}
 		/**
 		 * Get the options
 		 */
 		public function set_defaults() {
 			$this->available_currencies = array(
-				'AUD'	=> __('Australian Dollar',$this->plugin_slug),
-				'BRL'	=> __('Brazilian Real',$this->plugin_slug),
-				'GBP'	=> __('British Pound Sterling',$this->plugin_slug),
-				'BWP'	=> __('Botswana Pula',$this->plugin_slug),
-				'CAD'	=> __('Canadian Dollar',$this->plugin_slug),
-				'CNY'	=> __('Chinese Yuan',$this->plugin_slug),
-				'EUR'	=> __('Euro',$this->plugin_slug),
-				'HKD'	=> __('Hong Kong Dollar',$this->plugin_slug),
-				'INR'	=> __('Indian Rupee',$this->plugin_slug),
-				'IDR'	=> __('Indonesia Rupiah',$this->plugin_slug),
-				'ILS'	=> __('Israeli Shekel',$this->plugin_slug),
-				'JPY'	=> __('Japanese Yen',$this->plugin_slug),
-				'KES'	=> __('Kenyan Shilling',$this->plugin_slug),
-				'LAK'	=> __('Laos Kip',$this->plugin_slug),
-				'MWK'	=> __('Malawian Kwacha',$this->plugin_slug),
-				'MYR'	=> __('Malaysia Ringgit',$this->plugin_slug),
-				'MZN'	=> __('Mozambique Metical',$this->plugin_slug),				
-				'NAD'	=> __('Namibian Dollar',$this->plugin_slug),
-				'NZD'	=> __('New Zealand Dollar',$this->plugin_slug),
-				'NOK'	=> __('Norwegian Krone',$this->plugin_slug),
-				'NZD'	=> __('New Zealand Dollar',$this->plugin_slug),
-				'RUB'	=> __('Russian Ruble',$this->plugin_slug),				
-				'SGD'	=> __('Singapore Dollar',$this->plugin_slug),
-				'ZAR'	=> __('South African Rand',$this->plugin_slug),
-				'SEK'	=> __('Swedish Krona',$this->plugin_slug),
-				'CHF'	=> __('Swiss Franc',$this->plugin_slug),
-				'TZS'	=> __('Tanzania Shilling',$this->plugin_slug),				
-				'USD'	=> __('United States Dollar',$this->plugin_slug),
-				'AED'	=> __('United Arab Emirates Dirham',$this->plugin_slug),
-				'ZMW'	=> __('Zambian Kwacha',$this->plugin_slug),
-				'ZWL'	=> __('Zimbabwean Dollar',$this->plugin_slug)
+				'AUD'	=> esc_html__('Australian Dollar','lsx-currencies'),
+				'BRL'	=> esc_html__('Brazilian Real','lsx-currencies'),
+				'GBP'	=> esc_html__('British Pound Sterling','lsx-currencies'),
+				'BWP'	=> esc_html__('Botswana Pula','lsx-currencies'),
+				'CAD'	=> esc_html__('Canadian Dollar','lsx-currencies'),
+				'CNY'	=> esc_html__('Chinese Yuan','lsx-currencies'),
+				'EUR'	=> esc_html__('Euro','lsx-currencies'),
+				'HKD'	=> esc_html__('Hong Kong Dollar','lsx-currencies'),
+				'INR'	=> esc_html__('Indian Rupee','lsx-currencies'),
+				'IDR'	=> esc_html__('Indonesia Rupiah','lsx-currencies'),
+				'ILS'	=> esc_html__('Israeli Shekel','lsx-currencies'),
+				'JPY'	=> esc_html__('Japanese Yen','lsx-currencies'),
+				'KES'	=> esc_html__('Kenyan Shilling','lsx-currencies'),
+				'LAK'	=> esc_html__('Laos Kip','lsx-currencies'),
+				'MWK'	=> esc_html__('Malawian Kwacha','lsx-currencies'),
+				'MYR'	=> esc_html__('Malaysia Ringgit','lsx-currencies'),
+				'MZN'	=> esc_html__('Mozambique Metical','lsx-currencies'),				
+				'NAD'	=> esc_html__('Namibian Dollar','lsx-currencies'),
+				'NZD'	=> esc_html__('New Zealand Dollar','lsx-currencies'),
+				'NOK'	=> esc_html__('Norwegian Krone','lsx-currencies'),
+				'NZD'	=> esc_html__('New Zealand Dollar','lsx-currencies'),
+				'RUB'	=> esc_html__('Russian Ruble','lsx-currencies'),				
+				'SGD'	=> esc_html__('Singapore Dollar','lsx-currencies'),
+				'ZAR'	=> esc_html__('South African Rand','lsx-currencies'),
+				'SEK'	=> esc_html__('Swedish Krona','lsx-currencies'),
+				'CHF'	=> esc_html__('Swiss Franc','lsx-currencies'),
+				'TZS'	=> esc_html__('Tanzania Shilling','lsx-currencies'),				
+				'USD'	=> esc_html__('United States Dollar','lsx-currencies'),
+				'AED'	=> esc_html__('United Arab Emirates Dirham','lsx-currencies'),
+				'ZMW'	=> esc_html__('Zambian Kwacha','lsx-currencies'),
+				'ZWL'	=> esc_html__('Zimbabwean Dollar','lsx-currencies')
 			);	
 			$this->flag_relations = array(
 				'AUD'	=> 'au',
@@ -169,5 +169,5 @@ if (!class_exists( 'LSX_Currency' ) ) {
 			return '<span class="flag-icon flag-icon-'.$this->flag_relations[$key].'"></span> ';
 		}		
 	}
-	new LSX_Currency();
+	new LSX_Currencies();
 }

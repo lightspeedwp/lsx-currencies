@@ -1,1 +1,1 @@
-# lsx-currency
+# lsx-currencies

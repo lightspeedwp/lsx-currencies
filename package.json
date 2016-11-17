@@ -1,30 +1,31 @@
 {
-  "name": "lsx-currency",
-  "version": "1.0.0",
-  "description": "Multi Currency for LSX",
+  "name": "lsx-currencies",
+  "version": "1.1.0",
+  "description": "Multi Currencies for LSX",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/feedmycode/lsx-currency"
+    "url": "git+https://bitbucket.org/feedmycode/lsx-currencies"
   },
   "keywords": [
     "lsx",
-    "mega",
-    "menus"
+    "currency",
+    "currencies"
   ],
   "author": "LightSpeed",
   "license": "GPL2+",
   "bugs": {
-    "url": "https://bitbucket.org/feedmycode/lsx-currency/issues"
+    "url": "https://bitbucket.org/feedmycode/lsx-currencies/issues"
   },
-  "homepage": "https://bitbucket.org/feedmycode/lsx-currency#readme",
+  "homepage": "https://bitbucket.org/feedmycode/lsx-currencies#readme",
   "devDependencies": {
     "accounting": "^0.4.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
+    "gulp-gettext": "^0.3.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.2.0",
     "gulp-sort": "^2.0.0",
