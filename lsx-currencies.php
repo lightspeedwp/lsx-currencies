@@ -1,8 +1,8 @@
 <?php
 /*
- * Plugin Name: Tour Operator Currencies 
- * Plugin URI:  https://www.lsdev.biz/product/tour-operator-currencies/
- * Description: The Tour Operator Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in. 
+ * Plugin Name: LSX Currencies
+ * Plugin URI:  https://www.lsdev.biz/product/lsx-currencies
+ * Description: The LSX Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in. 
  * Version:     1.1.0
  * Author:      LightSpeed WordPress Development
  * Author URI:  https://www.lsdev.biz/
