@@ -33,6 +33,7 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 
 		/** @var boolean */
 		public $display_flags = false;
+		
 		/** @var string */
 		public $flag_position = 'left';
 
@@ -44,16 +45,24 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 		 */
 		public function __construct() {
 			$this->set_defaults();
+			add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		}
 
+		/**
+		 * After active plugins and pluggable functions are loaded
+		 */
+		public function plugins_loaded() {
 			require_once( LSX_CURRENCY_PATH . 'classes/class-lsx-currencies-admin.php' );
-			if(class_exists('LSX_Currencies_Admin')){
+			if ( class_exists( 'LSX_Currencies_Admin' ) ) {
 				$this->admin = new LSX_Currencies_Admin();
 			}
+
 			require_once( LSX_CURRENCY_PATH . 'classes/class-lsx-currencies-frontend.php' );
-			if(class_exists('LSX_Currencies_Frontend')){
+			if ( class_exists( 'LSX_Currencies_Frontend' ) ) {
 				$this->frontend = new LSX_Currencies_Frontend();
 			}
 		}
+
 		/**
 		 * Get the options
 		 */

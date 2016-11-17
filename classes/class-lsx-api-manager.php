@@ -140,7 +140,11 @@ class LSX_API_Manager {
 		add_filter('site_transient_update_plugins', array($this,'injectUpdate'));
 		add_action( "in_plugin_update_message-".$this->file,array($this,'plugin_update_message'),10,2);
 
-		add_action('lsx_framework_dashboard_tab_content_api',array($this,'dashboard_tabs'),1);
+		if ( class_exists( 'Tour_Operator' ) ) {
+			add_action( 'to_framework_dashboard_tab_content_api', array( $this, 'dashboard_tabs' ), 1 );
+		} else {
+			add_action( 'lsx_framework_dashboard_tab_content_api', array( $this, 'dashboard_tabs' ), 1 );
+		}
 		
 		add_action('wp_ajax_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));	
 		add_action('wp_ajax_nopriv_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));

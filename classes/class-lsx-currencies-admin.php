@@ -11,8 +11,13 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 		$this->set_defaults();
 		add_action( 'init', array( $this, 'create_settings_page'), 200 );
 
-		add_action( 'lsx_framework_dashboard_tab_content', array($this, 'settings' ), 200 );
-		add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
+		if ( class_exists( 'Tour_Operator' ) ) {
+			add_action( 'to_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
+			add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
+		} else {
+			add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
+			add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
+		}
 		
 		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
 	}
