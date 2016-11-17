@@ -49,30 +49,26 @@ class LSX_Currencies_Frontend extends LSX_Currencies{
 	 * Enques the assets
 	 */
 	public function assets() {
-
-		if(defined('WP_DEBUG') && true === WP_DEBUG){
-			$min='';
-		}else{
+		if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
+			$min = '';
+		 }else {
 			$min = '.min';
 		}
 
-		wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCY_URL.'/assets/js/money'.$min.'.js' , array( 'jquery' ), LSX_CURRENCY_VER, true );
-		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCY_URL.'/assets/js/accounting'.$min.'.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
-		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCY_URL.'/assets/js/cookie'.$min.'.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
-		wp_enqueue_script( 'lsx_currencies', LSX_CURRENCY_URL.'/assets/js/lsx-currencies'.$min.'.js', array(
-			'jquery',
-			'lsx-moneyjs',
-			'lsx-accountingjs',
-			'lsx-jquery-cookie'
-		), LSX_CURRENCY_VER, true );
+		wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCY_URL . 'assets/js/money' . $min . '.js' , array( 'jquery' ), LSX_CURRENCY_VER, true );
+		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCY_URL . 'assets/js/accounting' . $min . '.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
+		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCY_URL . 'assets/js/cookie' . $min . '.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
+		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCY_URL . 'assets/js/lsx-currencies' . $min . '.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCY_VER, true );
 
 		$params = apply_filters( 'lsx_currencies_js_params', array(
-			'current_currency'       => $this->current_currency,
-			'rates'                  => $this->rates,
-			'base'                   => $this->base_currency,
-			'flags'					 => $this->display_flags,
+			'current_currency' => $this->current_currency,
+			'rates'            => $this->rates,
+			'base'             => $this->base_currency,
+			'flags'            => $this->display_flags,
 		));
-		wp_localize_script( 'lsx_currencies', 'lsx_currencies_params', $params );		
+		wp_localize_script( 'lsx-currencies', 'lsx_currencies_params', $params );
+
+		wp_enqueue_style( 'lsx-currencies', LSX_CURRENCY_URL . 'assets/css/lsx-currencies.css', array(), LSX_CURRENCY_VER );
 	}
 
 	/**

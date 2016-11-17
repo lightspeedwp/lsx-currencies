@@ -16,199 +16,199 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/class-lsx-currencies-admin.php:52, includes/settings/general.php:12
+#: classes/class-lsx-currencies-admin.php:50, includes/settings/general.php:12
 msgid "General"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:60, classes/class-lsx-currencies-admin.php:61
+#: classes/class-lsx-currencies-admin.php:58, classes/class-lsx-currencies-admin.php:59
 msgid "LSX Settings"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:65
+#: classes/class-lsx-currencies-admin.php:63
 msgid "Save Changes"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:79
+#: classes/class-lsx-currencies-admin.php:76
 msgid "Currency Settings"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:88
+#: classes/class-lsx-currencies-admin.php:85
 msgid "Get your free API key here"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:93
+#: classes/class-lsx-currencies-admin.php:90
 msgid "Base Currency"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:111
+#: classes/class-lsx-currencies-admin.php:108
 msgid "Additional Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:134
+#: classes/class-lsx-currencies-admin.php:131
 msgid "Enable Multiple Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:138
+#: classes/class-lsx-currencies-admin.php:135
 msgid "Allowing you to add specific prices per active currency."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:143
+#: classes/class-lsx-currencies-admin.php:140
 msgid "Currency Switcher"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:149
+#: classes/class-lsx-currencies-admin.php:146
 msgid "Display in Menu"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:166
+#: classes/class-lsx-currencies-admin.php:163
 msgid "You have no menus set up."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:174
+#: classes/class-lsx-currencies-admin.php:171
 msgid "Display Flags"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:178
+#: classes/class-lsx-currencies-admin.php:175
 msgid "Displays a small flag in front of the name."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:183
+#: classes/class-lsx-currencies-admin.php:180
 msgid "Flag Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:187
+#: classes/class-lsx-currencies-admin.php:184
 msgid "This moves the flag to the right (after the symbol)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:193
+#: classes/class-lsx-currencies-admin.php:190
 msgid "Symbol Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:197
+#: classes/class-lsx-currencies-admin.php:194
 msgid "This moves the symbol for the switcher to the left (before the flag)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:256
+#: classes/class-lsx-currencies-admin.php:253
 msgid "Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:70
+#: classes/class-lsx-currencies.php:71
 msgid "Australian Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:71
+#: classes/class-lsx-currencies.php:72
 msgid "Brazilian Real"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:72
+#: classes/class-lsx-currencies.php:73
 msgid "British Pound Sterling"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:73
+#: classes/class-lsx-currencies.php:74
 msgid "Botswana Pula"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:74
+#: classes/class-lsx-currencies.php:75
 msgid "Canadian Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:75
+#: classes/class-lsx-currencies.php:76
 msgid "Chinese Yuan"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:76
+#: classes/class-lsx-currencies.php:77
 msgid "Euro"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:77
+#: classes/class-lsx-currencies.php:78
 msgid "Hong Kong Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:78
+#: classes/class-lsx-currencies.php:79
 msgid "Indian Rupee"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:79
+#: classes/class-lsx-currencies.php:80
 msgid "Indonesia Rupiah"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:80
+#: classes/class-lsx-currencies.php:81
 msgid "Israeli Shekel"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:81
+#: classes/class-lsx-currencies.php:82
 msgid "Japanese Yen"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:82
+#: classes/class-lsx-currencies.php:83
 msgid "Kenyan Shilling"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:83
+#: classes/class-lsx-currencies.php:84
 msgid "Laos Kip"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:84
+#: classes/class-lsx-currencies.php:85
 msgid "Malawian Kwacha"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:85
+#: classes/class-lsx-currencies.php:86
 msgid "Malaysia Ringgit"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:86
+#: classes/class-lsx-currencies.php:87
 msgid "Mozambique Metical"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:87
+#: classes/class-lsx-currencies.php:88
 msgid "Namibian Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:88, classes/class-lsx-currencies.php:90
+#: classes/class-lsx-currencies.php:89, classes/class-lsx-currencies.php:91
 msgid "New Zealand Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:89
+#: classes/class-lsx-currencies.php:90
 msgid "Norwegian Krone"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:91
+#: classes/class-lsx-currencies.php:92
 msgid "Russian Ruble"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:92
+#: classes/class-lsx-currencies.php:93
 msgid "Singapore Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:93
+#: classes/class-lsx-currencies.php:94
 msgid "South African Rand"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:94
+#: classes/class-lsx-currencies.php:95
 msgid "Swedish Krona"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:95
+#: classes/class-lsx-currencies.php:96
 msgid "Swiss Franc"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:96
+#: classes/class-lsx-currencies.php:97
 msgid "Tanzania Shilling"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:97
+#: classes/class-lsx-currencies.php:98
 msgid "United States Dollar"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:98
+#: classes/class-lsx-currencies.php:99
 msgid "United Arab Emirates Dirham"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:99
+#: classes/class-lsx-currencies.php:100
 msgid "Zambian Kwacha"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:100
+#: classes/class-lsx-currencies.php:101
 msgid "Zimbabwean Dollar"
 msgstr ""
 

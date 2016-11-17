@@ -1,0 +1,82 @@
+/*
+ * lsx-currencies.css
+ */
+header.banner #top-menu .top-menu ul li.menu-item-currency a.current:before {
+  display: inline-block;
+  font-family: fontawesome;
+  font-weight: normal;
+  margin-right: 5px;
+  content: '\f0d6'; }
+
+header.banner #top-menu .top-menu ul li.menu-item-currency .caret {
+  margin-left: 5px; }
+
+.menu-item-currency .currency-icon:after {
+  margin-left: 3px;
+  margin-right: 3px; }
+
+.menu-item-currency .currency-icon.usd:after, .menu-item-currency .currency-icon.nad:after, .menu-item-currency .currency-icon.cad:after, .menu-item-currency .currency-icon.hkd:after, .menu-item-currency .currency-icon.sgd:after, .menu-item-currency .currency-icon.nzd:after, .menu-item-currency .currency-icon.aud:after {
+  content: '\0024'; }
+
+.menu-item-currency .currency-icon.eur:after {
+  content: '\20AC'; }
+
+.menu-item-currency .currency-icon.gbp:after {
+  content: '\00A3'; }
+
+.menu-item-currency .currency-icon.zar:after {
+  content: '\0052'; }
+
+.menu-item-currency .currency-icon.brl:after {
+  content: '\0052\0024'; }
+
+.menu-item-currency .currency-icon.bwp:after {
+  content: '\0050'; }
+
+.menu-item-currency .currency-icon.cny:after, .menu-item-currency .currency-icon.jpy:after {
+  content: '\00A5'; }
+
+.menu-item-currency .currency-icon.inr:after {
+  content: '\20B9'; }
+
+.menu-item-currency .currency-icon.idr:after {
+  content: '\20B9'; }
+
+.menu-item-currency .currency-icon.ils:after {
+  content: '\20AA'; }
+
+.menu-item-currency .currency-icon.kes:after {
+  content: '\004b'; }
+
+.menu-item-currency .currency-icon.lak:after {
+  content: '\20ad'; }
+
+.menu-item-currency .currency-icon.mwk:after {
+  content: '\004d\004b'; }
+
+.menu-item-currency .currency-icon.myr:after {
+  content: '\0052\004d'; }
+
+.menu-item-currency .currency-icon.mzn:after {
+  content: '\004d\0054'; }
+
+.menu-item-currency .currency-icon.nok:after, .menu-item-currency .currency-icon.sek:after {
+  content: '\006b\0072'; }
+
+.menu-item-currency .currency-icon.rub:after {
+  content: '\0440\0443\0431'; }
+
+.menu-item-currency .currency-icon.chf:after {
+  content: '\0043\0048\0046'; }
+
+.menu-item-currency .currency-icon.tzs:after {
+  content: '\0054\0053\0068'; }
+
+.menu-item-currency .currency-icon.aed:after {
+  content: '\062f\002e\0625'; }
+
+.menu-item-currency .currency-icon.zmw:after {
+  content: '\005a\006b'; }
+
+.menu-item-currency .currency-icon.zwl:after {
+  content: '\005a\0024'; }
