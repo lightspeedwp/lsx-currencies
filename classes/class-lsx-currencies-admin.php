@@ -27,9 +27,10 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 			}
 
 			if ( class_exists( 'Tour_Operator' ) ) {
-				add_action( 'to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 20 );
+				add_action( 'to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 20,1 );
 				add_action( 'to_framework_display_tab_content', array( $this, 'display_settings' ), 20 );
 				add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
+				add_action( 'to_framework_api_tab_content', array( $this, 'api_settings' ), 20,1 );
 			} else {
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 20 );
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'display_settings' ), 20 );
@@ -74,9 +75,26 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	 * @param $tab string
 	 * @return null
 	 */
-	public function general_settings($tab='general') {
-			$this->currency_heading();
+	public function api_settings($tab='general')
+	{
+		if ('api' !== $tab) {
+			$this->currency_api_heading();
 			$this->api_key_field();
+		}
+	}
+
+	/**
+	 * Outputs the dashboard tabs settings
+	 *
+	 * @param $tab string
+	 * @return null
+	 */
+	public function general_settings($tab='general') {
+		if ( class_exists( 'Tour_Operator' ) && 'currency_switcher' !== $tab ) { return false; }
+			if ( !class_exists( 'Tour_Operator' )) {
+				$this->currency_heading();
+				$this->api_key_field();
+			}
 			$this->base_currency_field();
 			$this->additional_currencies_field();
 			$this->enable_multiple_prices_field();
@@ -98,14 +116,24 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 		$this->flag_position_field();
 		$this->symbol_position_field();
 	}
+	/**
+	 * Outputs the currency heading
+	 */
+	public function currency_api_heading() { ?>
+		<tr class="form-field banner-wrap">
+			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
+				<h4 style="margin-bottom:0px;"><?php esc_html_e('LSX Currencies','lsx-currencies'); ?></h4>
+			</th>
+		</tr>
+	<?php }
 
 	/**
 	 * Outputs the currency heading
 	 */
-	public function currency_heading() { ?>
+	public function currency_heading($tag='h3') { ?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-				<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Settings','lsx-currencies'); ?></h3></label>
+				<h3 style="margin-bottom:0px;"><label><?php esc_html_e('Currency Settings','lsx-currencies'); ?></label></h3>
 			</th>
 		</tr>
 	<?php }
@@ -115,7 +143,7 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	public function api_key_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
-				<label for="openexchange_api">Open Exchange Rate API Key</label>
+				<i class="dashicons-before dashicons-admin-network"></i><label for="openexchange_api"> <?php _e( 'Key', 'to-maps' ); ?></label>
 			</th>
 			<td>
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
