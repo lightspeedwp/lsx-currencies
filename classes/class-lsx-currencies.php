@@ -156,8 +156,12 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 					$this->multi_prices = true;
 				}	
 
-				if(isset($this->options['general']['openexchange_api']) && '' !== $this->options['general']['openexchange_api']){
-					$this->app_id = $this->options['general']['openexchange_api'];
+				$tab = 'general';
+				if ( class_exists( 'Tour_Operator' ) ) {
+					$tab = 'api';
+				}
+				if(isset($this->options[$tab]['openexchange_api']) && '' !== $this->options[$tab]['openexchange_api']){
+					$this->app_id = $this->options[$tab]['openexchange_api'];
 				}
 
 
