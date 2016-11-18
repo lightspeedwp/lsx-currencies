@@ -11,14 +11,6 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 		$this->set_defaults();
 		add_action( 'init', array( $this, 'create_settings_page'), 200 );
 
-		if ( class_exists( 'Tour_Operator' ) ) {
-			add_action( 'to_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
-			add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
-		} else {
-			add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
-			add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
-		}
-		
 		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
 	}
 
@@ -32,6 +24,14 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				$pages = $this->settings_page_array();
 				$uix = \lsx\ui\uix::get_instance( 'lsx' );
 				$uix->register_pages( $pages );
+			}
+
+			if ( class_exists( 'Tour_Operator' ) ) {
+				add_action( 'to_framework_dashboard_tab_content', array( $this, 'settings' ), 80 );
+				add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
+			} else {
+				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
+				add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
 			}
 		}
 	}
@@ -70,12 +70,31 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 	 * Outputs the dashboard tabs settings
 	 */
 	public function settings() {
-	?>	
+			$this->currency_heading();
+			$this->api_key_field();
+			$this->base_currency_field();
+			$this->additional_currencies_field();
+			$this->enable_multiple_prices_field();
+			$this->currency_switcher_heading();
+			$this->display_in_menu_field();
+			$this->display_flags_field();
+			$this->flag_position_field();
+			$this->symbol_position_field();
+	}
+	/**
+	 * Outputs the currency heading
+	 */
+	public function currency_heading() { ?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-			<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Settings','lsx-currencies'); ?></h3></label>			
+				<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Settings','lsx-currencies'); ?></h3></label>
 			</th>
 		</tr>
+	<?php }
+	/**
+	 * Outputs the api key text field
+	 */
+	public function api_key_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="openexchange_api">Open Exchange Rate API Key</label>
@@ -84,7 +103,12 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
 				<br /><small><?php esc_html_e('Get your free API key here','lsx-currencies'); ?> - <a target="_blank" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
 			</td>
-		</tr>			
+		</tr>
+	<?php }
+	/**
+	 * Outputs the base currency drop down
+	 */
+	public function base_currency_field() { ?>
 		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
 			<th scope="row">
 				<label for="currency"><?php esc_html_e('Base Currency','lsx-currencies');?></label>
@@ -92,7 +116,7 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 			<td>
 				<select value="{{currency}}" name="currency">
 					<?php
-					foreach($this->available_currencies as $currency_id => $currency_label ){ 
+					foreach($this->available_currencies as $currency_id => $currency_label ){
 
 						$selected = '';
 						if($currency_id === $this->base_currency){
@@ -103,29 +127,39 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				</select>
 			</td>
 		</tr>
+	<?php }
+	/**
+	 * Outputs the additional currencies checkboxes
+	 */
+	public function additional_currencies_field() { ?>
 		<tr data-trigger="currency" class="lsx-checkbox-action form-field-wrap">
 			<th scope="row">
 				<label for="modules"><?php esc_html_e('Additional Currencies','lsx-currencies');?></label>
 			</th>
 			<td><ul>
-			<?php 	
-			foreach($this->available_currencies as $slug => $label){
-				$checked = $hidden = '';
-				if(array_key_exists($slug,$this->additional_currencies) || $slug === $this->base_currency){
-					$checked='checked="checked"';
-				}
-				
-				if($slug === $this->base_currency){
-					$hidden = 'style="display:none;" class="hidden"';
-				}
-				?>
-				<li <?php echo $hidden; ?>>
-					<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag($slug).$label; ?></label> 
-				</li>
-			<?php }
-			?>
-			</ul></td>
-		</tr> 
+					<?php
+					foreach($this->available_currencies as $slug => $label){
+						$checked = $hidden = '';
+						if(array_key_exists($slug,$this->additional_currencies) || $slug === $this->base_currency){
+							$checked='checked="checked"';
+						}
+
+						if($slug === $this->base_currency){
+							$hidden = 'style="display:none;" class="hidden"';
+						}
+						?>
+						<li <?php echo $hidden; ?>>
+							<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag($slug).$label; ?></label>
+						</li>
+					<?php }
+					?>
+				</ul></td>
+		</tr>
+	<?php }
+	/**
+	 * Outputs the multiple prices checkbox
+	 */
+	public function enable_multiple_prices_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="multi_price"><?php esc_html_e('Enable Multiple Prices','lsx-currencies'); ?></label>
@@ -134,38 +168,51 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				<input type="checkbox" {{#if multi_price}} checked="checked" {{/if}} name="multi_price" />
 				<small><?php esc_html_e('Allowing you to add specific prices per active currency.','lsx-currencies'); ?></small>
 			</td>
-		</tr>	
+		</tr>
+	<?php }
+	/**
+	 * Outputs the currency switcher heading
+	 */
+	public function currency_switcher_heading() { ?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-			<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Switcher','lsx-currencies'); ?></h3></label>			
+				<label><h3 style="margin-bottom:0px;"><?php esc_html_e('Currency Switcher','lsx-currencies'); ?></h3></label>
 			</th>
-		</tr>	
-
+		</tr>
+	<?php }
+	/**
+	 * Outputs the symbol position field
+	 */
+	public function display_in_menu_field() { ?>
 		<tr class="form-field-wrap">
 			<th scope="row">
 				<label for="currency_menu_switcher"><?php esc_html_e('Display in Menu','lsx-currencies'); ?></label>
 			</th>
 			<td><ul>
-			<?php 	
-			$all_menus = get_registered_nav_menus();
-			if(is_array($all_menus) && !empty($all_menus)){
-				foreach($all_menus as $slug => $label){
-					$checked = $hidden = '';
-					if(is_array($this->menus) && array_key_exists($slug,$this->menus)){
-						$checked='checked="checked"';
+					<?php
+					$all_menus = get_registered_nav_menus();
+					if(is_array($all_menus) && !empty($all_menus)){
+						foreach($all_menus as $slug => $label){
+							$checked = $hidden = '';
+							if(is_array($this->menus) && array_key_exists($slug,$this->menus)){
+								$checked='checked="checked"';
+							}
+							?>
+							<li>
+								<input type="checkbox" <?php echo $checked; ?> name="currency_menu_switcher[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label>
+							</li>
+						<?php }
+					}else{
+						echo '<li><p>'.esc_html__('You have no menus set up.','lsx-currencies').'</p></li>';
 					}
 					?>
-					<li>
-						<input type="checkbox" <?php echo $checked; ?> name="currency_menu_switcher[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label> 
-					</li>
-				<?php }
-			}else{
-				echo '<li><p>'.esc_html__('You have no menus set up.','lsx-currencies').'</p></li>';
-			}
-			?>
-			</ul></td>
+				</ul></td>
 		</tr>
-
+	<?php }
+	/**
+	 * Outputs the Display flags checkbox
+	 */
+	public function display_flags_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="display_flags"><?php esc_html_e('Display Flags','lsx-currencies'); ?></label>
@@ -175,6 +222,11 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				<small><?php esc_html_e('Displays a small flag in front of the name.','lsx-currencies'); ?></small>
 			</td>
 		</tr>
+	<?php }
+	/**
+	 * Outputs the flag position field
+	 */
+	public function flag_position_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="flag_position"><?php esc_html_e('Flag Position','lsx-currencies'); ?></label>
@@ -183,8 +235,12 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				<input type="checkbox" {{#if flag_position}} checked="checked" {{/if}} name="flag_position" />
 				<small><?php esc_html_e('This moves the flag to the right (after the symbol).','lsx-currencies'); ?></small>
 			</td>
-		</tr>				
-
+		</tr>
+	<?php }
+	/**
+	 * Outputs the symbol position field
+	 */
+	public function symbol_position_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="currency_switcher_position"><?php esc_html_e('Symbol Position','lsx-currencies'); ?></label>
@@ -194,8 +250,9 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 				<small><?php esc_html_e('This moves the symbol for the switcher to the left (before the flag).','lsx-currencies'); ?></small>
 			</td>
 		</tr>
-		<?php	
-	}
+	<?php }
+
+
 
 	/**
 	 * Outputs the dashboard tabs settings scripts
@@ -237,6 +294,8 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 		</script>
 		<?php
 	}	
+
+
 
 	/**
 	 * 
