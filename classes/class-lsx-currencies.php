@@ -132,10 +132,15 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 				'ZWL'	=> 'zw'			
 			);					
 
-			$options = get_option('_lsx_settings',false);
-			if ( false === $options ) {
-				$options = get_option('_lsx_lsx-settings',false);
+			if ( class_exists( 'Tour_Operator' ) ) {
+				$options = get_option('_to_settings',false);
+			} else {
+				$options = get_option('_lsx_settings',false);
+				if ( false === $options ) {
+					$options = get_option('_lsx_lsx-settings',false);
+				}
 			}
+			
 			if(false !== $options){
 				$this->options = $options;	
 

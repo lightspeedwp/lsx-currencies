@@ -49,10 +49,15 @@ function lsx_currencies_options_pages_filter($pages){
 add_filter('lsx_api_manager_options_pages','lsx_currencies_options_pages_filter',10,1);
 
 function lsx_currencies_api_admin_init(){
-	$options = get_option('_lsx_settings',false);
-	if ( false === $options ) {
-		$options = get_option('_lsx_lsx-settings',false);
+	if ( class_exists( 'Tour_Operator' ) ) {
+		$options = get_option('_to_settings',false);
+	} else {
+		$options = get_option('_lsx_settings',false);
+		if ( false === $options ) {
+			$options = get_option('_lsx_lsx-settings',false);
+		}
 	}
+			
 	$data = array('api_key'=>'','email'=>'');
 
 	if(false !== $options && isset($options['general'])){
