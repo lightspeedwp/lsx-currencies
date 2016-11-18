@@ -27,10 +27,12 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 			}
 
 			if ( class_exists( 'Tour_Operator' ) ) {
-				add_action( 'to_framework_dashboard_tab_content', array( $this, 'settings' ), 80 );
+				add_action( 'to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 20 );
+				add_action( 'to_framework_display_tab_content', array( $this, 'display_settings' ), 20 );
 				add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
 			} else {
-				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'settings' ), 20 );
+				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 20 );
+				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'display_settings' ), 20 );
 				add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 200 );
 			}
 		}
@@ -68,19 +70,35 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 
 	/**
 	 * Outputs the dashboard tabs settings
+	 *
+	 * @param $tab string
+	 * @return null
 	 */
-	public function settings() {
+	public function general_settings($tab='general') {
 			$this->currency_heading();
 			$this->api_key_field();
 			$this->base_currency_field();
 			$this->additional_currencies_field();
 			$this->enable_multiple_prices_field();
-			$this->currency_switcher_heading();
-			$this->display_in_menu_field();
-			$this->display_flags_field();
-			$this->flag_position_field();
-			$this->symbol_position_field();
 	}
+
+	/**
+	 * Outputs the display tabs settings
+	 *
+	 * @param $tab string
+	 * @return null
+	 */
+	public function display_settings($tab='general') {
+		if ( class_exists( 'Tour_Operator' ) && 'currency_switcher' !== $tab ) { return false; }
+		if ( !class_exists( 'Tour_Operator' )){
+			$this->currency_switcher_heading();
+		}
+		$this->display_in_menu_field();
+		$this->display_flags_field();
+		$this->flag_position_field();
+		$this->symbol_position_field();
+	}
+
 	/**
 	 * Outputs the currency heading
 	 */

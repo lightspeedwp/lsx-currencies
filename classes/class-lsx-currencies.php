@@ -86,7 +86,6 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 				'MYR'	=> esc_html__('Malaysia Ringgit','lsx-currencies'),
 				'MZN'	=> esc_html__('Mozambique Metical','lsx-currencies'),				
 				'NAD'	=> esc_html__('Namibian Dollar','lsx-currencies'),
-				'NZD'	=> esc_html__('New Zealand Dollar','lsx-currencies'),
 				'NOK'	=> esc_html__('Norwegian Krone','lsx-currencies'),
 				'NZD'	=> esc_html__('New Zealand Dollar','lsx-currencies'),
 				'RUB'	=> esc_html__('Russian Ruble','lsx-currencies'),				
@@ -154,17 +153,22 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 				}
 
 
-				if(isset($this->options['general']['currency_menu_switcher']) && is_array($this->options['general']['currency_menu_switcher']) && !empty($this->options['general']['currency_menu_switcher'])){
-					$this->menus = $this->options['general']['currency_menu_switcher'];
+				//Currency Switcher Options
+				$tab = 'general';
+				if ( class_exists( 'Tour_Operator' ) ) {
+					$tab = 'display';
+				}
+				if(isset($this->options[$tab]['currency_menu_switcher']) && is_array($this->options[$tab]['currency_menu_switcher']) && !empty($this->options[$tab]['currency_menu_switcher'])){
+					$this->menus = $this->options[$tab]['currency_menu_switcher'];
 				}
 
-				if(isset($this->options['general']['display_flags']) && 'on' === $this->options['general']['display_flags']){
+				if(isset($this->options[$tab]['display_flags']) && 'on' === $this->options[$tab]['display_flags']){
 					$this->display_flags = true;
 				}
-				if(isset($this->options['general']['flag_position']) && 'on' === $this->options['general']['flag_position']){
+				if(isset($this->options[$tab]['flag_position']) && 'on' === $this->options[$tab]['flag_position']){
 					$this->flag_position = 'right';
 				}
-				if(isset($this->options['general']['currency_switcher_position']) && 'on' === $this->options['general']['currency_switcher_position']){
+				if(isset($this->options[$tab]['currency_switcher_position']) && 'on' === $this->options[$tab]['currency_switcher_position']){
 					$this->switcher_symbol_position = 'left';
 				}					
 
