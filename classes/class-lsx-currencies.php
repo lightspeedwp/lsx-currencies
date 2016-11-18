@@ -132,7 +132,10 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 				'ZWL'	=> 'zw'			
 			);					
 
-			$options = get_option('_lsx_lsx-settings',false);
+			$options = get_option('_lsx_settings',false);
+			if ( false === $options ) {
+				$options = get_option('_lsx_lsx-settings',false);
+			}
 			if(false !== $options){
 				$this->options = $options;	
 

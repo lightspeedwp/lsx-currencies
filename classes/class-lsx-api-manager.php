@@ -126,11 +126,12 @@ class LSX_API_Manager {
 
 			$button_url = '<a data-product="'.$this->product_slug.'" style="margin-top:-5px;" href="';
 			$button_label = '';
+			$admin_url_base = class_exists( 'Tour_Operator' ) ? 'admin.php?page=to-setting' : 'themes.php?page=lsx-settings';
 			if('active' !== $this->status){
-				$button_url .= admin_url('options-general.php?page=lsx-lsx-settings&action=activate&product='.$this->product_slug);
+				$button_url .= admin_url($admin_url_base.'&action=activate&product='.$this->product_slug);
 				$button_label = 'Activate';
 			}else{
-				$button_url .= admin_url('options-general.php?page=lsx-lsx-settings&action=deactivate&product='.$this->product_slug);
+				$button_url .= admin_url($admin_url_base.'&action=deactivate&product='.$this->product_slug);
 				$button_label = 'Deactivate';
 			}
 			$button_url .= '" class="button-secondary activate">'.$button_label.'</a>';
@@ -139,9 +140,9 @@ class LSX_API_Manager {
 
 		add_filter('site_transient_update_plugins', array($this,'injectUpdate'));
 		add_action( "in_plugin_update_message-".$this->file,array($this,'plugin_update_message'),10,2);
-
+		
 		if ( class_exists( 'Tour_Operator' ) ) {
-			add_action( 'to_framework_dashboard_tab_content_api', array( $this, 'dashboard_tabs' ), 1 );
+			add_action( 'to_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
 		} else {
 			add_action( 'lsx_framework_dashboard_tab_content_api', array( $this, 'dashboard_tabs' ), 1 );
 		}
@@ -172,7 +173,9 @@ class LSX_API_Manager {
 	 *
 	 * @return    object|Module_Template    A single instance of this class.
 	 */
-	public static function dashboard_tabs() { ?>
+	public static function dashboard_tabs($tab='general') {
+		if(class_exists( 'Tour_Operator' ) && 'api' !== $tab){ return false;}
+		?>
 		<tr class="form-field <?php echo $this->product_slug; ?>-wrap">
 			<th class="<?php echo $this->product_slug; ?>_table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
 
@@ -185,9 +188,9 @@ class LSX_API_Manager {
 
 				<h4 style="margin-bottom:0px;">
 					<span><?php echo $this->product_id; ?></span> 
-					 - <span><?php echo $this->version; ?></span> 
-					 - <span style="color:<?php echo $colour;?>;"><?php echo $this->status; ?></span>
-					 - <?php echo $this->button; ?>
+					- <span><?php echo $this->version; ?></span> 
+					- <span style="color:<?php echo $colour;?>;"><?php echo $this->status; ?></span>
+					- <?php echo $this->button; ?>
 				</h4>
 
 				<?php if(is_array($this->messages)) { ?><p><small class="messages" style="font-weight:normal;"><?php echo implode('. ',$this->messages); ?></small></p><?php } ?>
@@ -240,12 +243,10 @@ class LSX_API_Manager {
 						window.location.href = url;
 					});
 					$('.page-title-action').click();
-				});				
-
-				
+				});
 			});
-		{{/script}}				
-	<?php 
+		{{/script}}
+	<?php
 	}
 
 	/**
@@ -320,12 +321,12 @@ class LSX_API_Manager {
 	 */
 	public function query($action='status') {
 		$args = array(
-				'request' 		=> $action,
-				'email' 		=> $this->email,
-				'licence_key'	=> $this->api_key,
-				'product_id' 	=> $this->product_id,
-				'platform' 		=> home_url(),
-				'instance' 		=> $this->password
+			'request' 		=> $action,
+			'email' 		=> $this->email,
+			'licence_key'	=> $this->api_key,
+			'product_id' 	=> $this->product_id,
+			'platform' 		=> home_url(),
+			'instance' 		=> $this->password
 		);
 		$target_url = esc_url_raw( $this->create_software_api_url( $args ) );
 
@@ -366,8 +367,8 @@ class LSX_API_Manager {
           default :
             $error = array( 'error' => esc_html__( 'Invalid Request', $this->product_slug ), 'code' => '100' );
             break;
-        }		
-	}	
+        }
+	}
 
 	public static function generatePassword($length = 20) {
 	    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -384,15 +385,15 @@ class LSX_API_Manager {
 	public function set_update_status(){
 		if(isset($this->status) && 'active' === $this->status){
 			$args = array(
-					'request' 			=> 'pluginupdatecheck',
-					'plugin_name' 		=> $this->product_slug.'/'.$this->file,
-					'version' 			=> $this->product_slug,
-					'activation_email' 	=> $this->email,
-					'api_key'			=> $this->api_key,
-					'product_id' 		=> $this->product_id,
-					'domain' 			=> home_url(),
-					'instance' 			=> $this->password,
-					'software_version'	=> $this->version,			
+				'request' 			=> 'pluginupdatecheck',
+				'plugin_name' 		=> $this->product_slug.'/'.$this->file,
+				'version' 			=> $this->product_slug,
+				'activation_email' 	=> $this->email,
+				'api_key'			=> $this->api_key,
+				'product_id' 		=> $this->product_id,
+				'domain' 			=> home_url(),
+				'instance' 			=> $this->password,
+				'software_version'	=> $this->version,
 			);
 			$target_url = esc_url_raw( $this->create_software_api_url( $args ) );
 			$request = wp_remote_get( $target_url );
@@ -429,11 +430,12 @@ class LSX_API_Manager {
 	 * Adds in the "settings" link for the plugins.php page
 	 */
 	public function add_action_links ( $links ) {
-		 $mylinks = array(
-		 	'<a href="' . admin_url( 'options-general.php?page=lsx-lsx-settings' ) . '">'.esc_html__('Settings',$this->product_slug).'</a>',
-		 	'<a href="https://www.lsdev.biz/documentation/lsx-tour-operator-plugin/" target="_blank">'.esc_html__('Documentation',$this->product_slug).'</a>',
-		 	'<a href="https://feedmysupport.zendesk.com/home" target="_blank">'.esc_html__('Support',$this->product_slug).'</a>',
-		 );
+		$admin_url_base = class_exists( 'Tour_Operator' ) ? 'admin.php?page=to-setting' : 'themes.php?page=lsx-settings';
+		$mylinks = array(
+			'<a href="' . admin_url( $admin_url_base ) . '">'.esc_html__('Settings',$this->product_slug).'</a>',
+			'<a href="https://www.lsdev.biz/documentation/lsx-tour-operator-plugin/" target="_blank">'.esc_html__('Documentation',$this->product_slug).'</a>',
+			'<a href="https://feedmysupport.zendesk.com/home" target="_blank">'.esc_html__('Support',$this->product_slug).'</a>',
+		);
 		return array_merge( $links, $mylinks );
 	}	
 }

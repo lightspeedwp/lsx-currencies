@@ -57,12 +57,12 @@ class LSX_Currencies_Admin extends LSX_Currencies{
 		);
 
 		return array(
-			'lsx-settings'  => array(                                              // this is the settings array. The key is the page slug
-				'page_title'  =>  esc_html__( 'LSX Settings', 'lsx-currencies' ),  // title of the page
-				'menu_title'  =>  esc_html__( 'LSX Settings', 'lsx-currencies' ),  // title seen on the menu link
+			'settings'  => array(                                              // this is the settings array. The key is the page slug
+				'page_title'  =>  esc_html__( 'Theme Options', 'lsx-currencies' ),  // title of the page
+				'menu_title'  =>  esc_html__( 'Theme Options', 'lsx-currencies' ),  // title seen on the menu link
 				'capability'  =>  'manage_options',                                // required capability to access page
 				'icon'        =>  'dashicons-book-alt',                            // Icon or image to be used on admin menu
-				'parent'      =>  'options-general.php',                           // Position priority on admin menu)
+				'parent'      =>  'themes.php',                           // Position priority on admin menu)
 				'save_button' =>  esc_html__( 'Save Changes', 'lsx-currencies' ),  // If the page required saving settings, Set the text here.
 				'tabs'        =>  $tabs,
 			),
