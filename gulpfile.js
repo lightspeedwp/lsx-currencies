@@ -4,6 +4,7 @@ gulp.task('default', function() {
 	console.log('Use the following commands');
 	console.log('--------------------------');
 	console.log('gulp sass				to compile the lsx-currencies.scss to lsx-currencies.css');
+	console.log('gulp admin-sass		to compile the lsx-currencies-admin.scss to lsx-currencies-admin.css');
 	console.log('gulp compile-sass		to compile both of the above.');
 	console.log('gulp js				to compile the lsx-currencies.js to lsx-currencies.min.js');
 	console.log('gulp compile-js		to compile both JS files above');
@@ -26,6 +27,12 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('assets/css/'));
 });
 
+gulp.task('admin-sass', function () { 
+    gulp.src('assets/css/lsx-currencies-admin.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('assets/css/'));
+});
+
 gulp.task('js', function () {
 	gulp.src('assets/js/lsx-currencies.js')
 		.pipe(concat('lsx-currencies.min.js'))
@@ -33,11 +40,12 @@ gulp.task('js', function () {
 		.pipe(gulp.dest('assets/js'));
 });
 
-gulp.task('compile-sass', (['sass']));
+gulp.task('compile-sass', (['sass', 'admin-sass']));
 gulp.task('compile-js', (['js']));
 
 gulp.task('watch', function() {
 	gulp.watch('assets/css/lsx-currencies.scss', ['sass']);
+	gulp.watch('assets/css/lsx-currencies-admin.scss', ['admin-sass']);
 	gulp.watch('assets/js/lsx-currencies.js', ['js']);
 });
 

@@ -144,7 +144,7 @@ class LSX_API_Manager {
 		if ( class_exists( 'Tour_Operator' ) ) {
 			add_action( 'to_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
 		} else {
-			add_action( 'lsx_framework_dashboard_tab_content_api', array( $this, 'dashboard_tabs' ), 1 );
+			add_action( 'lsx_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
 		}
 		
 		add_action('wp_ajax_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));	
@@ -173,8 +173,8 @@ class LSX_API_Manager {
 	 *
 	 * @return    object|Module_Template    A single instance of this class.
 	 */
-	public static function dashboard_tabs($tab='general') {
-		if(class_exists( 'Tour_Operator' ) && 'api' !== $tab){ return false;}
+	public function dashboard_tabs($tab='general') {
+		if('api' !== $tab){ return false;}
 		?>
 		<tr class="form-field <?php echo $this->product_slug; ?>-wrap">
 			<th class="<?php echo $this->product_slug; ?>_table_heading" style="padding-bottom:0px;" scope="row" colspan="2">

@@ -16,83 +16,83 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/class-lsx-currencies-admin.php:53, includes/settings/general.php:12
-msgid "General"
-msgstr ""
-
-#: classes/class-lsx-currencies-admin.php:61, classes/class-lsx-currencies-admin.php:62
+#: classes/class-lsx-currencies-admin.php:68, classes/class-lsx-currencies-admin.php:69
 msgid "Theme Options"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:66
+#: classes/class-lsx-currencies-admin.php:73
 msgid "Save Changes"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:125
-msgid "LSX Currencies"
+#: classes/class-lsx-currencies-admin.php:93
+msgid "General"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:136
-msgid "Currency Settings"
+#: classes/class-lsx-currencies-admin.php:105
+msgid "Display"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:150
-msgid "Get your free API key here"
+#: classes/class-lsx-currencies-admin.php:117
+msgid "API"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:160
+#: classes/class-lsx-currencies-admin.php:176
 msgid "Base Currency"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:183
+#: classes/class-lsx-currencies-admin.php:201
 msgid "Additional Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:211
+#: classes/class-lsx-currencies-admin.php:234
 msgid "Enable Multiple Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:215
+#: classes/class-lsx-currencies-admin.php:238
 msgid "Allowing you to add specific prices per active currency."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:225
-msgid "Currency Switcher"
-msgstr ""
-
-#: classes/class-lsx-currencies-admin.php:235
+#: classes/class-lsx-currencies-admin.php:249
 msgid "Display in Menu"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:252
+#: classes/class-lsx-currencies-admin.php:269
 msgid "You have no menus set up."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:264
+#: classes/class-lsx-currencies-admin.php:283
 msgid "Display Flags"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:268
+#: classes/class-lsx-currencies-admin.php:287
 msgid "Displays a small flag in front of the name."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:278
+#: classes/class-lsx-currencies-admin.php:298
 msgid "Flag Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:282
+#: classes/class-lsx-currencies-admin.php:302
 msgid "This moves the flag to the right (after the symbol)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:292
+#: classes/class-lsx-currencies-admin.php:313
 msgid "Symbol Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:296
+#: classes/class-lsx-currencies-admin.php:317
 msgid "This moves the symbol for the switcher to the left (before the flag)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:358
+#: classes/class-lsx-currencies-admin.php:328
+msgid "LSX Currencies"
+msgstr ""
+
+#: classes/class-lsx-currencies-admin.php:343
+msgid "Get your free API key here"
+msgstr ""
+
+#: classes/class-lsx-currencies-admin.php:410
 msgid "Prices"
 msgstr ""
 
@@ -216,6 +216,30 @@ msgstr ""
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/settings/general.php:6
-msgid "API Settings"
+#: includes/settings/api.php:3
+msgid "Settings"
+msgstr ""
+
+#: includes/settings/api.php:4
+msgid "License Keys"
+msgstr ""
+
+#: includes/settings/api.php:25
+msgid "Enter the license keys for your add-ons in the boxes below."
+msgstr ""
+
+#: includes/settings/api.php:30
+msgid "You have not installed any add-ons yet. View our list of add-ons"
+msgstr ""
+
+#: includes/settings/api.php:30
+msgid "here"
+msgstr ""
+
+#: includes/settings/display.php:4
+msgid "Placeholders"
+msgstr ""
+
+#: includes/settings/display.php:9, includes/settings/general.php:4
+msgid "Currencies"
 msgstr ""
