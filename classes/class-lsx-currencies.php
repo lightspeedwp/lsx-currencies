@@ -156,35 +156,27 @@ if (!class_exists( 'LSX_Currencies' ) ) {
 					$this->multi_prices = true;
 				}	
 
-				$tab = 'general';
-				if ( class_exists( 'Tour_Operator' ) ) {
-					$tab = 'api';
+				if(isset($this->options['api']['openexchange_api']) && '' !== $this->options['api']['openexchange_api']){
+					$this->app_id = $this->options['api']['openexchange_api'];
 				}
-				if(isset($this->options[$tab]['openexchange_api']) && '' !== $this->options[$tab]['openexchange_api']){
-					$this->app_id = $this->options[$tab]['openexchange_api'];
-				}
-
 
 				//Currency Switcher Options
-				$tab = 'general';
-				if ( class_exists( 'Tour_Operator' ) ) {
-					$tab = 'display';
-				}
-				if(isset($this->options[$tab]['currency_menu_switcher']) && is_array($this->options[$tab]['currency_menu_switcher']) && !empty($this->options[$tab]['currency_menu_switcher'])){
-					$this->menus = $this->options[$tab]['currency_menu_switcher'];
+				
+				if(isset($this->options['display']['currency_menu_switcher']) && is_array($this->options['display']['currency_menu_switcher']) && !empty($this->options['display']['currency_menu_switcher'])){
+					$this->menus = $this->options['display']['currency_menu_switcher'];
 				}
 
-				if(isset($this->options[$tab]['display_flags']) && 'on' === $this->options[$tab]['display_flags']){
+				if(isset($this->options['display']['display_flags']) && 'on' === $this->options['display']['display_flags']){
 					$this->display_flags = true;
 				}
-				if(isset($this->options[$tab]['flag_position']) && 'on' === $this->options[$tab]['flag_position']){
+
+				if(isset($this->options['display']['flag_position']) && 'on' === $this->options['display']['flag_position']){
 					$this->flag_position = 'right';
 				}
-				if(isset($this->options[$tab]['currency_switcher_position']) && 'on' === $this->options[$tab]['currency_switcher_position']){
-					$this->switcher_symbol_position = 'left';
-				}					
 
-												
+				if(isset($this->options['display']['currency_switcher_position']) && 'on' === $this->options['display']['currency_switcher_position']){
+					$this->switcher_symbol_position = 'left';
+				}							
 			}
 		}
 

@@ -60,12 +60,12 @@ function lsx_currencies_api_admin_init(){
 			
 	$data = array('api_key'=>'','email'=>'');
 
-	if(false !== $options && isset($options['general'])){
-		if(isset($options['general']['lsx-currencies_api_key']) && '' !== $options['general']['lsx-currencies_api_key']){
-			$data['api_key'] = $options['general']['lsx-currencies_api_key'];
+	if(false !== $options && isset($options['api'])){
+		if(isset($options['api']['lsx-currencies_api_key']) && '' !== $options['api']['lsx-currencies_api_key']){
+			$data['api_key'] = $options['api']['lsx-currencies_api_key'];
 		}
-		if(isset($options['general']['lsx-currencies_email']) && '' !== $options['general']['lsx-currencies_email']){
-			$data['email'] = $options['general']['lsx-currencies_email'];
+		if(isset($options['api']['lsx-currencies_email']) && '' !== $options['api']['lsx-currencies_email']){
+			$data['email'] = $options['api']['lsx-currencies_email'];
 		}		
 	}
 
