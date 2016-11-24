@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.2.0
+* LSX API Manager class updated to work with LSX Theme Options and TO Settings
+
 ### 1.1.0
 * Changed all references from CURRENCY to CURRENCIES (LSX Currencies, lsx-currencies)
 * Added plugin version to all scripts and styles included
