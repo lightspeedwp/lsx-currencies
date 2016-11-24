@@ -243,3 +243,7 @@ msgstr ""
 #: includes/settings/display.php:9, includes/settings/general.php:4
 msgid "Currencies"
 msgstr ""
+
+#: includes/settings/display.php:14
+msgid "Team"
+msgstr ""
