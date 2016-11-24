@@ -247,3 +247,7 @@ msgstr ""
 #: includes/settings/display.php:14
 msgid "Team"
 msgstr ""
+
+#: includes/settings/display.php:19
+msgid "Testimonials"
+msgstr ""
