@@ -7,6 +7,7 @@ gulp.task('default', function() {
 	console.log('gulp admin-sass		to compile the lsx-currencies-admin.scss to lsx-currencies-admin.css');
 	console.log('gulp compile-sass		to compile both of the above.');
 	console.log('gulp js				to compile the lsx-currencies.js to lsx-currencies.min.js');
+	console.log('gulp admin-js			to compile the lsx-currencies-admin.js to lsx-currencies-admin.min.js');
 	console.log('gulp compile-js		to compile both JS files above');
 	console.log('gulp watch				to continue watching all files for changes, and build when changed');
 	console.log('gulp wordpress-lang	to compile the lsx-currencies.pot, en_EN.po and en_EN.mo');
@@ -40,13 +41,21 @@ gulp.task('js', function () {
 		.pipe(gulp.dest('assets/js'));
 });
 
+gulp.task('admin-js', function () {
+	gulp.src('assets/js/lsx-currencies-admin.js')
+		.pipe(concat('lsx-currencies-admin.min.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest('assets/js'));
+});
+
 gulp.task('compile-sass', (['sass', 'admin-sass']));
-gulp.task('compile-js', (['js']));
+gulp.task('compile-js', (['js', 'admin-js']));
 
 gulp.task('watch', function() {
 	gulp.watch('assets/css/lsx-currencies.scss', ['sass']);
 	gulp.watch('assets/css/lsx-currencies-admin.scss', ['admin-sass']);
 	gulp.watch('assets/js/lsx-currencies.js', ['js']);
+	gulp.watch('assets/js/lsx-currencies-admin.js', ['admin-js']);
 });
 
 gulp.task('wordpress-pot', function () {
