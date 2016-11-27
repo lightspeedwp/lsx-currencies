@@ -49,6 +49,8 @@ function lsx_currencies_options_pages_filter($pages){
 add_filter('lsx_api_manager_options_pages','lsx_currencies_options_pages_filter',10,1);
 
 function lsx_currencies_api_admin_init(){
+	global $lsx_currencies_api_manager;
+	
 	if ( class_exists( 'Tour_Operator' ) ) {
 		$options = get_option('_to_settings',false);
 	} else {
@@ -80,7 +82,7 @@ function lsx_currencies_api_admin_init(){
 		'api_key'		=>		$data['api_key'],
 		'file'			=>		'lsx-currencies.php'
 	);
-	$lsx_to_api_manager = new LSX_API_Manager($api_array);
+	$lsx_currencies_api_manager = new LSX_API_Manager($api_array);
 }
 add_action('admin_init','lsx_currencies_api_admin_init');
 

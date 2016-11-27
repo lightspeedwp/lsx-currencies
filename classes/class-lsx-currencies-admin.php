@@ -27,7 +27,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			$min = '.min';
 		}
 
-		//wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCY_URL . 'assets/js/lsx-currencies-admin' . $min . '.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
+		wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCY_URL . 'assets/js/lsx-currencies-admin' . $min . '.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
 		wp_enqueue_style( 'lsx-currencies-admin', LSX_CURRENCY_URL . 'assets/css/lsx-currencies-admin.css', array(), LSX_CURRENCY_VER );
 	}
 
@@ -47,12 +47,10 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				add_action( 'to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
 				add_action( 'to_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-				add_action( 'to_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 100 );
 			} else {
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
 				add_action( 'lsx_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-				add_action( 'lsx_framework_dashboard_tab_bottom', array( $this, 'settings_scripts' ), 100 );
 			}
 		}
 	}
@@ -344,52 +342,6 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-
-	/**
-	 * Outputs the dashboard tabs settings scripts
-	 */
-	public function settings_scripts() {
-		?>
-		<script>
-			var LSX_Select_Checkbox = {
-				initThis: function() {
-					if ('undefined' != jQuery('.lsx-select-trigger') && 'undefined' != jQuery('.lsx-checkbox-action')) {
-						this.watchSelect();
-						//this.watchCheckbox();
-					}
-				},
-				watchSelect: function() {
-					jQuery('.lsx-select-trigger select').change(function(event){
-						event.preventDefault();
-						var name = jQuery(this).attr('name');
-						var value = jQuery(this).val();
-						jQuery('[data-trigger="'+name+'"] li.hidden input[checked="checked"]').removeAttr("checked").parents('li').show().removeClass('hidden');
-						jQuery('[data-trigger="'+name+'"] input[name="additional_currencies['+value+']"]').attr('checked','checked').parents('li').hide().addClass('hidden');
-					});
-				},
-				watchCheckbox: function() {
-					jQuery('.lsx-checkbox-action input').change(function(event){
-						event.preventDefault();
-						var name = jQuery(this).attr('data-name');
-						var value = jQuery(this).attr('data-value');
-						jQuery('[data-trigger="'+name+'"] option[selected="selected"]').removeAttr('selected');
-						jQuery('[data-trigger="'+name+'"] option[value="'+value+'"]').attr('selected','selected');
-					});
-				}
-			};	
-			jQuery(document).ready(function() {
-				LSX_Select_Checkbox.initThis();
-			});
-			jQuery(document).on('click', '.ui-tab-nav a', function(event) {
-				event.preventDefault();
-				jQuery('.ui-tab-nav a.active').removeClass('active');
-				jQuery(this).addClass('active');
-				jQuery('.ui-tab.active').removeClass('active');
-				jQuery(jQuery(this).attr('href')).addClass('active');
-			});
-		</script>
-		<?php
-	}
 
 	/**
 	 * 
