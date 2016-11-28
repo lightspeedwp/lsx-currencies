@@ -1,6 +1,12 @@
 <?php
 /**
- * LSX Currency Main Class
+ * LSX Currency Admin Class
+ *
+ * @package   LSX Currencies
+ * @author    LightSpeed
+ * @license   GPL3
+ * @link      
+ * @copyright 2016 LightSpeed
  */
 class LSX_Currencies_Admin extends LSX_Currencies {	
 

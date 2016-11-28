@@ -2,6 +2,12 @@
 if (!class_exists( 'LSX_Currencies' ) ) {
 	/**
 	 * LSX Currency Main Class
+	 *
+	 * @package   LSX Currencies
+	 * @author    LightSpeed
+	 * @license   GPL3
+	 * @link      
+	 * @copyright 2016 LightSpeed
 	 */
 	class LSX_Currencies {
 		

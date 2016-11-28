@@ -2,7 +2,7 @@
 /*
  * Plugin Name: LSX Currencies
  * Plugin URI:  https://www.lsdev.biz/product/lsx-currencies
- * Description: The LSX Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in. 
+ * Description: The LSX Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in.
  * Version:     1.0.0
  * Author:      LightSpeed WordPress Development
  * Author URI:  https://www.lsdev.biz/
@@ -44,6 +44,7 @@ register_activation_hook( __FILE__, 'lsx_currencies_activate_plugin' );
  */ 
 function lsx_currencies_options_pages_filter($pages){
 	$pages[] = 'lsx-settings';
+	$pages[] = 'to-settings';
 	return $pages;
 }
 add_filter('lsx_api_manager_options_pages','lsx_currencies_options_pages_filter',10,1);
@@ -51,12 +52,12 @@ add_filter('lsx_api_manager_options_pages','lsx_currencies_options_pages_filter'
 function lsx_currencies_api_admin_init(){
 	global $lsx_currencies_api_manager;
 	
-	if ( class_exists( 'Tour_Operator' ) ) {
-		$options = get_option('_to_settings',false);
-	} else {
-		$options = get_option('_lsx_settings',false);
-		if ( false === $options ) {
-			$options = get_option('_lsx_lsx-settings',false);
+	if(class_exists('Tour_Operator')) {
+		$options = get_option('_to_settings', false);
+	}else{
+		$options = get_option('_lsx_settings', false);
+		if (false === $options) {
+			$options = get_option('_lsx_lsx-settings', false);
 		}
 	}
 			
@@ -70,10 +71,12 @@ function lsx_currencies_api_admin_init(){
 			$data['email'] = $options['api']['lsx-currencies_email'];
 		}		
 	}
+
 	$instance = get_option( 'lsx_api_instance', false );
 	if(false === $instance){
 		$instance = LSX_API_Manager::generatePassword();
 	}
+	
 	$api_array = array(
 		'product_id'	=>		'LSX Currencies',
 		'version'		=>		'1.0.0',

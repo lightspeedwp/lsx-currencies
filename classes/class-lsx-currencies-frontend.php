@@ -1,6 +1,12 @@
 <?php
 /**
- * LSX Currency Frontend Main Class
+ * LSX Currency Frontend Class
+ *
+ * @package   LSX Currencies
+ * @author    LightSpeed
+ * @license   GPL3
+ * @link      
+ * @copyright 2016 LightSpeed
  */
 class LSX_Currencies_Frontend extends LSX_Currencies{	
 

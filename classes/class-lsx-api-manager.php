@@ -1,12 +1,13 @@
 <?php
 /**
- * @package   LSX API Manager Class
- * @author     LightSpeeds
- * @license   GPL-2.0+
- * @link
- * @copyright 2015  LightSpeed Team
+ * LSX API Manager Class
+ *
+ * @package   LSX API Manager
+ * @author    LightSpeed
+ * @license   GPL3
+ * @link      
+ * @copyright 2016 LightSpeed
  */
-
 class LSX_API_Manager {
 
 	/**
