@@ -19,6 +19,6 @@ This will run the package.json file and download the list of modules to a "node_
 
 ### 3: Gulp Commands
 `gulp watch`
-`gulp compile-css`
+`gulp compile-sass`
 `gulp compile-js`
 `gulp wordpress-lang`
