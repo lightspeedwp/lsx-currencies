@@ -4,6 +4,10 @@ The LSX Currencies extension adds currency selection functionality to sites, all
 
 ## Changelog
 
+### 1.0.1 - 08/12/16
+* Fix - Reduced the access to server (check API key status) using transients
+* Fix - Made the API URLs dev/live dynamic using a prefix "dev-" in the API KEY
+
 ### 1.0.0 - 30/11/16
 * First Version
 
