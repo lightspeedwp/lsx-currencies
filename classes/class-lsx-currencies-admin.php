@@ -50,9 +50,9 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			}
 
 			if ( class_exists( 'Tour_Operator' ) ) {
-				add_action( 'to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
-				add_action( 'to_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
-				add_action( 'to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
+				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
+				add_action( 'lsx_to_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
+				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 			} else {
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
 				add_action( 'lsx_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
