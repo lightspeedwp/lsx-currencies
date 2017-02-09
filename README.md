@@ -4,6 +4,9 @@ The LSX Currencies extension adds currency selection functionality to sites, all
 
 ## Changelog
 
+### 1.0.3
+* Fix - Adjusted the plugin settings link inside the LSX API Class
+
 ### 1.0.2
 * Fix - Fixed all prefixes replaces (to_ > lsx_to_, TO_ > LSX_TO_)
 
