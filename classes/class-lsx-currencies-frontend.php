@@ -20,11 +20,13 @@ class LSX_Currencies_Frontend extends LSX_Currencies{
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->set_defaults();
-		if(false !== $this->app_id){
-			add_filter('lsx_custom_field_query',array($this,'price_filter'),20,5);
-			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
-			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
+		if(!is_admin()){
+			$this->set_defaults();
+			if(false !== $this->app_id){
+				add_filter('lsx_custom_field_query',array($this,'price_filter'),20,5);
+				add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
+				add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
+			}
 		}
 	}
 
