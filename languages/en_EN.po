@@ -24,75 +24,75 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:97
+#: classes/class-lsx-currencies-admin.php:98
 msgid "General"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:109
+#: classes/class-lsx-currencies-admin.php:110
 msgid "Display"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:121
+#: classes/class-lsx-currencies-admin.php:122
 msgid "API"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:180
+#: classes/class-lsx-currencies-admin.php:182
 msgid "Base Currency"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:205
+#: classes/class-lsx-currencies-admin.php:207
 msgid "Additional Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:238
+#: classes/class-lsx-currencies-admin.php:240
 msgid "Enable Multiple Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:242
+#: classes/class-lsx-currencies-admin.php:244
 msgid "Allowing you to add specific prices per active currency."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:253
+#: classes/class-lsx-currencies-admin.php:255
 msgid "Display in Menu"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:273
+#: classes/class-lsx-currencies-admin.php:275
 msgid "You have no menus set up."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:287
+#: classes/class-lsx-currencies-admin.php:289
 msgid "Display Flags"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:291
+#: classes/class-lsx-currencies-admin.php:293
 msgid "Displays a small flag in front of the name."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:302
+#: classes/class-lsx-currencies-admin.php:304
 msgid "Flag Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:306
+#: classes/class-lsx-currencies-admin.php:308
 msgid "This moves the flag to the right (after the symbol)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:317
+#: classes/class-lsx-currencies-admin.php:319
 msgid "Symbol Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:321
+#: classes/class-lsx-currencies-admin.php:323
 msgid "This moves the symbol for the switcher to the left (before the flag)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:332
+#: classes/class-lsx-currencies-admin.php:334
 msgid "LSX Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:347
+#: classes/class-lsx-currencies-admin.php:349
 msgid "Get your free API key here"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:368
+#: classes/class-lsx-currencies-admin.php:370
 msgid "Prices"
 msgstr ""
 
@@ -250,4 +250,8 @@ msgstr ""
 
 #: includes/settings/display.php:19
 msgid "Testimonials"
+msgstr ""
+
+#: includes/settings/display.php:24
+msgid "Sharing"
 msgstr ""
