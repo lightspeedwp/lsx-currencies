@@ -5,10 +5,10 @@
  * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
- * @link      
+ * @link
  * @copyright 2016 LightSpeed
  */
-class LSX_Currencies_Admin extends LSX_Currencies {	
+class LSX_Currencies_Admin extends LSX_Currencies {
 
 	/**
 	 * Constructor
@@ -27,14 +27,8 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	 * Enques the assets
 	 */
 	public function assets() {
-		if ( defined( 'WP_DEBUG' ) && true === WP_DEBUG ) {
-			$min = '';
-		 }else {
-			$min = '.min';
-		}
-
-		wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCY_URL . 'assets/js/lsx-currencies-admin' . $min . '.js', array( 'jquery' ), LSX_CURRENCY_VER, true );
-		wp_enqueue_style( 'lsx-currencies-admin', LSX_CURRENCY_URL . 'assets/css/lsx-currencies-admin.css', array(), LSX_CURRENCY_VER );
+		wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCIES_URL . 'assets/js/lsx-currencies-admin.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
+		wp_enqueue_style( 'lsx-currencies-admin', LSX_CURRENCIES_URL . 'assets/css/lsx-currencies-admin.css', array(), LSX_CURRENCIES_VER );
 	}
 
 	/**
@@ -42,22 +36,23 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	 */
 	public function create_settings_page() {
 		if ( is_admin() ) {
-			if ( ! class_exists( '\lsx\ui\uix' ) && ! class_exists( 'Tour_Operator' ) ) {
-				include_once LSX_CURRENCY_PATH . 'vendor/uix/uix.php';
+			if ( ! class_exists( '\lsx\ui\uix' ) && ! function_exists( 'tour_operator' ) ) {
+				include_once LSX_CURRENCIES_PATH . 'vendor/uix/uix.php';
 				$pages = $this->settings_page_array();
 				$uix = \lsx\ui\uix::get_instance( 'lsx' );
 				$uix->register_pages( $pages );
 			}
 
-			if ( class_exists( 'Tour_Operator' ) ) {
+			// @TODO the function_exists( 'tour_operator' ) is not working here.
+			//if ( function_exists( 'tour_operator' ) ) {
 				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
 				add_action( 'lsx_to_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-			} else {
+			//} else {
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
 				add_action( 'lsx_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-			}
+			//}
 		}
 	}
 
@@ -66,23 +61,23 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	 */
 	public function settings_page_array() {
 		$tabs = apply_filters( 'lsx_framework_settings_tabs', array() );
-		
+
 		return array(
 			'settings'  => array(
-				'page_title'  =>  esc_html__( 'Theme Options', 'lsx-currencies' ),
-				'menu_title'  =>  esc_html__( 'Theme Options', 'lsx-currencies' ),
-				'capability'  =>  'manage_options',
-				'icon'        =>  'dashicons-book-alt',
-				'parent'      =>  'themes.php',
-				'save_button' =>  esc_html__( 'Save Changes', 'lsx-currencies' ),
-				'tabs'        =>  $tabs,
+				'page_title'  => esc_html__( 'Theme Options', 'lsx-currencies' ),
+				'menu_title'  => esc_html__( 'Theme Options', 'lsx-currencies' ),
+				'capability'  => 'manage_options',
+				'icon'        => 'dashicons-book-alt',
+				'parent'      => 'themes.php',
+				'save_button' => esc_html__( 'Save Changes', 'lsx-currencies' ),
+				'tabs'        => $tabs,
 			),
 		);
 	}
 
 	/**
 	 * Register tabs
-	 */	
+	 */
 	public function register_tabs( $tabs ) {
 		$default = true;
 
@@ -90,14 +85,14 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			$default = false;
 		}
 
-		if ( ! class_exists( 'Tour_Operator' ) ) {
+		if ( ! function_exists( 'tour_operator' ) ) {
 			if ( ! array_key_exists( 'general', $tabs ) ) {
 				$tabs['general'] = array(
 					'page_title'        => '',
 					'page_description'  => '',
 					'menu_title'        => esc_html__( 'General', 'lsx-currencies' ),
-					'template'          => LSX_CURRENCY_PATH . 'includes/settings/general.php',
-					'default'           => $default
+					'template'          => LSX_CURRENCIES_PATH . 'includes/settings/general.php',
+					'default'           => $default,
 				);
 
 				$default = false;
@@ -108,8 +103,8 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 					'page_title'        => '',
 					'page_description'  => '',
 					'menu_title'        => esc_html__( 'Display', 'lsx-currencies' ),
-					'template'          => LSX_CURRENCY_PATH . 'includes/settings/display.php',
-					'default'           => $default
+					'template'          => LSX_CURRENCIES_PATH . 'includes/settings/display.php',
+					'default'           => $default,
 				);
 
 				$default = false;
@@ -120,8 +115,8 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 					'page_title'        => '',
 					'page_description'  => '',
 					'menu_title'        => esc_html__( 'API', 'lsx-currencies' ),
-					'template'          => LSX_CURRENCY_PATH . 'includes/settings/api.php',
-					'default'           => $default
+					'template'          => LSX_CURRENCIES_PATH . 'includes/settings/api.php',
+					'default'           => $default,
 				);
 
 				$default = false;
@@ -197,7 +192,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the additional currencies checkboxes
 	 */
@@ -211,7 +206,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 					<?php
 						foreach ( $this->available_currencies as $slug => $label ) {
 							$checked = $hidden = '';
-							
+
 							if ( array_key_exists( $slug, $this->additional_currencies ) || $slug === $this->base_currency ) {
 								$checked = 'checked="checked"';
 							}
@@ -221,7 +216,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 							}
 							?>
 							<li <?php echo $hidden; ?>>
-								<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag($slug).$label; ?></label>
+								<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag( $slug ) . $label; ?></label>
 							</li>
 							<?php
 						}
@@ -230,7 +225,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the multiple prices checkbox
 	 */
@@ -245,7 +240,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the symbol position field
 	 */
@@ -258,9 +253,9 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				<ul>
 					<?php
 						$all_menus = get_registered_nav_menus();
-						
+
 						if ( is_array( $all_menus ) && ! empty( $all_menus ) ) {
-							foreach( $all_menus as $slug => $label ) {
+							foreach ( $all_menus as $slug => $label ) {
 								$checked = $hidden = '';
 
 								if ( is_array( $this->menus ) && array_key_exists( $slug, $this->menus ) ) {
@@ -279,7 +274,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the Display flags checkbox
 	 */
@@ -294,7 +289,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the flag position field
 	 */
@@ -309,7 +304,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</td>
 		</tr>
 	<?php }
-	
+
 	/**
 	 * Outputs the symbol position field
 	 */
@@ -342,7 +337,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	public function api_key_field() { ?>
 		<tr class="form-field">
 			<th scope="row">
-				<i class="dashicons-before dashicons-admin-network"></i><label for="openexchange_api"> <?php _e( 'Key', 'to-maps' ); ?></label>
+				<i class="dashicons-before dashicons-admin-network"></i><label for="openexchange_api"> <?php esc_html_e( 'Key', 'to-maps' ); ?></label>
 			</th>
 			<td>
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
@@ -352,23 +347,31 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	<?php }
 
 	/**
-	 * 
+	 *
 	 */
 	public function fields( $field ) {
 		if ( true === $this->multi_prices && ! empty( $this->additional_currencies ) ) {
 			$currency_options = array();
-			
-			foreach( $this->additional_currencies as $key => $values ) {
+
+			foreach ( $this->additional_currencies as $key => $values ) {
 				if ( $key === $this->base_currency ) {
 					continue;
 				}
 
-				$currency_options[$key] = $this->available_currencies[$key];
+				$currency_options[ $key ] = $this->available_currencies[ $key ];
 			}
 
 			return array(
-				array( 'id' => 'price_title',  'name' => esc_html__( 'Prices', 'lsx-currencies' ), 'type' => 'title' ),
-				array( 'id' => 'price',  'name' => 'Base Price (' . $this->base_currency . ')', 'type' => 'text' ),
+				array(
+					'id' => 'price_title',
+					'name' => esc_html__( 'Prices', 'lsx-currencies' ),
+					'type' => 'title',
+				),
+				array(
+					'id' => 'price',
+					'name' => 'Base Price (' . $this->base_currency . ')',
+					'type' => 'text',
+				),
 				array(
 					'id' => 'additional_prices',
 					'name' => '',
@@ -377,14 +380,29 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 					'repeatable' => true,
 					'sortable' => true,
 					'fields' => array(
-						array( 'id' => 'amount',  'name' => 'Amount', 'type' => 'text' ),
-						array( 'id' => 'currency', 'name' => 'Currency', 'type' => 'select', 'options' => $currency_options ),
-					)
-				)
+						array(
+							'id' => 'amount',
+							'name' => 'Amount',
+							'type' => 'text',
+						),
+						array(
+							'id' => 'currency',
+							'name' => 'Currency',
+							'type' => 'select',
+							'options' => $currency_options,
+						),
+					),
+				),
 			);
 		} else {
-			return array( array( 'id' => 'price',  'name' => 'Price (' . $this->base_currency . ')', 'type' => 'text' ) );
-		}	
+			return array(
+				array(
+					'id' => 'price',
+					'name' => 'Price (' . $this->base_currency . ')',
+					'type' => 'text',
+				),
+			);
+		}
 	}
 
 }

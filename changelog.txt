@@ -1,11 +1,16 @@
 ## Changelog
 
-### 1.0.5
-* Fix - LSX tabs working integrated with TO tabs (dashboard settings)
+### 1.1.0
+* Added compatibility with LSX 2.0
+* Dev - New project structure
+* Dev - UIX copied from TO 1.1 + Fixed issue with sub tabs click (settings)
+* Fix - Fixing the settings integration with the Tour Operator Plugin
+* Fix - Fixed scripts/styles loading order
+* Fix - Fixed small issues
 
 ### 1.0.4
- * Dev - Added in a transient call to cache the Rates from the exchange API
- * Fix - Restricted the API calls to the frontend only reducing the number of queries.
+* Dev - Added in a transient call to cache the Rates from the exchange API
+* Fix - Restricted the API calls to the frontend only reducing the number of queries.
 
 ### 1.0.3
 * Fix - Adjusted the plugin settings link inside the LSX API Class

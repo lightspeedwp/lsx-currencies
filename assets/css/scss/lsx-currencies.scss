@@ -2,6 +2,8 @@
  * lsx-currencies.css
  */
 
+@import 'flag-icon-css/flag-icon';
+
 
 // ---------- Placeholders: Top Menu / Header ----------
 
@@ -22,7 +24,7 @@
 					.caret {
 						margin-left: 5px;
 					}
-				}	
+				}
 			}
 		}
 	}
@@ -182,7 +184,7 @@
 // ---------- Header ----------
 
 header.banner {
-	
+
 	// ---------- Top Menu ----------
 
 	#top-menu {
@@ -191,7 +193,7 @@ header.banner {
 }
 
 // ---------- Currency items ----------
-	
+
 .menu-item-currency {
 	@extend %currency-icons;
 }

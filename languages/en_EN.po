@@ -3,237 +3,247 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: lsx-currencies\n"
-"Report-Msgid-Bugs-To: https://bitbucket.org/feedmycode/lsx-currencies/issues\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Language-Team: LightSpeed <webmaster@lsdev.biz>\n"
 "X-Poedit-Basepath: ..\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: classes/class-lsx-currencies-admin.php:72, classes/class-lsx-currencies-admin.php:73
+#: classes/class-lsx-currencies-admin.php:67, classes/class-lsx-currencies-admin.php:68
 msgid "Theme Options"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:77
+#: classes/class-lsx-currencies-admin.php:72
 msgid "Save Changes"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:98
+#: classes/class-lsx-currencies-admin.php:93
 msgid "General"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:110
+#: classes/class-lsx-currencies-admin.php:105
 msgid "Display"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:122
+#: classes/class-lsx-currencies-admin.php:117
 msgid "API"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:182
+#: classes/class-lsx-currencies-admin.php:177
 msgid "Base Currency"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:207
+#: classes/class-lsx-currencies-admin.php:202
 msgid "Additional Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:240
+#: classes/class-lsx-currencies-admin.php:235
 msgid "Enable Multiple Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:244
+#: classes/class-lsx-currencies-admin.php:239
 msgid "Allowing you to add specific prices per active currency."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:255
+#: classes/class-lsx-currencies-admin.php:250
 msgid "Display in Menu"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:275
+#: classes/class-lsx-currencies-admin.php:270
 msgid "You have no menus set up."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:289
+#: classes/class-lsx-currencies-admin.php:284
 msgid "Display Flags"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:293
+#: classes/class-lsx-currencies-admin.php:288
 msgid "Displays a small flag in front of the name."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:304
+#: classes/class-lsx-currencies-admin.php:299
 msgid "Flag Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:308
+#: classes/class-lsx-currencies-admin.php:303
 msgid "This moves the flag to the right (after the symbol)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:319
+#: classes/class-lsx-currencies-admin.php:314
 msgid "Symbol Position"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:323
+#: classes/class-lsx-currencies-admin.php:318
 msgid "This moves the symbol for the switcher to the left (before the flag)."
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:334
+#: classes/class-lsx-currencies-admin.php:329
 msgid "LSX Currencies"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:349
+#: classes/class-lsx-currencies-admin.php:344
 msgid "Get your free API key here"
 msgstr ""
 
-#: classes/class-lsx-currencies-admin.php:370
+#: classes/class-lsx-currencies-admin.php:367
 msgid "Prices"
 msgstr ""
 
-#: classes/class-lsx-currencies.php:77
-msgid "Australian Dollar"
+#: classes/class-lsx-currencies-frontend.php:39
+msgid "Error: API key isn't set."
 msgstr ""
 
-#: classes/class-lsx-currencies.php:78
-msgid "Brazilian Real"
+#: classes/class-lsx-currencies-frontend.php:53
+msgid "Error: API response is empty."
+msgstr ""
+
+#: classes/class-lsx-currencies-frontend.php:55
+msgid "Success (new request)."
+msgstr ""
+
+#: classes/class-lsx-currencies-frontend.php:60
+msgid "Success (from cache)."
+msgstr ""
+
+#: classes/class-lsx-currencies-frontend.php:135
+msgid "Off"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:79
-msgid "British Pound Sterling"
+msgid "Australian Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:80
-msgid "Botswana Pula"
+msgid "Brazilian Real"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:81
-msgid "Canadian Dollar"
+msgid "British Pound Sterling"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:82
-msgid "Chinese Yuan"
+msgid "Botswana Pula"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:83
-msgid "Euro"
+msgid "Canadian Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:84
-msgid "Hong Kong Dollar"
+msgid "Chinese Yuan"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:85
-msgid "Indian Rupee"
+msgid "Euro"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:86
-msgid "Indonesia Rupiah"
+msgid "Hong Kong Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:87
-msgid "Israeli Shekel"
+msgid "Indian Rupee"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:88
-msgid "Japanese Yen"
+msgid "Indonesia Rupiah"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:89
-msgid "Kenyan Shilling"
+msgid "Israeli Shekel"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:90
-msgid "Laos Kip"
+msgid "Japanese Yen"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:91
-msgid "Malawian Kwacha"
+msgid "Kenyan Shilling"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:92
-msgid "Malaysia Ringgit"
+msgid "Laos Kip"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:93
-msgid "Mozambique Metical"
+msgid "Malawian Kwacha"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:94
-msgid "Namibian Dollar"
+msgid "Malaysia Ringgit"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:95
-msgid "Norwegian Krone"
+msgid "Mozambique Metical"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:96
-msgid "New Zealand Dollar"
+msgid "Namibian Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:97
-msgid "Russian Ruble"
+msgid "Norwegian Krone"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:98
-msgid "Singapore Dollar"
+msgid "New Zealand Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:99
-msgid "South African Rand"
+msgid "Russian Ruble"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:100
-msgid "Swedish Krona"
+msgid "Singapore Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:101
-msgid "Swiss Franc"
+msgid "South African Rand"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:102
-msgid "Tanzania Shilling"
+msgid "Swedish Krona"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:103
-msgid "United States Dollar"
+msgid "Swiss Franc"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:104
-msgid "United Arab Emirates Dirham"
+msgid "Tanzania Shilling"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:105
-msgid "Zambian Kwacha"
+msgid "United States Dollar"
 msgstr ""
 
 #: classes/class-lsx-currencies.php:106
+msgid "United Arab Emirates Dirham"
+msgstr ""
+
+#: classes/class-lsx-currencies.php:107
+msgid "Zambian Kwacha"
+msgstr ""
+
+#: classes/class-lsx-currencies.php:108
 msgid "Zimbabwean Dollar"
 msgstr ""
 
-#: includes/settings/api.php:3
+#: includes/settings/api.php:11
 msgid "Settings"
 msgstr ""
 
-#: includes/settings/api.php:4
+#: includes/settings/api.php:12
 msgid "License Keys"
 msgstr ""
 
-#: includes/settings/api.php:25
-msgid "Enter the license keys for your add-ons in the boxes below."
-msgstr ""
-
-#: includes/settings/api.php:30
-msgid "You have not installed any add-ons yet. View our list of add-ons"
-msgstr ""
-
-#: includes/settings/api.php:30
-msgid "here"
+#: includes/settings/api.php:17
+msgid "Please enter your user details (email address, API key, username, etc) below as required for the extensions that you have installed."
 msgstr ""
 
 #: includes/settings/display.php:4
@@ -253,5 +263,17 @@ msgid "Testimonials"
 msgstr ""
 
 #: includes/settings/display.php:24
+msgid "Projects"
+msgstr ""
+
+#: includes/settings/display.php:29
+msgid "Services"
+msgstr ""
+
+#: includes/settings/display.php:34
+msgid "Blog Customizer (posts widget)"
+msgstr ""
+
+#: includes/settings/display.php:39
 msgid "Sharing"
 msgstr ""

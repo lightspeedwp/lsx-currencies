@@ -1025,11 +1025,11 @@
 
 .flag-icon-un.flag-icon-squared { background-image: url(../flags/1x1/un.svg); }
 
-header.banner #top-menu .top-menu ul li.menu-item-currency a.current:before { display: inline-block; font-family: fontawesome; font-weight: normal; margin-right: 5px; content: '\f0d6'; }
+header.banner #top-menu .top-menu ul li.menu-item-currency a.current:before { display: inline-block; font-family: fontawesome; font-weight: normal; margin-left: 5px; content: '\f0d6'; }
 
-header.banner #top-menu .top-menu ul li.menu-item-currency .caret { margin-left: 5px; }
+header.banner #top-menu .top-menu ul li.menu-item-currency .caret { margin-right: 5px; }
 
-.menu-item-currency .currency-icon:after, .lsx-currencies .currency-icon:after { margin-left: 3px; margin-right: 3px; }
+.menu-item-currency .currency-icon:after, .lsx-currencies .currency-icon:after { margin-right: 3px; margin-left: 3px; }
 
 .menu-item-currency .currency-icon.usd:after, .lsx-currencies .currency-icon.usd:after, .menu-item-currency .currency-icon.nad:after, .lsx-currencies .currency-icon.nad:after, .menu-item-currency .currency-icon.cad:after, .lsx-currencies .currency-icon.cad:after, .menu-item-currency .currency-icon.hkd:after, .lsx-currencies .currency-icon.hkd:after, .menu-item-currency .currency-icon.sgd:after, .lsx-currencies .currency-icon.sgd:after, .menu-item-currency .currency-icon.nzd:after, .lsx-currencies .currency-icon.nzd:after, .menu-item-currency .currency-icon.aud:after, .lsx-currencies .currency-icon.aud:after { content: '\0024'; }
 
@@ -1075,6 +1075,4 @@ header.banner #top-menu .top-menu ul li.menu-item-currency .caret { margin-left:
 
 .menu-item-currency .currency-icon.zwl:after, .lsx-currencies .currency-icon.zwl:after { content: '\005a\0024'; }
 
-.lsx-currencies .currency-icon:after { margin-right: 0px; }
-
-/*# sourceMappingURL=maps/lsx-currencies.css.map */
+.lsx-currencies .currency-icon:after { margin-left: 0px; }

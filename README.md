@@ -4,9 +4,6 @@ The LSX Currencies extension adds currency selection functionality to sites, all
 
 ## Changelog
 
-### 1.0.5
-* Fix - LSX tabs working integrated with TO tabs (dashboard settings)
-
 ### 1.0.4
  * Dev - Added in a transient call to cache the Rates from the exchange API
  * Fix - Restricted the API calls to the frontend only reducing the number of queries.

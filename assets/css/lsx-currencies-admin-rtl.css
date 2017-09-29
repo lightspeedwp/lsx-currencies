@@ -1,4 +1,4 @@
-/* lsx-currencies.css */
+/* lsx-currencies-admin.css */
 .flag-icon { background-size: contain; background-position: 50%; background-repeat: no-repeat; position: relative; display: inline-block; width: 1.33333em; line-height: 1em; }
 
 .flag-icon:before { content: '\00a0'; }
@@ -1025,56 +1025,33 @@
 
 .flag-icon-un.flag-icon-squared { background-image: url(../flags/1x1/un.svg); }
 
-header.banner #top-menu .top-menu ul li.menu-item-currency a.current:before { display: inline-block; font-family: fontawesome; font-weight: normal; margin-right: 5px; content: '\f0d6'; }
+#banners .CMB_Group_Field { display: block; }
 
-header.banner #top-menu .top-menu ul li.menu-item-currency .caret { margin-left: 5px; }
+.CMB_Group_Field.active { display: block; }
 
-.menu-item-currency .currency-icon:after, .lsx-currencies .currency-icon:after { margin-left: 3px; margin-right: 3px; }
+.CMB_Color_Picker .field-item { float: none; }
 
-.menu-item-currency .currency-icon.usd:after, .lsx-currencies .currency-icon.usd:after, .menu-item-currency .currency-icon.nad:after, .lsx-currencies .currency-icon.nad:after, .menu-item-currency .currency-icon.cad:after, .lsx-currencies .currency-icon.cad:after, .menu-item-currency .currency-icon.hkd:after, .lsx-currencies .currency-icon.hkd:after, .menu-item-currency .currency-icon.sgd:after, .lsx-currencies .currency-icon.sgd:after, .menu-item-currency .currency-icon.nzd:after, .lsx-currencies .currency-icon.nzd:after, .menu-item-currency .currency-icon.aud:after, .lsx-currencies .currency-icon.aud:after { content: '\0024'; }
+#lsx-tab-headings { display: block; float: right; width: 10%; }
 
-.menu-item-currency .currency-icon.eur:after, .lsx-currencies .currency-icon.eur:after { content: '\20AC'; }
+#details .cmb_metabox { display: block; float: left; width: 85%; }
 
-.menu-item-currency .currency-icon.gbp:after, .lsx-currencies .currency-icon.gbp:after { content: '\00A3'; }
+#details .cmb_metabox .cmb_metabox { float: none; width: 98%; }
 
-.menu-item-currency .currency-icon.zar:after, .lsx-currencies .currency-icon.zar:after { content: '\0052'; }
+#lsx-tab-headings .tab-heading { display: block; text-transform: capitalize; padding: 10px 15px; width: 100%; }
 
-.menu-item-currency .currency-icon.brl:after, .lsx-currencies .currency-icon.brl:after { content: '\0052\0024'; }
+/* The Tab Styling */
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li { display: inline-block; }
 
-.menu-item-currency .currency-icon.bwp:after, .lsx-currencies .currency-icon.bwp:after { content: '\0050'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li:after { content: "|"; display: inline-block; padding: 0 8px 0 3px; }
 
-.menu-item-currency .currency-icon.cny:after, .lsx-currencies .currency-icon.cny:after, .menu-item-currency .currency-icon.jpy:after, .lsx-currencies .currency-icon.jpy:after { content: '\00A5'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li:last-child:after { content: ""; padding-right: 0; }
 
-.menu-item-currency .currency-icon.inr:after, .lsx-currencies .currency-icon.inr:after { content: '\20B9'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li a { text-decoration: none; }
 
-.menu-item-currency .currency-icon.idr:after, .lsx-currencies .currency-icon.idr:after { content: '\20B9'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li a.active { color: black; font-weight: bold; }
 
-.menu-item-currency .currency-icon.ils:after, .lsx-currencies .currency-icon.ils:after { content: '\20AA'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab-nav li a:focus { box-shadow: none; }
 
-.menu-item-currency .currency-icon.kes:after, .lsx-currencies .currency-icon.kes:after { content: '\004b'; }
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab { display: none; }
 
-.menu-item-currency .currency-icon.lak:after, .lsx-currencies .currency-icon.lak:after { content: '\20ad'; }
-
-.menu-item-currency .currency-icon.mwk:after, .lsx-currencies .currency-icon.mwk:after { content: '\004d\004b'; }
-
-.menu-item-currency .currency-icon.myr:after, .lsx-currencies .currency-icon.myr:after { content: '\0052\004d'; }
-
-.menu-item-currency .currency-icon.mzn:after, .lsx-currencies .currency-icon.mzn:after { content: '\004d\0054'; }
-
-.menu-item-currency .currency-icon.nok:after, .lsx-currencies .currency-icon.nok:after, .menu-item-currency .currency-icon.sek:after, .lsx-currencies .currency-icon.sek:after { content: '\006b\0072'; }
-
-.menu-item-currency .currency-icon.rub:after, .lsx-currencies .currency-icon.rub:after { content: '\0440\0443\0431'; }
-
-.menu-item-currency .currency-icon.chf:after, .lsx-currencies .currency-icon.chf:after { content: '\0043\0048\0046'; }
-
-.menu-item-currency .currency-icon.tzs:after, .lsx-currencies .currency-icon.tzs:after { content: '\0054\0053\0068'; }
-
-.menu-item-currency .currency-icon.aed:after, .lsx-currencies .currency-icon.aed:after { content: '\062f\002e\0625'; }
-
-.menu-item-currency .currency-icon.zmw:after, .lsx-currencies .currency-icon.zmw:after { content: '\005a\006b'; }
-
-.menu-item-currency .currency-icon.zwl:after, .lsx-currencies .currency-icon.zwl:after { content: '\005a\0024'; }
-
-.lsx-currencies .currency-icon:after { margin-right: 0px; }
-
-/*# sourceMappingURL=maps/lsx-currencies.css.map */
+body.appearance_page_lsx-settings .uix-field-wrapper .ui-tab.active { display: block; }
