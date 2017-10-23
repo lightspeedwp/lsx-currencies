@@ -3,7 +3,7 @@
  * Plugin Name: LSX Currencies
  * Plugin URI:  https://www.lsdev.biz/product/lsx-currencies
  * Description: The LSX Currencies extension adds currency selection functionality to sites, allowing users to view your products in whatever currencies you choose to sell in.
- * Version:     1.1.0
+ * Version:     1.1.1
  * Author:      LightSpeed
  * Author URI:  https://www.lsdev.biz/
  * License:     GPL3
@@ -20,7 +20,7 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'LSX_CURRENCIES_PATH',  plugin_dir_path( __FILE__ ) );
 define( 'LSX_CURRENCIES_CORE',  __FILE__ );
 define( 'LSX_CURRENCIES_URL',  plugin_dir_url( __FILE__ ) );
-define( 'LSX_CURRENCIES_VER',  '1.1.0' );
+define( 'LSX_CURRENCIES_VER',  '1.1.1' );
 
 /* ======================= The API Classes ========================= */
 
@@ -86,7 +86,7 @@ function lsx_currencies_api_admin_init() {
 
 	$api_array = array(
 		'product_id' => 'LSX Currencies',
-		'version'    => '1.1.0',
+		'version'    => '1.1.1',
 		'instance'   => $instance,
 		'email'      => $data['email'],
 		'api_key'    => $data['api_key'],
