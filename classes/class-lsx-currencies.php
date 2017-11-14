@@ -107,6 +107,7 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 				'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
 				'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
 			);
+
 			$this->flag_relations = array(
 				'AUD' => 'au',
 				'BRL' => 'br',
@@ -152,6 +153,7 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 
 			if ( false !== $options ) {
 				$this->options = $options;
+				// $this->migration_uix_to_customize();
 
 				if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
 					$this->base_currency = $this->options['general']['currency'];
@@ -171,19 +173,17 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 
 				// Currency Switcher Options
 
-				if ( isset( $this->options['display']['currency_menu_switcher'] ) && is_array( $this->options['display']['currency_menu_switcher'] ) && ! empty( $this->options['display']['currency_menu_switcher'] ) ) {
-					$this->menus = $this->options['display']['currency_menu_switcher'];
-				}
+				$this->menus = get_theme_mod( 'lsx_currencies_currency_menu_position', false );
 
-				if ( isset( $this->options['display']['display_flags'] ) && 'on' === $this->options['display']['display_flags'] ) {
+				if ( get_theme_mod( 'lsx_currencies_display_flags', false ) ) {
 					$this->display_flags = true;
 				}
 
-				if ( isset( $this->options['display']['flag_position'] ) && 'on' === $this->options['display']['flag_position'] ) {
+				if ( get_theme_mod( 'lsx_currencies_flag_position', false ) ) {
 					$this->flag_position = 'right';
 				}
 
-				if ( isset( $this->options['display']['currency_switcher_position'] ) && 'on' === $this->options['display']['currency_switcher_position'] ) {
+				if ( get_theme_mod( 'lsx_currencies_currency_switcher_position', false ) ) {
 					$this->switcher_symbol_position = 'left';
 				}
 			}
@@ -198,6 +198,67 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 		 */
 		public function get_currency_flag( $key = 'USD' ) {
 			return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
+		}
+
+		/**
+		 * Sanitize checkbox.
+		 *
+		 * @since 1.1.1
+		 */
+		public function sanitize_checkbox( $input ) {
+			return ( 1 === absint( $input ) ) ? 1 : 0;
+		}
+
+		/**
+		 * Sanitize select.
+		 *
+		 * @since 1.1.1
+		 */
+		public function sanitize_select( $input ) {
+			if ( is_string( $input ) || is_integer( $input ) || is_bool( $input ) ) {
+				return $input;
+			} else {
+				return '';
+			}
+		}
+
+		/**
+		 * Sanitize textarea.
+		 *
+		 * @since 1.1.1
+		 */
+		public function sanitize_textarea( $input ) {
+			return wp_kses_post( $input );
+		}
+
+		/**
+		 * Migrate the old data (from UIX) to WP Customizer settings.
+		 *
+		 * @since 1.1.1
+		 */
+		public function migration_uix_to_customize() {
+			$visual_tab_migration = get_theme_mod( 'lsx_currencies_visual_tab_migration', false );
+
+			if ( empty( $visual_tab_migration ) ) {
+				if ( isset( $this->options['display']['currency_menu_switcher'] ) && is_array( $this->options['display']['currency_menu_switcher'] ) && ! empty( $this->options['display']['currency_menu_switcher'] ) ) {
+					$currency_menu_position = $this->options['display']['currency_menu_switcher'];
+					set_theme_mod( 'lsx_currencies_currency_menu_position', $currency_menu_position[0] );
+				}
+
+				if ( isset( $this->options['display']['display_flags'] ) && 'on' === $this->options['display']['display_flags'] ) {
+					set_theme_mod( 'lsx_currencies_display_flags', true );
+				}
+
+				if ( isset( $this->options['display']['flag_position'] ) && 'on' === $this->options['display']['flag_position'] ) {
+					set_theme_mod( 'lsx_currencies_flag_position', 'right' );
+				}
+
+				if ( isset( $this->options['display']['currency_switcher_position'] ) && 'on' === $this->options['display']['currency_switcher_position'] ) {
+					set_theme_mod( 'lsx_currencies_currency_switcher_position', 'left' );
+				}
+
+				set_theme_mod( 'lsx_currencies_visual_tab_migration', true );
+			}
 		}
 	}
 }

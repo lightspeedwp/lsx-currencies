@@ -21,6 +21,8 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 		add_filter( 'lsx_framework_settings_tabs', array( $this, 'register_tabs' ), 100, 1 );
 
 		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
+
+		add_action( 'customize_register', array( $this, 'customize_register' ), 20 );
 	}
 
 	/**
@@ -46,11 +48,9 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			// @TODO the function_exists( 'tour_operator' ) is not working here.
 			//if ( function_exists( 'tour_operator' ) ) {
 				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
-				add_action( 'lsx_to_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 			//} else {
 				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
-				add_action( 'lsx_framework_display_tab_content', array( $this, 'display_settings' ), 11 );
 				add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 			//}
 		}
@@ -141,21 +141,6 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	}
 
 	/**
-	 * Outputs the display tabs settings
-	 *
-	 * @param $tab string
-	 * @return null
-	 */
-	public function display_settings( $tab = 'general' ) {
-		if ( 'currency_switcher' === $tab ) {
-			$this->display_in_menu_field();
-			$this->display_flags_field();
-			$this->flag_position_field();
-			$this->symbol_position_field();
-		}
-	}
-
-	/**
 	 * Outputs the dashboard tabs settings
 	 *
 	 * @param $tab string
@@ -237,85 +222,6 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			<td>
 				<input type="checkbox" {{#if multi_price}} checked="checked" {{/if}} name="multi_price" />
 				<small><?php esc_html_e( 'Allowing you to add specific prices per active currency.', 'lsx-currencies' ); ?></small>
-			</td>
-		</tr>
-	<?php }
-
-	/**
-	 * Outputs the symbol position field
-	 */
-	public function display_in_menu_field() { ?>
-		<tr class="form-field-wrap">
-			<th scope="row">
-				<label for="currency_menu_switcher"><?php esc_html_e( 'Display in Menu', 'lsx-currencies' ); ?></label>
-			</th>
-			<td>
-				<ul>
-					<?php
-						$all_menus = get_registered_nav_menus();
-
-						if ( is_array( $all_menus ) && ! empty( $all_menus ) ) {
-							foreach ( $all_menus as $slug => $label ) {
-								$checked = $hidden = '';
-
-								if ( is_array( $this->menus ) && array_key_exists( $slug, $this->menus ) ) {
-									$checked = 'checked="checked"';
-								}
-								?>
-								<li>
-									<input type="checkbox" <?php echo $checked; ?> name="currency_menu_switcher[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $label; ?></label>
-								</li>
-							<?php }
-						} else {
-							echo '<li><p>' . esc_html__( 'You have no menus set up.', 'lsx-currencies' ) . '</p></li>';
-						}
-					?>
-				</ul>
-			</td>
-		</tr>
-	<?php }
-
-	/**
-	 * Outputs the Display flags checkbox
-	 */
-	public function display_flags_field() { ?>
-		<tr class="form-field">
-			<th scope="row">
-				<label for="display_flags"><?php esc_html_e( 'Display Flags', 'lsx-currencies' ); ?></label>
-			</th>
-			<td>
-				<input type="checkbox" {{#if display_flags}} checked="checked" {{/if}} name="display_flags" />
-				<small><?php esc_html_e( 'Displays a small flag in front of the name.', 'lsx-currencies' ); ?></small>
-			</td>
-		</tr>
-	<?php }
-
-	/**
-	 * Outputs the flag position field
-	 */
-	public function flag_position_field() { ?>
-		<tr class="form-field">
-			<th scope="row">
-				<label for="flag_position"><?php esc_html_e( 'Flag Position', 'lsx-currencies' ); ?></label>
-			</th>
-			<td>
-				<input type="checkbox" {{#if flag_position}} checked="checked" {{/if}} name="flag_position" />
-				<small><?php esc_html_e( 'This moves the flag to the right (after the symbol).', 'lsx-currencies' ); ?></small>
-			</td>
-		</tr>
-	<?php }
-
-	/**
-	 * Outputs the symbol position field
-	 */
-	public function symbol_position_field() { ?>
-		<tr class="form-field">
-			<th scope="row">
-				<label for="currency_switcher_position"><?php esc_html_e( 'Symbol Position', 'lsx-currencies' ); ?></label>
-			</th>
-			<td>
-				<input type="checkbox" {{#if currency_switcher_position}} checked="checked" {{/if}} name="currency_switcher_position" />
-				<small><?php esc_html_e( 'This moves the symbol for the switcher to the left (before the flag).', 'lsx-currencies' ); ?></small>
 			</td>
 		</tr>
 	<?php }
@@ -403,6 +309,115 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				),
 			);
 		}
+	}
+
+	/**
+	 * Customizer Controls and Settings.
+	 *
+	 * @since 1.1.1
+	 */
+	public function customize_register( $wp_customize ) {
+		/**
+		 * Panel.
+		 */
+
+		$wp_customize->add_panel( 'lsx_currencies', array(
+			'priority'       	=> 62,
+			'capability'     	=> 'edit_theme_options',
+			'theme_supports' 	=> '',
+			'title'				=> esc_html__( 'Currencies', 'lsx-currencies' ),
+			'description'    	=> esc_html__( 'LSX Currencies extension settings.', 'lsx-currencies' ),
+		) );
+
+		/**
+		 * Section.
+		 */
+
+		$wp_customize->add_section( 'lsx_currencies_display' , array(
+			'title'       => esc_html__( 'Display', 'lsx-currencies' ),
+			'description' => esc_html__( 'LSX Currencies extension display settings.', 'lsx-currencies' ),
+			'panel'       => 'lsx_currencies',
+			'priority'    => 1,
+		) );
+
+		/**
+		 * Fields.
+		 */
+
+		$wp_customize->add_setting( 'lsx_currencies_currency_menu_position', array(
+			'default' => '0',
+			'sanitize_callback' => array( $this, 'sanitize_select' ),
+		) );
+
+		$choices = array(
+			'0' => esc_html__( 'None', 'lsx-currencies' ),
+		);
+
+		$menus = get_registered_nav_menus();
+
+		if ( is_array( $menus ) && ! empty( $menus ) ) {
+			$choices = array_merge( $choices, $menus );
+		}
+
+		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_menu_position', array(
+			'label'       => esc_html__( 'Display in Menu', 'lsx-currencies' ),
+			'description' => esc_html__( 'Select the menu to display the currency menu switcher.', 'lsx-currencies' ),
+			'section'     => 'lsx_currencies_display',
+			'settings'    => 'lsx_currencies_currency_menu_position',
+			'type'        => 'select',
+			'priority'    => 1,
+			'choices'     => $choices,
+		) ) );
+
+		$wp_customize->add_setting( 'lsx_currencies_display_flags', array(
+			'default'           => false,
+			'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+		) );
+
+		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_display_flags', array(
+			'label'       => esc_html__( 'Display Flags', 'lsx-currencies' ),
+			'description' => esc_html__( 'Displays a small flag in front of the name.', 'lsx-currencies' ),
+			'section'     => 'lsx_currencies_display',
+			'settings'    => 'lsx_currencies_display_flags',
+			'type'        => 'checkbox',
+			'priority'    => 2,
+		) ) );
+
+		$wp_customize->add_setting( 'lsx_currencies_flag_position', array(
+			'default'           => 'left',
+			'sanitize_callback' => array( $this, 'sanitize_select' ),
+		) );
+
+		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_flag_position', array(
+			'label'       => esc_html__( 'Flag Position', 'lsx-currencies' ),
+			'description' => esc_html__( 'This moves the flag to the right (after the symbol).', 'lsx-currencies' ),
+			'section'     => 'lsx_currencies_display',
+			'settings'    => 'lsx_currencies_flag_position',
+			'type'        => 'select',
+			'priority'    => 3,
+			'choices'     => array(
+				'left' => esc_html__( 'Left', 'lsx-currencies' ),
+				'right' => esc_html__( 'Right', 'lsx-currencies' ),
+			),
+		) ) );
+
+		$wp_customize->add_setting( 'lsx_currencies_currency_switcher_position', array(
+			'default'           => 'right',
+			'sanitize_callback' => array( $this, 'sanitize_select' ),
+		) );
+
+		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_switcher_position', array(
+			'label'       => esc_html__( 'Symbol Position', 'lsx-currencies' ),
+			'description' => esc_html__( 'This moves the symbol for the switcher to the left (before the flag).', 'lsx-currencies' ),
+			'section'     => 'lsx_currencies_display',
+			'settings'    => 'lsx_currencies_currency_switcher_position',
+			'type'        => 'select',
+			'priority'    => 4,
+			'choices'     => array(
+				'left' => esc_html__( 'Left', 'lsx-currencies' ),
+				'right' => esc_html__( 'Right', 'lsx-currencies' ),
+			),
+		) ) );
 	}
 
 }

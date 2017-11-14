@@ -157,7 +157,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 	 * @return string
 	 */
 	function wp_nav_menu_items_filter( $items, $args ) {
-		if ( false !== $this->options['general'] && false !== $this->menus && array_key_exists( $args->theme_location,$this->menus ) ) {
+		if ( $args->theme_location == $this->menus ) {
 			$items .= $this->get_menu_html( $args );
 		}
 
@@ -182,7 +182,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 		$items .= '<a class="current symbol-' . $this->switcher_symbol_position . '" href="#' . strtolower( $this->current_currency ) . '">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 
-		if ( true === $this->display_flags && 'left' === $this->flag_position ) {
+		if ( ! empty( $this->display_flags ) && 'left' === $this->flag_position ) {
 			$items .= $this->get_currency_flag( $this->current_currency );
 		}
 
@@ -196,7 +196,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
 		}
 
-		if ( true === $this->display_flags && 'right' === $this->flag_position ) {
+		if ( ! empty( $this->display_flags ) && 'right' === $this->flag_position ) {
 			$items .= $this->get_currency_flag( $this->current_currency );
 		}
 
@@ -230,7 +230,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 			$sub_items .= '<li ' . $hidden . ' class="' . $class . ' menu-item menu-item-currency ' . $this->switcher_symbol_position . '">';
 			$sub_items .= '<a class=" symbol-' . $this->switcher_symbol_position . '" href="#' . strtolower( $key ) . '">';
 
-			if ( true === $this->display_flags && 'left' === $this->flag_position ) {
+			if ( ! empty( $this->display_flags ) && 'left' === $this->flag_position ) {
 				$sub_items .= $this->get_currency_flag( $key );
 			}
 
@@ -244,7 +244,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 				$sub_items .= '<span class="currency-icon ' . strtolower( $key ) . '"></span>';
 			}
 
-			if ( true === $this->display_flags && 'right' === $this->flag_position ) {
+			if ( ! empty( $this->display_flags ) && 'right' === $this->flag_position ) {
 				$sub_items .= $this->get_currency_flag( $key );
 			}
 
@@ -263,7 +263,7 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 	 * @return string
 	 */
 	public function get_currency_flag( $key = 'USD' ) {
-		if ( true === $this->display_flags ) {
+		if ( ! empty( $this->display_flags ) ) {
 			return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
 		}
 	}
