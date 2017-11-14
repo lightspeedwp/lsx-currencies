@@ -158,7 +158,11 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 	 */
 	function wp_nav_menu_items_filter( $items, $args ) {
 		if ( $args->theme_location == $this->menus ) {
-			$items .= $this->get_menu_html( $args );
+			if ( 'top-menu' === $args->theme_location ) {
+				$items = $this->get_menu_html( $args ) . $items;
+			} else {
+				$items = $items . $this->get_menu_html( $args );
+			}
 		}
 
 		return $items;
