@@ -345,12 +345,12 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 		 */
 
 		$wp_customize->add_setting( 'lsx_currencies_currency_menu_position', array(
-			'default' => '0',
+			'default' => '',
 			'sanitize_callback' => array( $this, 'sanitize_select' ),
 		) );
 
 		$choices = array(
-			'0' => esc_html__( 'None', 'lsx-currencies' ),
+			'' => esc_html__( 'None', 'lsx-currencies' ),
 		);
 
 		$menus = get_registered_nav_menus();

@@ -240,21 +240,27 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 			$visual_tab_migration = get_theme_mod( 'lsx_currencies_visual_tab_migration', false );
 
 			if ( empty( $visual_tab_migration ) ) {
-				if ( isset( $this->options['display']['currency_menu_switcher'] ) && is_array( $this->options['display']['currency_menu_switcher'] ) && ! empty( $this->options['display']['currency_menu_switcher'] ) ) {
-					$currency_menu_position = $this->options['display']['currency_menu_switcher'];
-					set_theme_mod( 'lsx_currencies_currency_menu_position', $currency_menu_position[0] );
-				}
+				if ( isset( $this->options['display'] ) ) {
+					if ( isset( $this->options['display']['currency_menu_switcher'] ) && is_array( $this->options['display']['currency_menu_switcher'] ) && ! empty( $this->options['display']['currency_menu_switcher'] ) ) {
+						$currency_menu_position = $this->options['display']['currency_menu_switcher'];
 
-				if ( isset( $this->options['display']['display_flags'] ) && 'on' === $this->options['display']['display_flags'] ) {
-					set_theme_mod( 'lsx_currencies_display_flags', true );
-				}
+						foreach ( $currency_menu_position as $key => $value ) {
+							set_theme_mod( 'lsx_currencies_currency_menu_position', $key );
+							break;
+						}
+					}
 
-				if ( isset( $this->options['display']['flag_position'] ) && 'on' === $this->options['display']['flag_position'] ) {
-					set_theme_mod( 'lsx_currencies_flag_position', 'right' );
-				}
+					if ( isset( $this->options['display']['display_flags'] ) && 'on' === $this->options['display']['display_flags'] ) {
+						set_theme_mod( 'lsx_currencies_display_flags', true );
+					}
 
-				if ( isset( $this->options['display']['currency_switcher_position'] ) && 'on' === $this->options['display']['currency_switcher_position'] ) {
-					set_theme_mod( 'lsx_currencies_currency_switcher_position', 'left' );
+					if ( isset( $this->options['display']['flag_position'] ) && 'on' === $this->options['display']['flag_position'] ) {
+						set_theme_mod( 'lsx_currencies_flag_position', 'right' );
+					}
+
+					if ( isset( $this->options['display']['currency_switcher_position'] ) && 'on' === $this->options['display']['currency_switcher_position'] ) {
+						set_theme_mod( 'lsx_currencies_currency_switcher_position', 'left' );
+					}
 				}
 
 				set_theme_mod( 'lsx_currencies_visual_tab_migration', true );
