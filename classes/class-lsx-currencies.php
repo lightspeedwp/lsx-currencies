@@ -153,7 +153,7 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 
 			if ( false !== $options ) {
 				$this->options = $options;
-				// $this->migration_uix_to_customize();
+				$this->migration_uix_to_customize();
 
 				if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
 					$this->base_currency = $this->options['general']['currency'];
