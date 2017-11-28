@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.1.2 (in progress)
+* Dev - Added in WooCommerce integration
+
 ### 1.1.1
 * Dev - Added compatibility with LSX Videos
 * Dev - Added compatibility with LSX Search
