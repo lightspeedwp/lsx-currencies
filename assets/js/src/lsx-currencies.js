@@ -9,6 +9,8 @@ LSX_Currencies = {
 			return;
 		}
 
+		console.log( lsx_currencies_params );
+
 		//Set the money rates and the base, we will always be converting first from the base.
 		lsx_money.rates = lsx_currencies_params.rates;
 		lsx_money.base = 'USD';
@@ -29,23 +31,41 @@ LSX_Currencies = {
 		var $this = this;
 
 		jQuery('.amount.lsx-currencies').each(function() {
-			var amount = ''
-				new_price = '',
-				strict_amount = jQuery(this).find('.value').attr('data-price-' + $this.current_currency);
 
-			//console.log('[LSX_Currencies.checkAmounts] strict_amount: ' + strict_amount);
+            var amount = '',
+                new_price = '',
+                strict_amount = '';
 
-			if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
-				new_price = strict_amount;
+			if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
+                strict_amount = jQuery(this).attr('data-price-' + $this.current_currency);
+                amount = jQuery(this).attr('data-price-' + lsx_currencies_params.base);
 			} else {
-				new_price = $this.switchCurrency(lsx_currencies_params.base, $this.current_currency, jQuery(this).find('.value').attr('data-price-' + lsx_currencies_params.base));
+                strict_amount = jQuery(this).find('.value').attr('data-price-' + $this.current_currency);
+                amount = jQuery(this).find('.value').attr('data-price-' + lsx_currencies_params.base);
 			}
 
-			//console.log('[LSX_Currencies.checkAmounts] new_price: ' + new_price);
+            if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
+                new_price = strict_amount;
+            } else {
+                new_price = $this.switchCurrency(lsx_currencies_params.base, $this.current_currency, amount );
+            }
 
-			jQuery(this).find('.value').html(new_price);
-			jQuery(this).find('.currency-icon').prop('class', '').addClass('currency-icon').addClass($this.current_currency.toLowerCase()).html($this.current_currency);
-		});
+            if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
+
+				var currency_symbol = $this.current_currency;
+				if ( undefined !== lsx_currencies_params.currency_symbols[ $this.current_currency ] ) {
+                    currency_symbol = lsx_currencies_params.currency_symbols[ $this.current_currency ];
+				}
+
+				var currency_span = '<span class="woocommerce-Price-currencySymbol">' + currency_symbol + '</span>' + new_price;
+                jQuery(this).html(currency_span);
+            } else {
+                jQuery(this).find('.value').html(new_price);
+                jQuery(this).find('.currency-icon').prop('class', '').addClass('currency-icon').addClass($this.current_currency.toLowerCase()).html($this.current_currency);
+
+			}
+
+        });
 	},
 
 	switchCurrency: function(from, to, amount) {
