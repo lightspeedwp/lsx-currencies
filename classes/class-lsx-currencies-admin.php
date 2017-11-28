@@ -15,6 +15,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	 */
 	public function __construct() {
 		$this->set_defaults();
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 
 		add_action( 'init', array( $this, 'create_settings_page' ), 100 );

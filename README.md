@@ -17,3 +17,7 @@ This will run the package.json file and download the list of modules to a "node_
 `gulp compile-sass`
 `gulp compile-js`
 `gulp wordpress-lang`
+
+
+### Filters
+`apply_filters( 'lsx_currencies_base_currency', $this->options['general']['currency'] )`

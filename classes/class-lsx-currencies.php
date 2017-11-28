@@ -11,6 +11,11 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 	 */
 	class LSX_Currencies {
 
+		/**
+		 * Holds instance of the class
+		 */
+		private static $instance;
+
 		/** @var string */
 		public $plugin_slug = 'lsx-currencies';
 
@@ -50,14 +55,30 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 		 * Constructor
 		 */
 		public function __construct() {
-			$this->set_defaults();
+			add_action( 'plugins_loaded', array( $this, 'set_defaults' ) );
 			add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		}
+
+		/**
+		 * Return an instance of this class.
+		 *
+		 * @return  object
+		 */
+		public static function init() {
+
+			// If the single instance hasn't been set, set it now.
+			if ( ! isset( self::$instance ) ) {
+				self::$instance = new self();
+			}
+
+			return self::$instance;
 		}
 
 		/**
 		 * After active plugins and pluggable functions are loaded
 		 */
 		public function plugins_loaded() {
+
 			require_once( LSX_CURRENCIES_PATH . 'classes/class-lsx-currencies-admin.php' );
 
 			if ( class_exists( 'LSX_Currencies_Admin' ) ) {
@@ -69,6 +90,12 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 			if ( class_exists( 'LSX_Currencies_Frontend' ) ) {
 				$this->frontend = new LSX_Currencies_Frontend();
 			}
+
+			if ( class_exists( 'WooCommerce') ) {
+				require_once( LSX_CURRENCIES_PATH . 'classes/class-lsx-currencies-woocommerce.php' );
+				$this->woocommerce = new LSX_Currencies_WooCommerce();
+			}
+
 		}
 
 		/**
@@ -156,7 +183,7 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 				$this->migration_uix_to_customize();
 
 				if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
-					$this->base_currency = $this->options['general']['currency'];
+					$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options['general']['currency'], $this );
 				}
 
 				if ( isset( $this->options['general']['additional_currencies'] ) && is_array( $this->options['general']['additional_currencies'] ) && ! empty( $this->options['general']['additional_currencies'] ) ) {
@@ -269,4 +296,4 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 	}
 }
 
-$lsx_currencies = new LSX_Currencies();
+$lsx_currencies = LSX_Currencies::init();
