@@ -248,7 +248,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</th>
 			<td>
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
-				<br /><small><?php esc_html_e( 'Get your free API key here', 'lsx-currencies' ); ?> - <a target="_blank" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
+				<br /><small><?php esc_html_e( 'Get your free API key here', 'lsx-currencies' ); ?> - <a target="_blank" rel="noopener noreferrer" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
 			</td>
 		</tr>
 	<?php }
