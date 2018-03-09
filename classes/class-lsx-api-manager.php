@@ -163,19 +163,20 @@ class LSX_API_Manager {
 			}
 			$button_url .= '" class="button-secondary activate">'.$button_label.'</a>';
 			$this->button = $button_url;
+
+			add_filter('site_transient_update_plugins', array($this,'injectUpdate'));
+			add_action( "in_plugin_update_message-".$this->file,array($this,'plugin_update_message'),10,2);
+
+			if ( function_exists( 'tour_operator' ) ) {
+				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
+			} else {
+				add_action( 'lsx_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
+			}
+
+			add_action('wp_ajax_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));
+			add_action('wp_ajax_nopriv_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));
+
 		}
-
-		add_filter('site_transient_update_plugins', array($this,'injectUpdate'));
-		add_action( "in_plugin_update_message-".$this->file,array($this,'plugin_update_message'),10,2);
-
-		if ( function_exists( 'tour_operator' ) ) {
-			add_action( 'lsx_to_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
-		} else {
-			add_action( 'lsx_framework_api_tab_content', array( $this, 'dashboard_tabs' ), 1, 1 );
-		}
-
-		add_action('wp_ajax_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));
-		add_action('wp_ajax_nopriv_wc_api_'.$this->product_slug,array($this,'activate_deactivate'));
 	}
 
 	/**
@@ -289,9 +290,9 @@ class LSX_API_Manager {
 	 */
 	public function activate_deactivate(){
 		if(isset($_GET['action']) && 'activate' === $_GET['action']
-			&& isset($_GET['product']) && $this->product_slug === $_GET['product']
-			&& false !== $this->api_key && '' !== $this->api_key
-			&& false !== $this->email && '' !== $this->email){
+		   && isset($_GET['product']) && $this->product_slug === $_GET['product']
+		   && false !== $this->api_key && '' !== $this->api_key
+		   && false !== $this->email && '' !== $this->email){
 
 
 			$response = $this->query('activation');
@@ -302,7 +303,7 @@ class LSX_API_Manager {
 		}
 
 		if((isset($_GET['action']) && 'deactivate' === $_GET['action'] && isset($_GET['product']) && $this->product_slug === $_GET['product'])
-			|| (false === $this->api_key || '' === $this->api_key || false === $this->email || '' === $this->email)){
+		   || (false === $this->api_key || '' === $this->api_key || false === $this->email || '' === $this->email)){
 
 			if('active' === $this->status) {
 				$this->query('deactivation');
