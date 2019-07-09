@@ -48,10 +48,10 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 
 			// @TODO the function_exists( 'tour_operator' ) is not working here.
 			//if ( function_exists( 'tour_operator' ) ) {
-				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
+				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
 				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 			//} else {
-				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11,1 );
+				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
 				add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 			//}
 		}
@@ -233,7 +233,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	public function currency_api_heading() { ?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
-				<h4 style="margin-bottom:0px;"><?php esc_html_e( 'LSX Currencies', 'lsx-currencies' ); ?></h4>
+				<h4 style="margin-bottom:0px;"><?php esc_html_e( 'Openexchange API', 'lsx-currencies' ); ?></h4>
 			</th>
 		</tr>
 	<?php }
@@ -321,7 +321,6 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 		/**
 		 * Panel.
 		 */
-
 		$wp_customize->add_panel( 'lsx_currencies', array(
 			'priority'       	=> 62,
 			'capability'     	=> 'edit_theme_options',

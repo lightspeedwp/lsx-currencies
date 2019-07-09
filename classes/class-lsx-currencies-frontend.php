@@ -20,7 +20,6 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 	public function __construct() {
 		if ( ! is_admin() ) {
 			$this->set_defaults();
-
 			if ( false !== $this->app_id ) {
 				add_filter( 'lsx_to_custom_field_query', array( $this, 'price_filter' ), 20, 5 );
 				add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 999 );
