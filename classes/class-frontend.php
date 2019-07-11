@@ -201,27 +201,26 @@ class Frontend {
 	/**
 	 * Filter on the 'wp_nav_menu_items' hook, that potentially adds a currency switcher to the item of some menus.
 	 *
-	 * @param string $items
-	 * @param object $args
+	 * @param $items string
+	 * @param $args object
 	 *
 	 * @return string
 	 */
 	public function wp_nav_menu_items_filter( $items, $args ) {
-		if ( $args->theme_location == lsx_currencies()->menus ) {
+		if ( $args->theme_location === lsx_currencies()->menus ) {
 			if ( 'top-menu' === $args->theme_location ) {
 				$items = $this->get_menu_html( $args ) . $items;
 			} else {
 				$items = $items . $this->get_menu_html( $args );
 			}
 		}
-
 		return $items;
 	}
 
 	/**
 	 * Returns the HTML string of the language switcher for a given menu.
 	 *
-	 * @param object $args
+	 * @param $args object
 	 *
 	 * @return string
 	 */
@@ -237,21 +236,21 @@ class Frontend {
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 
 		if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
-			$items .= lsx_currencies()->get_currency_flag( strtoupper( $this->current_currency ) );
+			$items .= lsx_currencies()->get_currency_flag( $this->current_currency );
 		}
 
 		if ( 'left' === lsx_currencies()->switcher_symbol_position ) {
 			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
 		}
 
-		$items .= strtoupper( $this->current_currency );
+		$items .= $this->current_currency;
 
 		if ( 'right' === lsx_currencies()->switcher_symbol_position ) {
 			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
 		}
 
 		if ( ! empty( lsx_currencies()->display_flags ) && 'right' === lsx_currencies()->flag_position ) {
-			$items .= lsx_currencies()->get_currency_flag( strtoupper( $this->current_currency ) );
+			$items .= lsx_currencies()->get_currency_flag( $this->current_currency );
 		}
 
 		$items .= isset( $args->link_after ) ? $args->link_after : '';

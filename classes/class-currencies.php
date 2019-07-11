@@ -136,12 +136,6 @@ class Currencies {
 	 * Get the options
 	 */
 	public function set_defaults() {
-		$this->available_currencies = $this->get_available_currencies();
-
-		$this->flag_relations = $this->get_flag_relations();
-
-		$this->currency_symbols = $this->get_currency_symbols();
-
 		if ( function_exists( 'tour_operator' ) ) {
 			$options = get_option( '_lsx-to_settings', false );
 		} else {
@@ -188,6 +182,9 @@ class Currencies {
 				$this->switcher_symbol_position = 'left';
 			}
 		}
+		$this->available_currencies = $this->get_available_currencies();
+		$this->flag_relations = $this->get_flag_relations();
+		$this->currency_symbols = $this->get_currency_symbols();		
 	}
 
 	/**
@@ -220,11 +217,23 @@ class Currencies {
 	 * @return array
 	 */
 	public function get_available_currencies() {
-		return array(
+
+		$paid_currencies = array(
+			'BWP' => esc_html__( 'Botswana Pula', 'lsx-currencies' ),
+			'KES' => esc_html__( 'Kenyan Shilling', 'lsx-currencies' ),
+			'LAK' => esc_html__( 'Laos Kip', 'lsx-currencies' ),
+			'MWK' => esc_html__( 'Malawian Kwacha', 'lsx-currencies' ),
+			'MZN' => esc_html__( 'Mozambique Metical', 'lsx-currencies' ),
+			'NAD' => esc_html__( 'Namibian Dollar', 'lsx-currencies' ),
+			'TZS' => esc_html__( 'Tanzania Shilling', 'lsx-currencies' ),
+			'AED' => esc_html__( 'United Arab Emirates Dirham', 'lsx-currencies' ),
+			'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
+			'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
+		);
+		$free_currencies = array(
 			'AUD' => esc_html__( 'Australian Dollar', 'lsx-currencies' ),
 			'BRL' => esc_html__( 'Brazilian Real', 'lsx-currencies' ),
 			'GBP' => esc_html__( 'British Pound Sterling', 'lsx-currencies' ),
-			'BWP' => esc_html__( 'Botswana Pula', 'lsx-currencies' ),
 			'CAD' => esc_html__( 'Canadian Dollar', 'lsx-currencies' ),
 			'CNY' => esc_html__( 'Chinese Yuan', 'lsx-currencies' ),
 			'EUR' => esc_html__( 'Euro', 'lsx-currencies' ),
@@ -233,12 +242,7 @@ class Currencies {
 			'IDR' => esc_html__( 'Indonesia Rupiah', 'lsx-currencies' ),
 			'ILS' => esc_html__( 'Israeli Shekel', 'lsx-currencies' ),
 			'JPY' => esc_html__( 'Japanese Yen', 'lsx-currencies' ),
-			'KES' => esc_html__( 'Kenyan Shilling', 'lsx-currencies' ),
-			'LAK' => esc_html__( 'Laos Kip', 'lsx-currencies' ),
-			'MWK' => esc_html__( 'Malawian Kwacha', 'lsx-currencies' ),
 			'MYR' => esc_html__( 'Malaysia Ringgit', 'lsx-currencies' ),
-			'MZN' => esc_html__( 'Mozambique Metical', 'lsx-currencies' ),
-			'NAD' => esc_html__( 'Namibian Dollar', 'lsx-currencies' ),
 			'NOK' => esc_html__( 'Norwegian Krone', 'lsx-currencies' ),
 			'NZD' => esc_html__( 'New Zealand Dollar', 'lsx-currencies' ),
 			'RUB' => esc_html__( 'Russian Ruble', 'lsx-currencies' ),
@@ -246,12 +250,15 @@ class Currencies {
 			'ZAR' => esc_html__( 'South African Rand', 'lsx-currencies' ),
 			'SEK' => esc_html__( 'Swedish Krona', 'lsx-currencies' ),
 			'CHF' => esc_html__( 'Swiss Franc', 'lsx-currencies' ),
-			'TZS' => esc_html__( 'Tanzania Shilling', 'lsx-currencies' ),
 			'USD' => esc_html__( 'United States Dollar', 'lsx-currencies' ),
-			'AED' => esc_html__( 'United Arab Emirates Dirham', 'lsx-currencies' ),
-			'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
-			'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
-		);		
+		);
+
+		if ( false !== $this->app_id ) {
+			$free_currencies = array_merge( $free_currencies, $paid_currencies );
+			asort( $free_currencies );
+		}
+
+		return $free_currencies;
 	}
 
 	/**

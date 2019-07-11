@@ -2,10 +2,7 @@ var lsx_money = fx.noConflict();
 
 LSX_Currencies = {
 	initThis: function() {
-		//console.log('[LSX_Currencies.initThis] lsx_currencies_params.rates_message: ' + lsx_currencies_params.rates_message);
-
 		if ('' === lsx_currencies_params.rates) {
-			//console.log('[LSX_Currencies.initThis] no rates, aborting');
 			return;
 		}
 
@@ -26,7 +23,7 @@ LSX_Currencies = {
 	},
 
 	checkAmounts: function(from) {
-		//console.log('[LSX_Currencies.checkAmounts] from: ' + from);
+		console.log('[LSX_Currencies.checkAmounts] from: ' + from);
 
 		var $this = this;
 
@@ -69,10 +66,10 @@ LSX_Currencies = {
 	},
 
 	switchCurrency: function(from, to, amount) {
-		//console.log('[LSX_Currencies.switchCurrency] from: ' + from);
-		//console.log('[LSX_Currencies.switchCurrency] to: ' + to);
-		//console.log('[LSX_Currencies.switchCurrency] lsx_currencies_params:');
-		//console.log(lsx_currencies_params);
+		console.log('[LSX_Currencies.switchCurrency] from: ' + from);
+		console.log('[LSX_Currencies.switchCurrency] to: ' + to);
+		console.log('[LSX_Currencies.switchCurrency] lsx_currencies_params:');
+		console.log(lsx_currencies_params);
 
 		//If the current from price is not the base
 		amount = lsx_money(amount).from(from).to(to);
