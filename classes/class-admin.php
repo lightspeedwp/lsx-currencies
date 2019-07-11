@@ -189,7 +189,7 @@ class Admin {
 					foreach ( lsx_currencies()->available_currencies as $currency_id => $currency_label ) {
 						$selected = '';
 
-						if ( $currency_id === lsx_currencies()->base_currency ) {
+						if ( lsx_currencies()->base_currency === $currency_id ) {
 							$selected = 'selected="selected"';
 						}
 						echo wp_kses_post( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
@@ -220,11 +220,11 @@ class Admin {
 					foreach ( lsx_currencies()->available_currencies as $slug => $label ) {
 								$checked = '';
 								$hidden  = $checked;
-						if ( array_key_exists( $slug, lsx_currencies()->additional_currencies ) || $slug === lsx_currencies()->base_currency ) {
+						if ( array_key_exists( $slug, lsx_currencies()->additional_currencies ) || lsx_currencies()->base_currency === $slug ) {
 								$checked = 'checked="checked"';
 						}
 
-						if ( $slug === lsx_currencies()->base_currency ) {
+						if ( lsx_currencies()->base_currency === $slug ) {
 								$hidden = 'style="display:none;" class="hidden"';
 						}
 						?>
@@ -295,7 +295,7 @@ class Admin {
 			$currency_options = array();
 
 			foreach ( lsx_currencies()->additional_currencies as $key => $values ) {
-				if ( $key === lsx_currencies()->base_currency ) {
+				if ( lsx_currencies()->base_currency === $key ) {
 					continue;
 				}
 
