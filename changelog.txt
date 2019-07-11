@@ -1,5 +1,10 @@
 ## Changelog
 
+### 1.2.0
+* Dev - Code Standards updates
+* Dev - Added in a fallback API for exchange rates.
+* Dev - Namespacing and instances for all classes.
+
 ### 1.1.2 
 * Dev - Added in WooCommerce integration
 * Dev - add noopener noreferrer tags to target="_blank" links
