@@ -76,30 +76,26 @@ class Frontend {
 	public function set_defaults() {
 		$this->rates_message = esc_html__( 'Error: API key isn\'t set.', 'lsx-currencies' );
 
-		if ( false !== lsx_currencies()->app_id && '' !== lsx_currencies()->app_id ) {
-			$this->rates = get_transient( 'lsx_currencies_rates' );
+		if ( false === $this->rates ) {
+			$rates         = wp_remote_retrieve_body( wp_safe_remote_get( lsx_currencies()->api_url ) );
+			$decoded_rates = json_decode( $rates );
 
-			if ( false === $this->rates ) {
-				$rates         = wp_remote_retrieve_body( wp_safe_remote_get( 'http://openexchangerates.org/api/latest.json?app_id=' . lsx_currencies()->app_id ) );
-				$decoded_rates = json_decode( $rates );
-
-				if ( is_wp_error( $rates ) ) {
-					$this->rates_message = $rates->get_error_message();
-				} elseif ( ! empty( $decoded_rates->error ) ) {
-					$this->rates_message = $decoded_rates->description;
-				} elseif ( empty( $rates ) ) {
-					$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
-				} else {
-					$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
-					set_transient( 'lsx_currencies_rates', $decoded_rates->rates, 60 * 60 * 2 );
-					$this->rates = $decoded_rates->rates;
-				}
+			if ( is_wp_error( $rates ) ) {
+				$this->rates_message = $rates->get_error_message();
+			} elseif ( ! empty( $decoded_rates->error ) ) {
+				$this->rates_message = $decoded_rates->description;
+			} elseif ( empty( $rates ) ) {
+				$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
 			} else {
-				$this->rates_message = esc_html__( 'Success (from cache).', 'lsx-currencies' );
+				$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
+				set_transient( 'lsx_currencies_rates', $decoded_rates->rates, 60 * 60 * 2 );
+				$this->rates = $decoded_rates->rates;
 			}
+		} else {
+			$this->rates_message = esc_html__( 'Success (from cache).', 'lsx-currencies' );
 		}
-
-		$this->current_currency = isset( $_COOKIE['lsx_currencies_choice'] ) ? $_COOKIE['lsx_currencies_choice'] : lsx_currencies()->base_currency;
+		$this->current_currency = isset( $_COOKIE['lsx_currencies_choice'] ) ? sanitize_key( $_COOKIE['lsx_currencies_choice'] ) : lsx_currencies()->base_currency;
+		$this->current_currency = strtoupper( $this->current_currency );
 	}
 
 	/**
@@ -127,6 +123,11 @@ class Frontend {
 		wp_style_add_data( 'lsx-currencies', 'rtl', 'replace' );
 	}
 
+	/**
+	 * Returns all of the available symbols.
+	 *
+	 * @return array
+	 */
 	public function get_available_symbols() {
 		$symbols = array();
 		if ( false !== lsx_currencies()->additional_currencies && ! empty( lsx_currencies()->additional_currencies ) ) {
@@ -236,21 +237,21 @@ class Frontend {
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 
 		if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
-			$items .= $this->get_currency_flag( $this->current_currency );
+			$items .= lsx_currencies()->get_currency_flag( strtoupper( $this->current_currency ) );
 		}
 
 		if ( 'left' === lsx_currencies()->switcher_symbol_position ) {
 			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
 		}
 
-		$items .= $this->current_currency;
+		$items .= strtoupper( $this->current_currency );
 
 		if ( 'right' === lsx_currencies()->switcher_symbol_position ) {
 			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
 		}
 
 		if ( ! empty( lsx_currencies()->display_flags ) && 'right' === lsx_currencies()->flag_position ) {
-			$items .= $this->get_currency_flag( $this->current_currency );
+			$items .= lsx_currencies()->get_currency_flag( strtoupper( $this->current_currency ) );
 		}
 
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
@@ -283,7 +284,7 @@ class Frontend {
 			$sub_items .= '<a class=" symbol-' . lsx_currencies()->switcher_symbol_position . '" href="#' . strtolower( $key ) . '">';
 
 			if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
-				$sub_items .= $this->get_currency_flag( $key );
+				$sub_items .= lsx_currencies()->get_currency_flag( $key );
 			}
 
 			if ( 'left' === lsx_currencies()->switcher_symbol_position ) {
@@ -297,7 +298,7 @@ class Frontend {
 			}
 
 			if ( ! empty( lsx_currencies()->display_flags ) && 'right' === lsx_currencies()->flag_position ) {
-				$sub_items .= $this->get_currency_flag( $key );
+				$sub_items .= lsx_currencies()->get_currency_flag( $key );
 			}
 
 			$sub_items .= '</a></li>';
@@ -305,19 +306,6 @@ class Frontend {
 
 		$sub_items = '<ul class="sub-menu submenu-currency dropdown-menu">' . $sub_items . '</ul>';
 		return $sub_items;
-	}
-
-	/**
-	 * Returns Currency Flag for currency code provided
-	 *
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	public function get_currency_flag( $key = 'USD' ) {
-		if ( ! empty( lsx_currencies()->display_flags ) ) {
-			return '<span class="flag-icon flag-icon-' . lsx_currencies()->flag_relations[ $key ] . '"></span> ';
-		}
 	}
 
 	/**

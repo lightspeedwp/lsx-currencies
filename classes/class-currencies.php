@@ -45,6 +45,13 @@ class Currencies {
 	public $woocommerce;
 
 	/**
+	 * This hold the URL, it defaults to the free exchange rates.
+	 *
+	 * @var string
+	 */
+	public $api_url = 'https://api.exchangeratesapi.io/latest?base=USD';
+
+	/**
 	 * General Parameters
 	 */
 	/** @var string */
@@ -129,7 +136,91 @@ class Currencies {
 	 * Get the options
 	 */
 	public function set_defaults() {
-		$this->available_currencies = array(
+		$this->available_currencies = $this->get_available_currencies();
+
+		$this->flag_relations = $this->get_flag_relations();
+
+		$this->currency_symbols = $this->get_currency_symbols();
+
+		if ( function_exists( 'tour_operator' ) ) {
+			$options = get_option( '_lsx-to_settings', false );
+		} else {
+			$options = get_option( '_lsx_settings', false );
+
+			if ( false === $options ) {
+				$options = get_option( '_lsx_lsx-settings', false );
+			}
+		}
+
+		if ( false !== $options ) {
+			$this->options = $options;
+			$this->migration_uix_to_customize();
+
+			if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
+				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options['general']['currency'], $this );
+			}
+
+			if ( isset( $this->options['general']['additional_currencies'] ) && is_array( $this->options['general']['additional_currencies'] ) && ! empty( $this->options['general']['additional_currencies'] ) ) {
+				$this->additional_currencies = $this->options['general']['additional_currencies'];
+			}
+
+			if ( isset( $this->options['general']['multi_price'] ) && 'on' === $this->options['general']['multi_price'] ) {
+				$this->multi_prices = true;
+			}
+
+			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {
+				$this->app_id = $this->options['api']['openexchange_api'];
+				$this->api_url = 'http://openexchangerates.org/api/latest.json?app_id=' . $this->app_id;
+			}
+
+			// Currency Switcher Options.
+			$this->menus = get_theme_mod( 'lsx_currencies_currency_menu_position', false );
+
+			if ( get_theme_mod( 'lsx_currencies_display_flags', false ) ) {
+				$this->display_flags = true;
+			}
+
+			if ( get_theme_mod( 'lsx_currencies_flag_position', false ) ) {
+				$this->flag_position = 'right';
+			}
+
+			if ( get_theme_mod( 'lsx_currencies_currency_switcher_position', false ) ) {
+				$this->switcher_symbol_position = 'left';
+			}
+		}
+	}
+
+	/**
+	 * Returns Currency Flag for currency code provided
+	 *
+	 * @param $key string
+	 * @return string
+	 */
+	public function get_currency_flag( $key = 'USD' ) {
+		return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
+	}
+
+	/**
+	 * Get Currency symbol.
+	 *
+	 * @param string $currency
+	 * @return string
+	 */
+	public function get_currency_symbol( $currency = '' ) {
+		if ( ! $currency ) {
+			$currency = $this->base_currency;
+		}
+		$currency_symbol = isset( $this->currency_symbols[ $currency ] ) ? $this->currency_symbols[ $currency ] : '';
+		return $currency_symbol;
+	}
+
+	/**
+	 * Returns an array of the available currencies
+	 *
+	 * @return array
+	 */
+	public function get_available_currencies() {
+		return array(
 			'AUD' => esc_html__( 'Australian Dollar', 'lsx-currencies' ),
 			'BRL' => esc_html__( 'Brazilian Real', 'lsx-currencies' ),
 			'GBP' => esc_html__( 'British Pound Sterling', 'lsx-currencies' ),
@@ -160,9 +251,16 @@ class Currencies {
 			'AED' => esc_html__( 'United Arab Emirates Dirham', 'lsx-currencies' ),
 			'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
 			'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
-		);
+		);		
+	}
 
-		$this->flag_relations = array(
+	/**
+	 * Returns the ISO 3 code in relation to its 2 code values.
+	 *
+	 * @return array
+	 */
+	public function get_flag_relations() {
+		return array(
 			'AUD' => 'au',
 			'BRL' => 'br',
 			'GBP' => 'gb',
@@ -194,8 +292,15 @@ class Currencies {
 			'ZMW' => 'zm',
 			'ZWL' => 'zw',
 		);
+	}
 
-		$this->currency_symbols = apply_filters( 'lsx_currencies_symbols', array(
+	/**
+	 * Returns all of the currency symbols.
+	 *
+	 * @return array
+	 */
+	public function get_currency_symbols() {
+		return apply_filters( 'lsx_currencies_symbols', array(
 			'AED' => '&#x62f;.&#x625;',
 			'AFN' => '&#x60b;',
 			'ALL' => 'L',
@@ -359,76 +464,6 @@ class Currencies {
 			'ZAR' => '&#82;',
 			'ZMW' => 'ZK',
 		) );
-
-		if ( function_exists( 'tour_operator' ) ) {
-			$options = get_option( '_lsx-to_settings', false );
-		} else {
-			$options = get_option( '_lsx_settings', false );
-
-			if ( false === $options ) {
-				$options = get_option( '_lsx_lsx-settings', false );
-			}
-		}
-
-		if ( false !== $options ) {
-			$this->options = $options;
-			$this->migration_uix_to_customize();
-
-			if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
-				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options['general']['currency'], $this );
-			}
-
-			if ( isset( $this->options['general']['additional_currencies'] ) && is_array( $this->options['general']['additional_currencies'] ) && ! empty( $this->options['general']['additional_currencies'] ) ) {
-				$this->additional_currencies = $this->options['general']['additional_currencies'];
-			}
-
-			if ( isset( $this->options['general']['multi_price'] ) && 'on' === $this->options['general']['multi_price'] ) {
-				$this->multi_prices = true;
-			}
-
-			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {
-				$this->app_id = $this->options['api']['openexchange_api'];
-			}
-
-			// Currency Switcher Options.
-			$this->menus = get_theme_mod( 'lsx_currencies_currency_menu_position', false );
-
-			if ( get_theme_mod( 'lsx_currencies_display_flags', false ) ) {
-				$this->display_flags = true;
-			}
-
-			if ( get_theme_mod( 'lsx_currencies_flag_position', false ) ) {
-				$this->flag_position = 'right';
-			}
-
-			if ( get_theme_mod( 'lsx_currencies_currency_switcher_position', false ) ) {
-				$this->switcher_symbol_position = 'left';
-			}
-		}
-	}
-
-	/**
-	 * Returns Currency Flag for currency code provided
-	 *
-	 * @param $key string
-	 * @return string
-	 */
-	public function get_currency_flag( $key = 'USD' ) {
-		return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
-	}
-
-	/**
-	 * Get Currency symbol.
-	 *
-	 * @param string $currency
-	 * @return string
-	 */
-	public function get_currency_symbol( $currency = '' ) {
-		if ( ! $currency ) {
-			$currency = $this->base_currency;
-		}
-		$currency_symbol = isset( $this->currency_symbols[ $currency ] ) ? $this->currency_symbols[ $currency ] : '';
-		return $currency_symbol;
 	}
 
 	/**
