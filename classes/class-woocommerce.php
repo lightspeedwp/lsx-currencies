@@ -60,7 +60,7 @@ class WooCommerce {
 
 	/**
 	 * Filter the WooCommerce Price.
-	 * 
+	 *
 	 * @param $return mixed
 	 * @param $price string
 	 * @param $args array

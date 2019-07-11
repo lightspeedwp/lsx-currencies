@@ -184,7 +184,7 @@ class Currencies {
 		}
 		$this->available_currencies = $this->get_available_currencies();
 		$this->flag_relations = $this->get_flag_relations();
-		$this->currency_symbols = $this->get_currency_symbols();		
+		$this->currency_symbols = $this->get_currency_symbols();
 	}
 
 	/**

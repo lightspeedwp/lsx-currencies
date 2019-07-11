@@ -68,7 +68,7 @@ class Frontend {
 			self::$instance = new self();
 		}
 		return self::$instance;
-	}	
+	}
 
 	/**
 	 * Constructor
@@ -212,7 +212,7 @@ class Frontend {
 	 * @return string
 	 */
 	public function wp_nav_menu_items_filter( $items, $args ) {
-		if ( $args->theme_location === lsx_currencies()->menus ) {
+		if ( lsx_currencies()->menus === $args->theme_location ) {
 			if ( 'top-menu' === $args->theme_location ) {
 				$items = $this->get_menu_html( $args ) . $items;
 			} else {
