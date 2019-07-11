@@ -1,7 +1,10 @@
 ## Changelog
 
-### 1.1.2 (in progress)
+### 1.1.2 
 * Dev - Added in WooCommerce integration
+* Dev - add noopener noreferrer tags to target="_blank" links
+* Dev - Adding the travis and codesniffer ruleset
+* Dev - Adding a readme.txt and updating the readme.md
 
 ### 1.1.1
 * Dev - Added compatibility with LSX Videos
