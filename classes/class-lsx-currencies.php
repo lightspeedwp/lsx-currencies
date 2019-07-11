@@ -108,7 +108,7 @@ if ( ! class_exists( 'LSX_Currencies' ) ) {
 				$this->frontend = new LSX_Currencies_Frontend();
 			}
 
-			if ( class_exists( 'WooCommerce') ) {
+			if ( class_exists( 'WooCommerce' ) ) {
 				require_once( LSX_CURRENCIES_PATH . 'classes/class-lsx-currencies-woocommerce.php' );
 				$this->woocommerce = LSX_Currencies_WooCommerce::init();
 				$this->woocommerce->set_currency( $this->base_currency );

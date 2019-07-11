@@ -88,10 +88,10 @@ class LSX_Currencies_Frontend extends LSX_Currencies {
 		wp_style_add_data( 'lsx-currencies', 'rtl', 'replace' );
 	}
 
-	public function get_available_symbols( ) {
+	public function get_available_symbols() {
 		$symbols = array();
 		if ( false !== $this->additional_currencies && ! empty( $this->additional_currencies ) ) {
-			foreach( $this->additional_currencies as $key => $currency ) {
+			foreach ( $this->additional_currencies as $key => $currency ) {
 				$symbols[ $key ] = $this->currency_symbols[ $key ];
 			}
 		}

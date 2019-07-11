@@ -157,10 +157,15 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	/**
 	 * Outputs the base currency drop down
 	 */
-	public function base_currency_field() { ?>
+	public function base_currency_field() {
+		?>
 		<tr data-trigger="additional_currencies" class="lsx-select-trigger form-field-wrap">
 			<th scope="row">
-				<label for="currency"><?php esc_html_e( 'Base Currency', 'lsx-currencies' );?></label>
+				<label for="currency">
+				<?php
+				esc_html_e( 'Base Currency', 'lsx-currencies' );
+				?>
+				</label>
 			</th>
 			<td>
 				<select value="{{currency}}" name="currency">
@@ -171,51 +176,59 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 						if ( $currency_id === $this->base_currency ) {
 							$selected = 'selected="selected"';
 						}
-
-						echo '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>';
-					} ?>
+						echo esc_attr( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
+					}
+					?>
 				</select>
 			</td>
 		</tr>
-	<?php }
+		<?php
+	}
 
 	/**
 	 * Outputs the additional currencies checkboxes
 	 */
-	public function additional_currencies_field() { ?>
+	public function additional_currencies_field() {
+		?>
 		<tr data-trigger="currency" class="lsx-checkbox-action form-field-wrap">
 			<th scope="row">
-				<label for="modules"><?php esc_html_e( 'Additional Currencies', 'lsx-currencies' );?></label>
+				<label for="modules">
+				<?php
+				esc_html_e( 'Additional Currencies', 'lsx-currencies' );
+				?>
+				</label>
 			</th>
 			<td>
 				<ul>
 					<?php
-						foreach ( $this->available_currencies as $slug => $label ) {
-							$checked = $hidden = '';
-
-							if ( array_key_exists( $slug, $this->additional_currencies ) || $slug === $this->base_currency ) {
+					foreach ( $this->available_currencies as $slug => $label ) {
+								$checked = '';
+								$hidden  = $checked;
+						if ( array_key_exists( $slug, $this->additional_currencies ) || $slug === $this->base_currency ) {
 								$checked = 'checked="checked"';
-							}
+						}
 
-							if ( $slug === $this->base_currency ) {
+						if ( $slug === $this->base_currency ) {
 								$hidden = 'style="display:none;" class="hidden"';
-							}
-							?>
-							<li <?php echo $hidden; ?>>
-								<input type="checkbox" <?php echo $checked; ?> data-name="additional_currencies" data-value="<?php echo $slug; ?>" name="additional_currencies[<?php echo $slug; ?>]" /> <label for="additional_currencies"><?php echo $this->get_currency_flag( $slug ) . $label; ?></label>
+						}
+						?>
+							<li <?php echo esc_attr( $hidden ); ?>>
+								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo esc_attr( $this->get_currency_flag( $slug ) . $label ); ?></label>
 							</li>
 							<?php
-						}
+					}
 					?>
 				</ul>
 			</td>
 		</tr>
-	<?php }
+		<?php
+	}
 
 	/**
 	 * Outputs the multiple prices checkbox
 	 */
-	public function enable_multiple_prices_field() { ?>
+	public function enable_multiple_prices_field() {
+		?>
 		<tr class="form-field">
 			<th scope="row">
 				<label for="multi_price"><?php esc_html_e( 'Enable Multiple Prices', 'lsx-currencies' ); ?></label>
@@ -225,23 +238,27 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				<small><?php esc_html_e( 'Allowing you to add specific prices per active currency.', 'lsx-currencies' ); ?></small>
 			</td>
 		</tr>
-	<?php }
+		<?php
+	}
 
 	/**
 	 * Outputs the currency heading
 	 */
-	public function currency_api_heading() { ?>
+	public function currency_api_heading() {
+		?>
 		<tr class="form-field banner-wrap">
 			<th class="table_heading" style="padding-bottom:0px;" scope="row" colspan="2">
 				<h4 style="margin-bottom:0px;"><?php esc_html_e( 'Openexchange API', 'lsx-currencies' ); ?></h4>
 			</th>
 		</tr>
-	<?php }
+		<?php
+	}
 
 	/**
 	 * Outputs the api key text field
 	 */
-	public function api_key_field() { ?>
+	public function api_key_field() {
+		?>
 		<tr class="form-field">
 			<th scope="row">
 				<i class="dashicons-before dashicons-admin-network"></i><label for="openexchange_api"> <?php esc_html_e( 'Key', 'to-maps' ); ?></label>
@@ -251,7 +268,8 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				<br /><small><?php esc_html_e( 'Get your free API key here', 'lsx-currencies' ); ?> - <a target="_blank" rel="noopener noreferrer" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
 			</td>
 		</tr>
-	<?php }
+		<?php
+	}
 
 	/**
 	 *
