@@ -45,15 +45,10 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				$uix = \lsx\ui\uix::get_instance( 'lsx' );
 				$uix->register_pages( $pages );
 			}
-
-			// @TODO the function_exists( 'tour_operator' ) is not working here.
-			//if ( function_exists( 'tour_operator' ) ) {
-				add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
-				add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-			//} else {
-				add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
-				add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-			//}
+			add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
+			add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
+			add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
+			add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 		}
 	}
 
@@ -176,7 +171,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 						if ( $currency_id === $this->base_currency ) {
 							$selected = 'selected="selected"';
 						}
-						echo esc_attr( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
+						echo wp_kses_post( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
 					}
 					?>
 				</select>
@@ -213,7 +208,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 						}
 						?>
 							<li <?php echo esc_attr( $hidden ); ?>>
-								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo esc_attr( $this->get_currency_flag( $slug ) . $label ); ?></label>
+								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo wp_kses_post( $this->get_currency_flag( $slug ) . $label ); ?></label>
 							</li>
 							<?php
 					}
@@ -265,7 +260,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			</th>
 			<td>
 				<input type="text" {{#if openexchange_api}} value="{{openexchange_api}}" {{/if}} name="openexchange_api" />
-				<br /><small><?php esc_html_e( 'Get your free API key here', 'lsx-currencies' ); ?> - <a target="_blank" rel="noopener noreferrer" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
+				<br /><small><?php esc_html_e( 'Get your API key here', 'lsx-currencies' ); ?> - <a target="_blank" rel="noopener noreferrer" href="https://openexchangerates.org/signup/free">openexchangerates.org</a></small>
 			</td>
 		</tr>
 		<?php
