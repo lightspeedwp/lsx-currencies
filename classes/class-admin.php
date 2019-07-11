@@ -393,7 +393,7 @@ class Admin {
 			$choices = array_merge( $choices, $menus );
 		}
 
-		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_menu_position', array(
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_menu_position', array(
 			'label'       => esc_html__( 'Display in Menu', 'lsx-currencies' ),
 			'description' => esc_html__( 'Select the menu to display the currency menu switcher.', 'lsx-currencies' ),
 			'section'     => 'lsx_currencies_display',
@@ -408,7 +408,7 @@ class Admin {
 			'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
 		) );
 
-		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_display_flags', array(
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_display_flags', array(
 			'label'       => esc_html__( 'Display Flags', 'lsx-currencies' ),
 			'description' => esc_html__( 'Displays a small flag in front of the name.', 'lsx-currencies' ),
 			'section'     => 'lsx_currencies_display',
@@ -422,7 +422,7 @@ class Admin {
 			'sanitize_callback' => array( $this, 'sanitize_select' ),
 		) );
 
-		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_flag_position', array(
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_flag_position', array(
 			'label'       => esc_html__( 'Flag Position', 'lsx-currencies' ),
 			'description' => esc_html__( 'This moves the flag to the right (after the symbol).', 'lsx-currencies' ),
 			'section'     => 'lsx_currencies_display',
@@ -440,7 +440,7 @@ class Admin {
 			'sanitize_callback' => array( $this, 'sanitize_select' ),
 		) );
 
-		$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_switcher_position', array(
+		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_switcher_position', array(
 			'label'       => esc_html__( 'Symbol Position', 'lsx-currencies' ),
 			'description' => esc_html__( 'This moves the symbol for the switcher to the left (before the flag).', 'lsx-currencies' ),
 			'section'     => 'lsx_currencies_display',
