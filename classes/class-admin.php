@@ -380,7 +380,7 @@ class Admin {
 
 		$wp_customize->add_setting( 'lsx_currencies_currency_menu_position', array(
 			'default' => '',
-			'sanitize_callback' => array( $this, 'sanitize_select' ),
+			'sanitize_callback' => array( '\lsx\currencies\classes\Currencies', 'sanitize_select' ),
 		) );
 
 		$choices = array(
@@ -405,7 +405,7 @@ class Admin {
 
 		$wp_customize->add_setting( 'lsx_currencies_display_flags', array(
 			'default'           => false,
-			'sanitize_callback' => array( $this, 'sanitize_checkbox' ),
+			'sanitize_callback' => array( '\lsx\currencies\classes\Currencies', 'sanitize_checkbox' ),
 		) );
 
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_display_flags', array(
@@ -419,7 +419,7 @@ class Admin {
 
 		$wp_customize->add_setting( 'lsx_currencies_flag_position', array(
 			'default'           => 'left',
-			'sanitize_callback' => array( $this, 'sanitize_select' ),
+			'sanitize_callback' => array( '\lsx\currencies\classes\Currencies', 'sanitize_select' ),
 		) );
 
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_flag_position', array(
@@ -437,7 +437,7 @@ class Admin {
 
 		$wp_customize->add_setting( 'lsx_currencies_currency_switcher_position', array(
 			'default'           => 'right',
-			'sanitize_callback' => array( $this, 'sanitize_select' ),
+			'sanitize_callback' => array( '\lsx\currencies\classes\Currencies', 'sanitize_select' ),
 		) );
 
 		$wp_customize->add_control( new \WP_Customize_Control( $wp_customize, 'lsx_currencies_currency_switcher_position', array(
