@@ -66,14 +66,15 @@ LSX_Currencies = {
 	},
 
 	switchCurrency: function(from, to, amount) {
-		console.log('[LSX_Currencies.switchCurrency] from: ' + from);
+		/*console.log('[LSX_Currencies.switchCurrency] from: ' + from);
 		console.log('[LSX_Currencies.switchCurrency] to: ' + to);
 		console.log('[LSX_Currencies.switchCurrency] lsx_currencies_params:');
-		console.log(lsx_currencies_params);
+		console.log(lsx_currencies_params);*/
 
 		//If the current from price is not the base
 		amount = lsx_money(amount).from(from).to(to);
 		amount = this.formatAmount(amount);
+		console.log(amount);
 		return amount;
 	},
 
