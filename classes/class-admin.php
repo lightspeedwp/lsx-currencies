@@ -6,24 +6,45 @@
  * @author    LightSpeed
  * @license   GPL3
  * @link
- * @copyright 2016 LightSpeed
+ * @copyright 2019 LightSpeed
  */
-class LSX_Currencies_Admin extends LSX_Currencies {
+
+namespace lsx\currencies\classes;
+
+/**
+ * Administration Class
+ */
+class Admin {
+
+	/**
+	 * Holds instance of the class
+	 *
+	 * @var object \lsx\currencies\classes\Admin()
+	 */
+	private static $instance;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->set_defaults();
-
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
-
 		add_action( 'init', array( $this, 'create_settings_page' ), 100 );
 		add_filter( 'lsx_framework_settings_tabs', array( $this, 'register_tabs' ), 100, 1 );
-
 		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
-
 		add_action( 'customize_register', array( $this, 'customize_register' ), 20 );
+	}
+
+	/**
+	 * Return an instance of this class.
+	 *
+	 * @return  object
+	 */
+	public static function init() {
+		// If the single instance hasn't been set, set it now.
+		if ( ! isset( self::$instance ) ) {
+			self::$instance = new self();
+		}
+		return self::$instance;
 	}
 
 	/**
@@ -165,10 +186,10 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			<td>
 				<select value="{{currency}}" name="currency">
 					<?php
-					foreach ( $this->available_currencies as $currency_id => $currency_label ) {
+					foreach ( lsx_currencies()->available_currencies as $currency_id => $currency_label ) {
 						$selected = '';
 
-						if ( $currency_id === $this->base_currency ) {
+						if ( $currency_id === lsx_currencies()->base_currency ) {
 							$selected = 'selected="selected"';
 						}
 						echo wp_kses_post( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
@@ -196,19 +217,19 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			<td>
 				<ul>
 					<?php
-					foreach ( $this->available_currencies as $slug => $label ) {
+					foreach ( lsx_currencies()->available_currencies as $slug => $label ) {
 								$checked = '';
 								$hidden  = $checked;
-						if ( array_key_exists( $slug, $this->additional_currencies ) || $slug === $this->base_currency ) {
+						if ( array_key_exists( $slug, lsx_currencies()->additional_currencies ) || $slug === lsx_currencies()->base_currency ) {
 								$checked = 'checked="checked"';
 						}
 
-						if ( $slug === $this->base_currency ) {
+						if ( $slug === lsx_currencies()->base_currency ) {
 								$hidden = 'style="display:none;" class="hidden"';
 						}
 						?>
 							<li <?php echo esc_attr( $hidden ); ?>>
-								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo wp_kses_post( $this->get_currency_flag( $slug ) . $label ); ?></label>
+								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo wp_kses_post( lsx_currencies()->get_currency_flag( $slug ) . $label ); ?></label>
 							</li>
 							<?php
 					}
@@ -270,15 +291,15 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 	 *
 	 */
 	public function fields( $field ) {
-		if ( true === $this->multi_prices && ! empty( $this->additional_currencies ) ) {
+		if ( true === lsx_currencies()->multi_prices && ! empty( lsx_currencies()->additional_currencies ) ) {
 			$currency_options = array();
 
-			foreach ( $this->additional_currencies as $key => $values ) {
-				if ( $key === $this->base_currency ) {
+			foreach ( lsx_currencies()->additional_currencies as $key => $values ) {
+				if ( $key === lsx_currencies()->base_currency ) {
 					continue;
 				}
 
-				$currency_options[ $key ] = $this->available_currencies[ $key ];
+				$currency_options[ $key ] = lsx_currencies()->available_currencies[ $key ];
 			}
 
 			return array(
@@ -289,7 +310,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 				),
 				array(
 					'id' => 'price',
-					'name' => 'Base Price (' . $this->base_currency . ')',
+					'name' => 'Base Price (' . lsx_currencies()->base_currency . ')',
 					'type' => 'text',
 				),
 				array(
@@ -318,7 +339,7 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			return array(
 				array(
 					'id' => 'price',
-					'name' => 'Price (' . $this->base_currency . ')',
+					'name' => 'Price (' . lsx_currencies()->base_currency . ')',
 					'type' => 'text',
 				),
 			);
@@ -432,5 +453,4 @@ class LSX_Currencies_Admin extends LSX_Currencies {
 			),
 		) ) );
 	}
-
 }

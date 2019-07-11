@@ -17,9 +17,19 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-define( 'LSX_CURRENCIES_PATH',  plugin_dir_path( __FILE__ ) );
-define( 'LSX_CURRENCIES_CORE',  __FILE__ );
-define( 'LSX_CURRENCIES_URL',  plugin_dir_url( __FILE__ ) );
-define( 'LSX_CURRENCIES_VER',  '1.2.0' );
+define( 'LSX_CURRENCIES_PATH', plugin_dir_path( __FILE__ ) );
+define( 'LSX_CURRENCIES_CORE', __FILE__ );
+define( 'LSX_CURRENCIES_URL', plugin_dir_url( __FILE__ ) );
+define( 'LSX_CURRENCIES_VER', '1.2.0' );
 
-require_once( LSX_CURRENCIES_PATH . '/classes/class-lsx-currencies.php' );
+require_once LSX_CURRENCIES_PATH . '/classes/class-currencies.php';
+
+/**
+ * Returns the main instance of the class
+ *
+ * @return object \lsx\currencies\classes\Currencies()
+ */
+function lsx_currencies() {
+	return \lsx\currencies\classes\Currencies::init();
+}
+lsx_currencies();

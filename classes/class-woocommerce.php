@@ -6,23 +6,35 @@
  * @author    LightSpeed
  * @license   GPL3
  * @link
- * @copyright 2016 LightSpeed
+ * @copyright 2019 LightSpeed
  */
-class LSX_Currencies_WooCommerce {
 
-	public $currency = false;
+namespace lsx\currencies\classes;
+
+/**
+ * Holds the WooCommerce Integrations
+ */
+class WooCommerce {
 
 	/**
 	 * Holds instance of the class
+	 *
+	 * @var object \lsx\currencies\classes\WooCommerce()
 	 */
 	private static $instance;
+
+	/**
+	 * Holds the current currency.
+	 *
+	 * @var boolean
+	 */
+	public $currency = false;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		add_filter( 'wc_price', array( $this, 'price_filter' ), 300, 3 );
-		//add_filter( 'woocommerce_cart_subtotal', array( $this, 'cart_subtotal' ), 10, 3 );
 	}
 
 	/**
@@ -31,12 +43,10 @@ class LSX_Currencies_WooCommerce {
 	 * @return  object
 	 */
 	public static function init() {
-
 		// If the single instance hasn't been set, set it now.
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
-
 		return self::$instance;
 	}
 
@@ -49,9 +59,11 @@ class LSX_Currencies_WooCommerce {
 	}
 
 	/**
-	 * @param $return
-	 * @param $price
-	 * @param $args
+	 * Filter the WooCommerce Price.
+	 * 
+	 * @param $return mixed
+	 * @param $price string
+	 * @param $args array
 	 *
 	 * @return mixed
 	 */
@@ -77,6 +89,4 @@ class LSX_Currencies_WooCommerce {
 
 		return $cart_subtotal;
 	}
-
-
 }
