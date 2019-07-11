@@ -232,7 +232,7 @@ class Frontend {
 		$items = '';
 		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
 		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a class="current symbol-' . $lsx_currencies()->switcher_symbol_position . '" href="#' . strtolower( $this->current_currency ) . '">';
+		$items .= '<a class="current symbol-' . lsx_currencies()->switcher_symbol_position . '" href="#' . strtolower( $this->current_currency ) . '">';
 		$items .= isset( $args->link_before ) ? $args->link_before : '';
 
 		if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
@@ -256,7 +256,6 @@ class Frontend {
 		$items .= isset( $args->link_after ) ? $args->link_after : '';
 		$items .= '<span class="caret"></span></a>';
 		$items .= isset( $args->after ) ? $args->after : '';
-		//unset( $languages[ $current_language ] );
 		$items .= $this->render_sub_items();
 		$items .= '</li>';
 		return $items;
