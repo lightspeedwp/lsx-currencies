@@ -106,7 +106,11 @@ class Frontend {
 		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCIES_URL . 'assets/js/vendor/accounting.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
 		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCIES_URL . 'assets/js/vendor/cookie.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
 
-		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/js/src/lsx-currencies.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCIES_VER, true );
+		$prefix = '.min';
+		if ( defined( 'SCRIPT_DEBUG' ) ) {
+			$prefix = '';
+		}
+		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/js/src/lsx-currencies' . $prefix . '.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCIES_VER, true );
 
 		$params = apply_filters( 'lsx_currencies_js_params', array(
 			'current_currency' => $this->current_currency,
