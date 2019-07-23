@@ -51,7 +51,7 @@ class Frontend {
 		if ( ! is_admin() ) {
 			$this->set_defaults();
 			add_filter( 'lsx_to_custom_field_query', array( $this, 'price_filter' ), 20, 5 );
-			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 999 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 5 );
 			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
 			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
 		}
