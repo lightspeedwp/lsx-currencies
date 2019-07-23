@@ -2,11 +2,14 @@ var lsx_money = fx.noConflict();
 
 LSX_Currencies = {
 	initThis: function() {
-		if ('' === lsx_currencies_params.rates) {
-			return;
+		if ( '1' === lsx_currencies_params.script_debug ) {
+			console.log('[LSX_Currencies.switchCurrency] lsx_currencies_params:');
+			console.log(lsx_currencies_params);
 		}
 
-		console.log( lsx_currencies_params );
+		if ('' === lsx_currencies_params.rates) {
+			return;
+		}		
 
 		//Set the money rates and the base, we will always be converting first from the base.
 		lsx_money.rates = lsx_currencies_params.rates;
@@ -15,7 +18,7 @@ LSX_Currencies = {
 		this.current_currency = lsx_currencies_params.current_currency;
 
 		//If the user has a previous selection, then change the amounts to that base
-		if (this.current_currency != lsx_currencies_params.base) {
+		if (this.current_currency !== lsx_currencies_params.base || '1' === lsx_currencies_params.convert_to_single ) {
 			this.checkAmounts(lsx_currencies_params.base);
 		}
 
@@ -23,28 +26,31 @@ LSX_Currencies = {
 	},
 
 	checkAmounts: function(from) {
-		console.log('[LSX_Currencies.checkAmounts] from: ' + from);
-
 		var $this = this;
 
 		jQuery('.amount.lsx-currencies').each(function() {
 
             var amount = '',
                 new_price = '',
-                strict_amount = '';
+				strict_amount = '';
+				base_currency = lsx_currencies_params.base;
+
+			if ( '1' === lsx_currencies_params.script_debug ) {
+				base_currency = $this.findAvailableCurrency( base_currency, this );
+			}
 
 			if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
                 strict_amount = jQuery(this).attr('data-price-' + $this.current_currency);
-                amount = jQuery(this).attr('data-price-' + lsx_currencies_params.base);
+                amount = jQuery(this).attr('data-price-' + base_currency );
 			} else {
                 strict_amount = jQuery(this).find('.value').attr('data-price-' + $this.current_currency);
-                amount = jQuery(this).find('.value').attr('data-price-' + lsx_currencies_params.base);
+                amount = jQuery(this).find('.value').attr('data-price-' + base_currency );
 			}
 
-            if (typeof strict_amount !== typeof undefined && strict_amount !== false) {
+            if (typeof strict_amount !== typeof undefined && strict_amount !== false && '0.00' !== strict_amount) {
                 new_price = strict_amount;
             } else {
-                new_price = $this.switchCurrency(lsx_currencies_params.base, $this.current_currency, amount );
+                new_price = $this.switchCurrency(base_currency, $this.current_currency, amount );
             }
 
             if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
@@ -66,15 +72,14 @@ LSX_Currencies = {
 	},
 
 	switchCurrency: function(from, to, amount) {
-		/*console.log('[LSX_Currencies.switchCurrency] from: ' + from);
-		console.log('[LSX_Currencies.switchCurrency] to: ' + to);
-		console.log('[LSX_Currencies.switchCurrency] lsx_currencies_params:');
-		console.log(lsx_currencies_params);*/
+		if ( '1' === lsx_currencies_params.script_debug ) {
+			console.log('[LSX_Currencies.switchCurrency] from: ' + from);
+			console.log('[LSX_Currencies.switchCurrency] to: ' + to);
+		}
 
 		//If the current from price is not the base
 		amount = lsx_money(amount).from(from).to(to);
 		amount = this.formatAmount(amount);
-		console.log(amount);
 		return amount;
 	},
 
@@ -124,8 +129,17 @@ LSX_Currencies = {
 	menuLabelToggle: function(amount) {
 		amount = accounting.formatNumber(amount, 2, ',', '.');
 		return amount;
-	}
+	},
 
+	findAvailableCurrency: function( base_currency, current_selector ) {
+		for (const [key, value] of Object.entries(lsx_currencies_params.currency_symbols)) {
+			strict_amount = jQuery( current_selector ).find('.value').attr('data-price-' + key);
+			if ( undefined !== strict_amount && '0.00' !== strict_amount ) {
+				base_currency = key;
+			}
+		}
+		return base_currency;
+	}
 };
 
 jQuery(document).ready( function() {

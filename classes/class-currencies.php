@@ -79,7 +79,7 @@ class Currencies {
 	public $multi_prices = false;
 
 	/** @var boolean */
-	public $conver_to_single = false;
+	public $convert_to_single = false;
 
 	/** @var boolean */
 	public $app_id = false;
@@ -167,7 +167,7 @@ class Currencies {
 
 			if ( isset( $this->options['general']['convert_to_single_currency'] ) && 'on' === $this->options['general']['convert_to_single_currency'] ) {
 				$this->convert_to_single = true;
-			}			
+			}
 
 			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {
 				$this->app_id = $this->options['api']['openexchange_api'];

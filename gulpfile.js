@@ -12,9 +12,9 @@ const plumber      = require('gulp-plumber');
 const autoprefixer = require('gulp-autoprefixer');
 const gutil        = require('gulp-util');
 const rename       = require('gulp-rename');
-const minify       = require('gulp-minify-css');
 const map          = require('map-stream');
 const browserlist  = ['last 2 version', '> 1%'];
+const TerserPlugin = require('terser-webpack-plugin')
 
 const errorreporter = map(function(file, cb) {
 	if (file.jshint.success) {

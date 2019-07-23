@@ -4,6 +4,7 @@
 * Dev - Code Standards updates
 * Dev - Added in a fallback API for exchange rates.
 * Dev - Namespacing and instances for all classes.
+* Dev - Added in an option to convert all multiple currencies to your base currency on the frontend.
 
 ### 1.1.2 
 * Dev - Added in WooCommerce integration

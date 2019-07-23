@@ -54,6 +54,7 @@ class Frontend {
 			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 5 );
 			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
 			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
+			add_filter( 'get_post_metadata', array( $this, 'filter_post_meta' ), 100, 4 );
 		}
 	}
 
@@ -108,18 +109,30 @@ class Frontend {
 		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCIES_URL . 'assets/js/vendor/cookie.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
 
 		$prefix = '.min';
+		$src = '';
+		$script_debug = false;
 		if ( defined( 'SCRIPT_DEBUG' ) ) {
 			$prefix = '';
+			$src = 'src/';
+			$script_debug = true;
 		}
-		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/js/src/lsx-currencies' . $prefix . '.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCIES_VER, true );
+		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/js/' . $src . 'lsx-currencies' . $prefix . '.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCIES_VER, true );
+
+		$base_currency = lsx_currencies()->base_currency;
+		$current_currency = $this->current_currency;
+		if ( true === lsx_currencies()->convert_to_single ) {
+			$current_currency = $base_currency;
+		}
 
 		$params = apply_filters( 'lsx_currencies_js_params', array(
-			'current_currency' => $this->current_currency,
-			'currency_symbols' => $this->get_available_symbols(),
-			'rates'            => $this->rates,
-			'rates_message'    => $this->rates_message,
-			'base'             => lsx_currencies()->base_currency,
-			'flags'            => lsx_currencies()->display_flags,
+			'current_currency'  => $current_currency,
+			'currency_symbols'  => $this->get_available_symbols(),
+			'rates'             => $this->rates,
+			'rates_message'     => $this->rates_message,
+			'base'              => $base_currency,
+			'flags'             => lsx_currencies()->display_flags,
+			'convert_to_single' => lsx_currencies()->convert_to_single,
+			'script_debug'      => $script_debug,
 		));
 
 		wp_localize_script( 'lsx-currencies', 'lsx_currencies_params', $params );
@@ -352,5 +365,25 @@ class Frontend {
 		$allowedtags['span']['data-price-ZWL'] = true;
 
 		return $allowedtags;
+	}
+
+	/**
+	 * Allow empty prices if the convert to single currency is active.
+	 *
+	 * @param null $metadata
+	 * @param string $object_id
+	 * @param string $meta_key
+	 * @param boolean $single
+	 * @return void
+	 */
+	public function filter_post_meta( $metadata = null, $object_id, $meta_key, $single ) {
+		if ( true === lsx_currencies()->convert_to_single && 'price' === $meta_key ) {
+			$meta_cache = wp_cache_get( $object_id, 'post_meta' );
+
+			if ( ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
+				$metadata = '0';
+			}
+		}
+		return $metadata;
 	}
 }
