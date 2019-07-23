@@ -30,7 +30,7 @@ class Admin {
 		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'init', array( $this, 'create_settings_page' ), 100 );
 		add_filter( 'lsx_framework_settings_tabs', array( $this, 'register_tabs' ), 100, 1 );
-		add_filter( 'lsx_price_field_pattern', array( $this, 'fields' ), 10, 1 );
+		add_filter( 'lsx_to_tour_custom_fields', array( $this, 'fields' ), 80, 1 );
 		add_action( 'customize_register', array( $this, 'customize_register' ), 20 );
 	}
 
@@ -154,6 +154,7 @@ class Admin {
 			$this->base_currency_field();
 			$this->additional_currencies_field();
 			$this->enable_multiple_prices_field();
+			$this->enable_convert_to_single_currency_field();
 		}
 	}
 
@@ -258,6 +259,23 @@ class Admin {
 	}
 
 	/**
+	 * Outputs the multiple prices checkbox
+	 */
+	public function enable_convert_to_single_currency_field() {
+		?>
+		<tr class="form-field">
+			<th scope="row">
+				<label for="convert_to_single_currency"><?php esc_html_e( 'Enable Convert to Single Currency', 'lsx-currencies' ); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if convert_to_single_currency}} checked="checked" {{/if}} name="convert_to_single_currency" />
+				<small><?php esc_html_e( 'This will convert all prices added to the base currency, the currency switcher will not work.', 'lsx-currencies' ); ?></small>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
 	 * Outputs the currency heading
 	 */
 	public function currency_api_heading() {
@@ -288,9 +306,9 @@ class Admin {
 	}
 
 	/**
-	 *
+	 *	adds in our multiple prices field
 	 */
-	public function fields( $field ) {
+	public function fields( $meta_boxes ) {
 		if ( true === lsx_currencies()->multi_prices && ! empty( lsx_currencies()->additional_currencies ) ) {
 			$currency_options = array();
 
@@ -302,48 +320,48 @@ class Admin {
 				$currency_options[ $key ] = lsx_currencies()->available_currencies[ $key ];
 			}
 
-			return array(
-				array(
-					'id' => 'price_title',
-					'name' => esc_html__( 'Prices', 'lsx-currencies' ),
-					'type' => 'title',
-				),
-				array(
-					'id' => 'price',
-					'name' => 'Base Price (' . lsx_currencies()->base_currency . ')',
-					'type' => 'text',
-				),
-				array(
-					'id' => 'additional_prices',
-					'name' => '',
-					'single_name' => 'Price',
-					'type' => 'group',
-					'repeatable' => true,
-					'sortable' => true,
-					'fields' => array(
-						array(
-							'id' => 'amount',
-							'name' => 'Amount',
+			$new_boxes = array();
+			$injected = false;
+			if ( ! empty( $meta_boxes ) ) {
+				foreach ( $meta_boxes as $meta_box ) {
+					if ( 'price' === $meta_box['id'] ) {
+						$new_boxes[] = array(
+							'id' => 'price',
+							'name' => 'Base Price (' . lsx_currencies()->base_currency . ')',
 							'type' => 'text',
-						),
-						array(
-							'id' => 'currency',
-							'name' => 'Currency',
-							'type' => 'select',
-							'options' => $currency_options,
-						),
-					),
-				),
-			);
-		} else {
-			return array(
-				array(
-					'id' => 'price',
-					'name' => 'Price (' . lsx_currencies()->base_currency . ')',
-					'type' => 'text',
-				),
-			);
+						);
+						$new_boxes[] = array(
+							'id' => 'additional_prices',
+							'name' => '',
+							'single_name' => 'Price',
+							'type' => 'group',
+							'repeatable' => true,
+							'sortable' => true,
+							'fields' => array(
+								array(
+									'id' => 'amount',
+									'name' => 'Amount',
+									'type' => 'text',
+								),
+								array(
+									'id' => 'currency',
+									'name' => 'Currency',
+									'type' => 'select',
+									'options' => $currency_options,
+								),
+							),
+						);
+						$injected = true;
+						continue;
+					}
+					$new_boxes[] = $meta_box;
+				}
+			}
+			if ( true === $injected ) {
+				$meta_boxes = $new_boxes;
+			}
 		}
+		return $meta_boxes;
 	}
 
 	/**
