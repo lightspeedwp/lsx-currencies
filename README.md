@@ -4,22 +4,24 @@
 
 <p align="center">
     <a href="http://gulpjs.com/"><img src="https://img.shields.io/badge/built%20with-gulp.js-green.svg" alt="Built with gulp.js"></a> 
-    <a href="https://travis-ci.org/lightspeeddevelopment/lsx-team/"><img src="https://travis-ci.com/lightspeeddevelopment/lsx-currencies.svg?branch=master" alt="Build Status"></a>
+    <a href="https://travis-ci.org/lightspeeddevelopment/lsx-currencies/"><img src="https://travis-ci.com/lightspeeddevelopment/lsx-currencies.svg?branch=master" alt="Build Status"></a>
     <a href="https://lsx.lsdev.biz/"><img src="https://lsx.lsdev.biz/wp-content/uploads/2019/06/Designed-for-LSX-Theme-blue.png" alt="Made for LSX"></a>
 </p>
 
+The LSX Currencies extension gives your users the ability to switch between currencies when viewing a product or service. Choose the currencies you want to support and your base currency and you are good to go! 
+
 ## Works with the LSX Theme
-Our  [theme](https://lsx.lsdev.biz/) works perfectly with the Team Extension, improving internal linking, website SEO and user experience! 
+Our [theme](https://lsx.lsdev.biz/) works perfectly with the Currencies Extension. We are always updating our software to add functionality, and maintain latest security protocols.
 
 ## Gutenberg Compatible Plugin
-Have you updated to the new WordPress Gutenberg editor? We've got you covered! The LSX Currencies Plugin has been optimised for the Gutenberg update. Check out our [release post](https://lsx.lsdev.biz/lsx-blocks-available-on-wordpress-org/) on the update for more information.
+Have you updated to the new WordPress Gutenberg editor? We've got you covered! The LSX Currencies Plugin has been optimised for the Gutenberg update. 
 
 ## It's free, and always will be.
 We’re firm believers in open source - that’s why the [LSX Currencies plugin](https://lsx.lsdev.biz/) is free, and that won't change. We are constantly maintaining and updating our extension so you have the latest and greatest abilities on your LSX Theme powered site. 
 
 ## LSX Currencies Documentation
 
-We have created extensive documentation on all of the LSX Currencies Plugin functionality. This means a hassle free installation and setup with no code requirements. Go to the [LSX Currencies Documentation](https://lsx.lsdev.biz/documentation/lsx-team/).
+We have created extensive documentation on all of the LSX Currencies Plugin functionality. This means a hassle free installation and setup with no code requirements.
 
 ## LSX Currencies Help & Support
 
