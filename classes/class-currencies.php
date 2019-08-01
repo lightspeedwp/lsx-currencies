@@ -133,6 +133,8 @@ class Currencies {
 			$this->woocommerce = \lsx\currencies\classes\WooCommerce::init();
 			$this->woocommerce->set_currency( $this->base_currency );
 		}
+
+		require_once LSX_CURRENCIES_PATH . '/includes/template-tags.php';
 	}
 
 	/**
