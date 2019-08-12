@@ -21,7 +21,7 @@ We’re firm believers in open source - that’s why the [LSX Currencies plugin]
 
 ## LSX Currencies Documentation
 
-We have created extensive documentation on all of the LSX Currencies Plugin functionality. This means a hassle free installation and setup with no code requirements.
+[LSX Currencies Documentation](https://lsx.lsdev.biz/documentation/lsx-currencies/) has everything you need to use the plugin.
 
 ## LSX Currencies Help & Support
 
