@@ -68,7 +68,8 @@ class Admin {
 			}
 			add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
 			add_action( 'lsx_to_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
-			add_action( 'lsx_framework_dashboard_tab_content', array( $this, 'general_settings' ), 11, 1 );
+
+			add_action( 'lsx_framework_display_tab_content', array( $this, 'general_settings' ), 11, 1 );
 			add_action( 'lsx_framework_api_tab_content', array( $this, 'api_settings' ), 11, 1 );
 		}
 	}
@@ -103,7 +104,7 @@ class Admin {
 		}
 
 		if ( ! function_exists( 'tour_operator' ) ) {
-			if ( ! array_key_exists( 'general', $tabs ) ) {
+			/*if ( ! array_key_exists( 'general', $tabs ) ) {
 				$tabs['general'] = array(
 					'page_title'        => '',
 					'page_description'  => '',
@@ -113,7 +114,7 @@ class Admin {
 				);
 
 				$default = false;
-			}
+			}*/
 
 			if ( ! array_key_exists( 'display', $tabs ) ) {
 				$tabs['display'] = array(
@@ -193,7 +194,13 @@ class Admin {
 						if ( lsx_currencies()->base_currency === $currency_id ) {
 							$selected = 'selected="selected"';
 						}
-						echo wp_kses_post( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>' );
+						$allowed_html = array(
+							'option' => array(
+								'value' => array(),
+								'selected' => array(),
+							),
+						);
+						echo wp_kses( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>', $allowed_html );
 					}
 					?>
 				</select>
@@ -219,8 +226,8 @@ class Admin {
 				<ul>
 					<?php
 					foreach ( lsx_currencies()->available_currencies as $slug => $label ) {
-								$checked = '';
-								$hidden  = $checked;
+						$checked = '';
+						$hidden  = $checked;
 						if ( array_key_exists( $slug, lsx_currencies()->additional_currencies ) || lsx_currencies()->base_currency === $slug ) {
 								$checked = 'checked="checked"';
 						}

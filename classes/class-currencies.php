@@ -141,8 +141,10 @@ class Currencies {
 	 * Get the options
 	 */
 	public function set_defaults() {
+		$settings_tab = 'display';
 		if ( function_exists( 'tour_operator' ) ) {
 			$options = get_option( '_lsx-to_settings', false );
+			$settings_tab = 'general';
 		} else {
 			$options = get_option( '_lsx_settings', false );
 
@@ -155,19 +157,19 @@ class Currencies {
 			$this->options = $options;
 			$this->migration_uix_to_customize();
 
-			if ( isset( $this->options['general'] ) && isset( $this->options['general']['currency'] ) ) {
-				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options['general']['currency'], $this );
+			if ( isset( $this->options[ $settings_tab ] ) && isset( $this->options[ $settings_tab ]['currency'] ) ) {
+				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options[ $settings_tab ]['currency'], $this );
 			}
 
-			if ( isset( $this->options['general']['additional_currencies'] ) && is_array( $this->options['general']['additional_currencies'] ) && ! empty( $this->options['general']['additional_currencies'] ) ) {
-				$this->additional_currencies = $this->options['general']['additional_currencies'];
+			if ( isset( $this->options[ $settings_tab ]['additional_currencies'] ) && is_array( $this->options[ $settings_tab ]['additional_currencies'] ) && ! empty( $this->options[ $settings_tab ]['additional_currencies'] ) ) {
+				$this->additional_currencies = $this->options[ $settings_tab ]['additional_currencies'];
 			}
 
-			if ( isset( $this->options['general']['multi_price'] ) && 'on' === $this->options['general']['multi_price'] ) {
+			if ( isset( $this->options[ $settings_tab ]['multi_price'] ) && 'on' === $this->options[ $settings_tab ]['multi_price'] ) {
 				$this->multi_prices = true;
 			}
 
-			if ( isset( $this->options['general']['convert_to_single_currency'] ) && 'on' === $this->options['general']['convert_to_single_currency'] ) {
+			if ( isset( $this->options[ $settings_tab ]['convert_to_single_currency'] ) && 'on' === $this->options[ $settings_tab ]['convert_to_single_currency'] ) {
 				$this->convert_to_single = true;
 			}
 

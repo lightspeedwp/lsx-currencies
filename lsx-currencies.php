@@ -22,7 +22,8 @@ define( 'LSX_CURRENCIES_CORE', __FILE__ );
 define( 'LSX_CURRENCIES_URL', plugin_dir_url( __FILE__ ) );
 define( 'LSX_CURRENCIES_VER', '1.2.0' );
 
-require_once LSX_CURRENCIES_PATH . '/classes/class-currencies.php';
+require_once LSX_CURRENCIES_PATH . 'classes/deprecated/class-lsx-currencies.php';
+require_once LSX_CURRENCIES_PATH . 'classes/class-currencies.php';
 
 /**
  * Returns the main instance of the class
