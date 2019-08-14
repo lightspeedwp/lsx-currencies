@@ -154,8 +154,10 @@ class Admin {
 		if ( 'currency_switcher' === $tab ) {
 			$this->base_currency_field();
 			$this->additional_currencies_field();
-			$this->enable_multiple_prices_field();
-			$this->enable_convert_to_single_currency_field();
+			if ( function_exists( 'tour_operator' ) ) {
+				$this->enable_multiple_prices_field();
+				$this->enable_convert_to_single_currency_field();
+			}
 		}
 	}
 
@@ -236,7 +238,7 @@ class Admin {
 								$hidden = 'style="display:none;" class="hidden"';
 						}
 						?>
-							<li <?php echo esc_attr( $hidden ); ?>>
+							<li <?php echo wp_kses_post( $hidden ); ?>>
 								<input type="checkbox" <?php echo esc_attr( $checked ); ?> data-name="additional_currencies" data-value="<?php echo esc_attr( $slug ); ?>" name="additional_currencies[<?php echo esc_attr( $slug ); ?>]" /> <label for="additional_currencies"><?php echo wp_kses_post( lsx_currencies()->get_currency_flag( $slug ) . $label ); ?></label>
 							</li>
 							<?php
