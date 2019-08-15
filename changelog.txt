@@ -6,6 +6,7 @@
 * Dev - Namespacing and instances for all classes.
 * Dev - Added in an option to convert all multiple currencies to your base currency on the frontend.
 * Dev - Added in a shortcode - [lsx_currency_value value="500"]
+* Dev - Added in the option to strip the decimal places from the values.
 
 ### 1.1.2 
 * Dev - Added in WooCommerce integration

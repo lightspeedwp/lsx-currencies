@@ -154,6 +154,7 @@ class Admin {
 		if ( 'currency_switcher' === $tab ) {
 			$this->base_currency_field();
 			$this->additional_currencies_field();
+			$this->remove_decimals_field();
 			if ( function_exists( 'tour_operator' ) ) {
 				$this->enable_multiple_prices_field();
 				$this->enable_convert_to_single_currency_field();
@@ -245,6 +246,23 @@ class Admin {
 					}
 					?>
 				</ul>
+			</td>
+		</tr>
+		<?php
+	}
+
+	/**
+	 * Outputs the multiple prices checkbox
+	 */
+	public function remove_decimals_field() {
+		?>
+		<tr class="form-field">
+			<th scope="row">
+				<label for="remove_decimals"><?php esc_html_e( 'Remove Decimals', 'lsx-currencies' ); ?></label>
+			</th>
+			<td>
+				<input type="checkbox" {{#if remove_decimals}} checked="checked" {{/if}} name="remove_decimals" />
+				<small><?php esc_html_e( 'Round down the amount to the nearest full value.', 'lsx-currencies' ); ?></small>
 			</td>
 		</tr>
 		<?php

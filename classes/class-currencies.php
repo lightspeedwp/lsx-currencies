@@ -97,6 +97,9 @@ class Currencies {
 	/** @var string */
 	public $switcher_symbol_position = 'right';
 
+	/** @var boolean */
+	public $remove_decimals = false;
+
 	/**
 	 * Constructor
 	 */
@@ -171,6 +174,10 @@ class Currencies {
 
 			if ( isset( $this->options[ $settings_tab ]['convert_to_single_currency'] ) && 'on' === $this->options[ $settings_tab ]['convert_to_single_currency'] ) {
 				$this->convert_to_single = true;
+			}
+
+			if ( isset( $this->options[ $settings_tab ]['remove_decimals'] ) && 'on' === $this->options[ $settings_tab ]['remove_decimals'] ) {
+				$this->remove_decimals = true;
 			}
 
 			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {

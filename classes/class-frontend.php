@@ -133,6 +133,7 @@ class Frontend {
 			'flags'             => lsx_currencies()->display_flags,
 			'convert_to_single' => lsx_currencies()->convert_to_single,
 			'script_debug'      => $script_debug,
+			'remove_decimals'   => lsx_currencies()->remove_decimals,
 		));
 
 		wp_localize_script( 'lsx-currencies', 'lsx_currencies_params', $params );
@@ -180,6 +181,11 @@ class Frontend {
 				$value = preg_replace( '/' . preg_quote( '.', '/' ) . '/', '', $value, $decimals );
 			}
 
+			$money_format = '%i';
+			if ( false !== lsx_currencies()->remove_decimals ) {
+				$money_format = '%.0n';
+			}
+
 			$prefix .= '>';
 			$suffix = '</span>';
 
@@ -187,7 +193,7 @@ class Frontend {
 
 			// Work out the other tags
 			$currency = '<span class="currency-icon ' . mb_strtolower( lsx_currencies()->base_currency ) . '">' . lsx_currencies()->base_currency . '</span>';
-			$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( 'USD', '', money_format( '%i', ltrim( rtrim( $value ) ) ) ) ) . '" ' . $additional_html . '>' . str_replace( 'USD', '', money_format( '%i', ltrim( rtrim( $value ) ) ) ) . '</span>';
+			$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( 'USD', '', money_format( $money_format, ltrim( rtrim( $value ) ) ) ) ) . '" ' . $additional_html . '>' . str_replace( 'USD', '', money_format( $money_format, ltrim( rtrim( $value ) ) ) ) . '</span>';
 
 			// Check for a price type and add that in.
 			$price_type = get_post_meta( get_the_ID(), 'price_type', true );

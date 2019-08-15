@@ -84,7 +84,11 @@ LSX_Currencies = {
 	},
 
 	formatAmount: function(amount) {
-		amount = accounting.formatNumber(amount, 2, ',', '.');
+		if ( 1 === lsx_currencies_params.remove_decimals || '1' === lsx_currencies_params.remove_decimals ) {
+			amount = Math.round( amount );
+		} else {
+			amount = accounting.formatNumber(amount, 2, ',', '.');
+		}
 		return amount;
 	},
 
