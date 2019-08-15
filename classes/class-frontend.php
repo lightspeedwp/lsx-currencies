@@ -231,7 +231,7 @@ class Frontend {
 	 * @return string
 	 */
 	public function wp_nav_menu_items_filter( $items, $args ) {
-		if ( lsx_currencies()->menus === $args->theme_location ) {
+		if ( '' !== lsx_currencies()->menus && lsx_currencies()->menus === $args->theme_location ) {
 			if ( 'top-menu' === $args->theme_location ) {
 				$items = $this->get_menu_html( $args ) . $items;
 			} else {
