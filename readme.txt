@@ -27,6 +27,12 @@ We’re firm believers in open source - that’s why the [LSX Currencies plugin]
 
 [LSX Currencies Documentation](https://lsx.lsdev.biz/documentation/lsx-currencies/) has everything you need to use the plugin.
 
+The plugin offers paid and free API options:
+
+Paid API - https://openexchangerates.org - this allows you greater choice of currencies, and the rates refresh more frequently.
+
+Free API - https://exchangeratesapi.io/
+
 == LSX Currencies Help & Support == 
 
 We offer premium support for this plugin. Premium support that can be purchased [via our website](https://www.lsdev.biz/services/support/).
