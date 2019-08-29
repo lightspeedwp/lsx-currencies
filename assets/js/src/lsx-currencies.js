@@ -40,14 +40,14 @@ LSX_Currencies = {
 			}
 
 			if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
-                strict_amount = jQuery(this).attr('data-price-' + $this.current_currency);
+                strict_amount = jQuery(this).attr('data-price-' + $this.current_currency.toLowerCase() );
                 amount = jQuery(this).attr('data-price-' + base_currency );
 			} else {
-                strict_amount = jQuery(this).find('.value').attr('data-price-' + $this.current_currency);
-                amount = jQuery(this).find('.value').attr('data-price-' + base_currency );
+                strict_amount = jQuery(this).find('.value').attr('data-price-' + $this.current_currency.toLowerCase() );
+                amount = jQuery(this).find('.value').attr('data-price-' + base_currency.toLowerCase() );
 			}
 
-            if (typeof strict_amount !== typeof undefined && strict_amount !== false && '0.00' !== strict_amount) {
+            if (typeof strict_amount !== typeof undefined && strict_amount !== false && '0.00' !== strict_amount && '0' !== strict_amount) {
                 new_price = strict_amount;
             } else {
                 new_price = $this.switchCurrency(base_currency, $this.current_currency, amount );
@@ -137,8 +137,9 @@ LSX_Currencies = {
 
 	findAvailableCurrency: function( base_currency, current_selector ) {
 		for (const [key, value] of Object.entries(lsx_currencies_params.currency_symbols)) {
-			strict_amount = jQuery( current_selector ).find('.value').attr('data-price-' + key);
-			if ( undefined !== strict_amount && '0.00' !== strict_amount ) {
+			lower_key = key.toLowerCase();
+			strict_amount = jQuery( current_selector ).find('.value').attr('data-price-' + lower_key);
+			if ( undefined !== strict_amount && '0.00' !== strict_amount && '0' !== strict_amount && '0' !== strict_amount ) {
 				base_currency = key;
 			}
 		}
