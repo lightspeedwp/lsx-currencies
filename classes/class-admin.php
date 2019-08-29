@@ -189,24 +189,39 @@ class Admin {
 				</label>
 			</th>
 			<td>
-				<select value="{{currency}}" name="currency">
-					<?php
-					foreach ( lsx_currencies()->available_currencies as $currency_id => $currency_label ) {
-						$selected = '';
+				<?php
+				if ( ! function_exists( 'WC' ) ) {
+					?>
+					<select value="{{currency}}" name="currency">
+						<?php
+						foreach ( lsx_currencies()->available_currencies as $currency_id => $currency_label ) {
+							$selected = '';
 
-						if ( lsx_currencies()->base_currency === $currency_id ) {
-							$selected = 'selected="selected"';
+							if ( lsx_currencies()->base_currency === $currency_id ) {
+								$selected = 'selected="selected"';
+							}
+							$allowed_html = array(
+								'option' => array(
+									'value' => array(),
+									'selected' => array(),
+								),
+							);
+							echo wp_kses( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>', $allowed_html );
 						}
-						$allowed_html = array(
-							'option' => array(
-								'value' => array(),
-								'selected' => array(),
-							),
-						);
-						echo wp_kses( '<option value="' . $currency_id . '" ' . $selected . '>' . $currency_label . '</option>', $allowed_html );
+						?>
+					</select>
+					<?php
+				} else {
+					$currency_label = '';
+					if ( isset( lsx_currencies()->available_currencies[ lsx_currencies()->base_currency ] ) ) {
+						$currency_label = lsx_currencies()->available_currencies[ lsx_currencies()->base_currency ];
 					}
 					?>
-				</select>
+					<p><?php echo wp_kses_post( lsx_currencies()->get_currency_flag( lsx_currencies()->base_currency ) ); ?> <?php echo esc_attr( $currency_label ); ?></p>
+					<p><small><?php esc_html_e( 'When WooCommerce is active, that currency is used as the base currency.', 'lsx-currencies' ); ?></small></p>
+					<?php
+				}
+				?>
 			</td>
 		</tr>
 		<?php

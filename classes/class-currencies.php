@@ -104,8 +104,8 @@ class Currencies {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'set_defaults' ) );
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		add_action( 'plugins_loaded', array( $this, 'set_defaults' ) );
 	}
 
 	/**
@@ -134,7 +134,6 @@ class Currencies {
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once LSX_CURRENCIES_PATH . 'classes/class-woocommerce.php';
 			$this->woocommerce = \lsx\currencies\classes\WooCommerce::init();
-			$this->woocommerce->set_currency( $this->base_currency );
 		}
 
 		require_once LSX_CURRENCIES_PATH . '/includes/template-tags.php';

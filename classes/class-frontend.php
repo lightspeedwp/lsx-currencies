@@ -49,7 +49,7 @@ class Frontend {
 	 */
 	public function __construct() {
 		if ( ! is_admin() ) {
-			$this->set_defaults();
+			add_action( 'plugins_loaded', array( $this, 'set_defaults' ), 11, 1 );
 			add_filter( 'lsx_to_custom_field_query', array( $this, 'price_filter' ), 20, 5 );
 			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 5 );
 			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );

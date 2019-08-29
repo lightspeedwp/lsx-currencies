@@ -7,6 +7,7 @@
 * Dev - Added in an option to convert all multiple currencies to your base currency on the frontend.
 * Dev - Added in a shortcode - [lsx_currency_value value="500"]
 * Dev - Added in the option to strip the decimal places from the values.
+* Dev - Allowing the base currency to be overwitten by the WooCommerce currency if the plugin is active.
 
 ### 1.1.2 
 * Dev - Added in WooCommerce integration

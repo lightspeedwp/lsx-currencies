@@ -35,6 +35,7 @@ class WooCommerce {
 	 */
 	public function __construct() {
 		add_filter( 'wc_price', array( $this, 'price_filter' ), 300, 3 );
+		add_filter( 'lsx_currencies_base_currency', array( $this, 'set_base_currency' ), 10, 1 );
 	}
 
 	/**
@@ -51,14 +52,6 @@ class WooCommerce {
 	}
 
 	/**
-	 * Set the current base currency
-	 * @param $currency
-	 */
-	public function set_currency( $currency ) {
-		$this->currency = $currency;
-	}
-
-	/**
 	 * Filter the WooCommerce Price.
 	 *
 	 * @param $return mixed
@@ -69,7 +62,7 @@ class WooCommerce {
 	 */
 	public function price_filter( $return, $price, $args ) {
 		if ( '' !== $price ) {
-			$return = str_replace( 'class', 'data-price-' . $this->currency . '=' . $price . ' class', $return );
+			$return = str_replace( 'class', 'data-price-' . lsx_currencies()->base_currency . '=' . $price . ' class', $return );
 			$return = str_replace( 'woocommerce-Price-amount', 'woocommerce-Price-amount lsx-currencies', $return );
 		}
 		return $return;
@@ -88,5 +81,15 @@ class WooCommerce {
 		$return = str_replace( 'woocommerce-Price-amount', 'woocommerce-Price-amount lsx-currencies', $return );
 
 		return $cart_subtotal;
+	}
+
+	/**
+	 * Make sure our base currency is set to the same as woocommerce.
+	 *
+	 * @param string $currency
+	 * @return void
+	 */
+	public function set_base_currency( $currency ) {
+		return get_woocommerce_currency();
 	}
 }
