@@ -27,7 +27,7 @@ class Admin {
 	 * Constructor
 	 */
 	public function __construct() {
-		//add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'assets' ) );
 		add_action( 'init', array( $this, 'create_settings_page' ), 100 );
 		add_filter( 'lsx_framework_settings_tabs', array( $this, 'register_tabs' ), 100, 1 );
 		add_filter( 'lsx_to_tour_custom_fields', array( $this, 'fields' ), 80, 1 );
