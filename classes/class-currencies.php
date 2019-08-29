@@ -211,6 +211,7 @@ class Currencies {
 	 * @return string
 	 */
 	public function get_currency_flag( $key = 'USD' ) {
+		$key = strtoupper( $key );
 		return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
 	}
 
