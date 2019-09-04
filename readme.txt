@@ -1,4 +1,4 @@
-=== LSX Team ===
+=== LSX Currencies ===
 Contributors: feedmymedia
 Donate link: https://donate.lsdev.biz/
 Tags: lsx, gutenberg complatible, currency switcher, currencies, currency converter
