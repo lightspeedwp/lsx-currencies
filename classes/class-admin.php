@@ -51,7 +51,7 @@ class Admin {
 	 * Enques the assets
 	 */
 	public function assets() {
-		wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCIES_URL . 'assets/js/lsx-currencies-admin.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
+		//wp_enqueue_script( 'lsx-currencies-admin', LSX_CURRENCIES_URL . 'assets/js/lsx-currencies-admin.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
 		wp_enqueue_style( 'lsx-currencies-admin', LSX_CURRENCIES_URL . 'assets/css/lsx-currencies-admin.css', array(), LSX_CURRENCIES_VER );
 	}
 
