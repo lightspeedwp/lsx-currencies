@@ -3,6 +3,8 @@
 ### 1.2.1 - In Development
 * Dev - Adding the .gitattributes file to remove unnecessary files from the WordPress version.
 * Dev - Removing the lsx-currencies admin js.
+* Fix - Making sure the money format stays constant.
+* Fix - Fixing the reloading of prices on facet selection
 
 ### 1.2.0
 * Dev - Code Standards updates

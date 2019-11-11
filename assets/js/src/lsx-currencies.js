@@ -23,10 +23,18 @@ LSX_Currencies = {
 		}
 
 		this.watchMenuSwitcher();
+
+		jQuery(document).on('facetwp-loaded', function() {
+			console.log(LSX_Currencies);
+			console.log('triggering the refresh.');
+			LSX_Currencies.checkAmounts();
+		 });
 	},
 
 	checkAmounts: function(from) {
 		var $this = this;
+
+		console.log(jQuery('.amount.lsx-currencies'));
 
 		jQuery('.amount.lsx-currencies').each(function() {
 
@@ -51,7 +59,7 @@ LSX_Currencies = {
                 new_price = strict_amount;
             } else {
                 new_price = $this.switchCurrency(base_currency, $this.current_currency, amount );
-            }
+			}
 
             if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
 
@@ -85,7 +93,7 @@ LSX_Currencies = {
 
 	formatAmount: function(amount) {
 		if ( 1 === lsx_currencies_params.remove_decimals || '1' === lsx_currencies_params.remove_decimals ) {
-			amount = Math.round( amount );
+			amount = accounting.formatNumber(amount, 0, ',', '.');
 		} else {
 			amount = accounting.formatNumber(amount, 2, ',', '.');
 		}
@@ -144,7 +152,7 @@ LSX_Currencies = {
 			}
 		}
 		return base_currency;
-	}
+	},
 };
 
 jQuery(document).ready( function() {
