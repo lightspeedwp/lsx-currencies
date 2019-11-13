@@ -5,7 +5,7 @@ Tags: lsx, gutenberg, currency switcher, currencies, currency converter
 Requires at least: 4.9
 Tested up to: 5.2.2
 Requires PHP: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
