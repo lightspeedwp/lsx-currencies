@@ -3,7 +3,7 @@ Contributors: feedmymedia
 Donate link: https://donate.lsdev.biz/
 Tags: lsx, gutenberg, currency switcher, currencies, currency converter
 Requires at least: 4.9
-Tested up to: 5.2.2
+Tested up to: 5.3
 Requires PHP: 7.0
 Stable tag: 1.2.1
 License: GPLv3 or later
