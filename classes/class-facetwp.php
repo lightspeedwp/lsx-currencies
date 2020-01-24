@@ -56,20 +56,31 @@ class FacetWP {
 	public function facetwp_index_row_data( $rows, $params ) {
 		switch ( $params['facet']['source'] ) {
 			case 'cf/price':
-				print_r('<pre>');
-				print_r($params);
-				print_r($rows);
-				print_r('</pre>');
-				foreach ( $rows as $r_index => $row ) {
-					$parent                        = wp_get_post_parent_id( $row['facet_value'] );
-					$rows[ $r_index ]['parent_id'] = $parent;
+				// only convert a price to the base currency if the setting is active.
+				// If $rows is empty then there is no base currency set.
+				if ( true === lsx_currencies()->convert_to_single && empty( $rows ) ) {
+					lsx_currencies()->frontend->set_defaults();
+					$additional_prices = get_post_meta( $params['defaults']['post_id'], 'additional_prices', false );
+
+					if ( ! empty( $additional_prices ) && isset( $additional_prices[0] ) && ! empty( lsx_currencies()->frontend->rates ) ) {
+						$row_currency     = $additional_prices[0]['currency'];
+						$row_value        = $additional_prices[0]['amount'];
+						$current_currency = lsx_currencies()->frontend->current_currency;
+						$usd_value        = $row_value / lsx_currencies()->frontend->rates->$row_currency;
+						if ( 'USD' !== $current_currency ) {
+							$usd_value = $usd_value * lsx_currencies()->frontend->rates->$current_currency;
+						}
+						$new_row                        = $params['defaults'];
+						$new_row['facet_value']         = round( $usd_value, 0 );
+						$new_row['facet_display_value'] = round( $usd_value, 0 );
+						$rows[]                         = $new_row;
+					}
 				}
 				break;
 
 			default:
 				break;
 		}
-
 		return $rows;
 	}
 }
