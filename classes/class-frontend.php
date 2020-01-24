@@ -77,7 +77,7 @@ class Frontend {
 	public function set_defaults() {
 		$this->rates_message = esc_html__( 'Error: API key isn\'t set.', 'lsx-currencies' );
 		$this->rates = get_transient( 'lsx_currencies_rates' );
-
+		$this->rates = false;
 		if ( false === $this->rates ) {
 			$rates         = wp_remote_retrieve_body( wp_safe_remote_get( lsx_currencies()->api_url ) );
 			$decoded_rates = json_decode( $rates );
@@ -90,7 +90,8 @@ class Frontend {
 				$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
 			} else {
 				$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
-				set_transient( 'lsx_currencies_rates', $decoded_rates->rates, 60 * 60 * 2 );
+				set_transient( 'lsx_currencies_rates', $decoded_rates->rates, 60 * 60 * 12 );
+				do_action( 'lsx_currencies_rates_refreshed' );
 				$this->rates = $decoded_rates->rates;
 			}
 		} else {

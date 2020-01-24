@@ -35,6 +35,7 @@ class FacetWP {
 	 */
 	public function __construct() {
 		add_filter( 'facetwp_indexer_row_data', array( $this, 'facetwp_index_row_data' ), 20, 2 );
+		add_action( 'lsx_currencies_rates_refreshed', array( $this, 'refresh_the_currencies' ), 20 );
 	}
 
 	/**
@@ -82,5 +83,37 @@ class FacetWP {
 				break;
 		}
 		return $rows;
+	}
+
+	/**
+	 * This will refresh the saved currencies that ar not the same as the base currency.
+	 *
+	 * @return void
+	 */
+	public function refresh_the_currencies() {
+		if ( true === lsx_currencies()->convert_to_single ) {
+			add_action( 'wp_footer', array( $this, 'trigger_the_index' ) );
+		}
+	}
+
+	/**
+	 * Grabs the tour ids and runs them through the index.
+	 *
+	 * @return void
+	 */
+	public function trigger_the_index() {
+		$tours_args  = array(
+			'post_type'      => 'tour',
+			'post_status'    => 'publish',
+			'posts_per_page' => '-1',
+			'nopagin'        => true,
+			'fields'         => 'ids',
+		);
+		$tours_query = new \WP_Query( $tours_args );
+		if ( $tours_query->have_posts() ) {
+			foreach ( $tours_query->posts as $tour_id ) {
+				FWP()->indexer->index( $tour_id );
+			}
+		}
 	}
 }
