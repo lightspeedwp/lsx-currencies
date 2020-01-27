@@ -68,7 +68,7 @@ class FacetWP {
 						$row_value        = $additional_prices[0]['amount'];
 						$current_currency = lsx_currencies()->frontend->current_currency;
 						$usd_value        = $row_value / lsx_currencies()->frontend->rates->$row_currency;
-						if ( 'USD' !== $current_currency ) {
+						if ( $row_currency !== $current_currency ) {
 							$usd_value = $usd_value * lsx_currencies()->frontend->rates->$current_currency;
 						}
 						$new_row                        = $params['defaults'];
