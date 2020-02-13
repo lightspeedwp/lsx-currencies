@@ -1,5 +1,8 @@
 ## Changelog
 
+### 1.2.2 - (in development)
+* Dev - Added in a function to get a converted value for the FacetWP Price slider when indexing and using multi currency.
+
 ### 1.2.1 - 13 November 2019
 * Dev - Adding the .gitattributes file to remove unnecessary files from the WordPress version.
 * Dev - Removing the lsx-currencies admin js.

@@ -45,6 +45,13 @@ class Currencies {
 	public $woocommerce;
 
 	/**
+	 * Holds the FacetWP instance
+	 *
+	 * @var object \lsx\currencies\classes\FacetWP()
+	 */
+	public $facetwp;
+
+	/**
 	 * This hold the URL, it defaults to the free exchange rates.
 	 *
 	 * @var string
@@ -134,6 +141,11 @@ class Currencies {
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once LSX_CURRENCIES_PATH . 'classes/class-woocommerce.php';
 			$this->woocommerce = \lsx\currencies\classes\WooCommerce::init();
+		}
+
+		if ( class_exists( 'FacetWP' ) ) {
+			require_once LSX_CURRENCIES_PATH . 'classes/class-facetwp.php';
+			$this->facetwp = \lsx\currencies\classes\FacetWP::init();
 		}
 
 		require_once LSX_CURRENCIES_PATH . '/includes/template-tags.php';
