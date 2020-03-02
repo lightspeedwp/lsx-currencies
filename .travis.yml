@@ -21,17 +21,23 @@ matrix:
 
   include:
     - php: 7.4
-      env: UNIT=0 SNIFF=1 TEST_GULP=0
+      env: UNIT=1 SNIFF=1 TEST_GULP=1
+    - php: 7.0
+      env: UNIT=1
     - php: 7.4
       env: INTEGRATION=1 WP_VERSION=latest
-    - php: nightly
-      env: UNIT=0
     - php: 7.4
-      env: INTEGRATION=0 WP_VERSION=master
+      env: INTEGRATION=1 WP_VERSION=4.5
+    - php: nightly
+      env: UNIT=1
+    - php: 7.3
+      env: INTEGRATION=1 WP_VERSION=master
 
   allow_failures:
     - php: nightly
-      env: UNIT=0
+      env: UNIT=1
+    - php: 7.4
+      env: INTEGRATION=1 WP_VERSION=master
 
 # Use this to prepare the system to install prerequisites or dependencies.
 # e.g. sudo apt-get update.
@@ -105,23 +111,11 @@ script:
       $(npm bin)/eslint .;
     fi
 
-  # Run the unit tests.
-  - |
-    if [[ "$UNIT" == "1" ]]; then
-      composer run-script phpunit-dev
-    fi
-
-  # Run the integration tests.
-  - |
-    if [[ "$INTEGRATION" == "1" ]]; then
-      composer run-script phpunit-integration-dev
-    fi
-
   # Run the gulp tests.
   - |
     if [[ "$TEST_GULP" == "1" ]]; then
-      npm run lint-gulp
-      npm run test-gulp
+      npm run lint:gulp
+      npm run test:gulp
     fi
 
 # Receive notifications for build results.
