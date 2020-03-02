@@ -53,14 +53,6 @@
 	#############################################################################
 	-->
 
-	<!-- Verify that the text_domain is set to the desired text-domain.
-		 Multiple valid text domains can be provided as a comma-delimited list. -->
-	<rule ref="WordPress.WP.I18n">
-		<properties>
-			<property name="text_domain" type="array" value="wp-rig"/>
-		</properties>
-	</rule>
-
 	<!-- Allow for theme specific exceptions to the file name rules based
 		 on the theme hierarchy and ensure PSR-4 autoloading compatibility. -->
 	<rule ref="WordPress.Files.FileName">
