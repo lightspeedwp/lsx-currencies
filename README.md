@@ -32,3 +32,6 @@ If you are experiencing issues with the LSX Currencies Plugin & have experience 
 ## Contributing to the LSX Currencies Plugin
 
 If you're a developer who's spotted a bug issue and have a fix, or simply have functionality you think would extend our core theme, we are always happy to accept your contribution! Visit the [LSX Currencies Plugin on Github](https://github.com/lightspeeddevelopment/lsx-currencies/) and submit a Pull Request with your updates.
+
+## Like what you see?
+<a href="https://www.lsdev.biz/contact/"><img src="https://www.lsdev.biz/wp-content/uploads/2020/02/work-with-lightspeed.png" width="850" alt="Work with us at LightSpeed"></a>
