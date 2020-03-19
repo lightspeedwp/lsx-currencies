@@ -1,55 +1,101 @@
-## Changelog
+# Change log
 
-### 1.2.2 - (in development)
-* Dev - Added in a function to get a converted value for the FacetWP Price slider when indexing and using multi currency.
 
-### 1.2.1 - 13 November 2019
-* Dev - Adding the .gitattributes file to remove unnecessary files from the WordPress version.
-* Dev - Removing the lsx-currencies admin js.
-* Fix - Making sure the money format stays constant.
-* Fix - Fixing the reloading of prices on facet selection
+## [Unreleased] - Minor version 1.2.2
 
-### 1.2.0
-* Dev - Code Standards updates
-* Dev - Added in a fallback API for exchange rates.
-* Dev - Namespacing and instances for all classes.
-* Dev - Added in an option to convert all multiple currencies to your base currency on the frontend.
-* Dev - Added in a shortcode - [lsx_currency_value value="500"]
-* Dev - Added in the option to strip the decimal places from the values.
-* Dev - Allowing the base currency to be overwitten by the WooCommerce currency if the plugin is active.
+### Added
+- Added in a function to get a converted value for the FacetWP Price slider when indexing and using multi currency.
 
-### 1.1.2 
-* Dev - Added in WooCommerce integration
-* Dev - add noopener noreferrer tags to target="_blank" links
-* Dev - Adding the travis and codesniffer ruleset
-* Dev - Adding a readme.txt and updating the readme.md
+### Security
+- Updating dependencies to prevent vulnerabilities.
+- General testing to ensure compatibility with latest WordPress version (5.4).
+- General testing to ensure compatibility with latest LSX Theme version (2.7).
 
-### 1.1.1
-* Dev - Added compatibility with LSX Videos
-* Dev - Added compatibility with LSX Search
-* Tweak - Move UIX settings (visual tab) to WP Customizer
 
-### 1.1.0
-* Added compatibility with LSX 2.0
-* Dev - New project structure
-* Dev - UIX copied from TO 1.1 + Fixed issue with sub tabs click (settings)
-* Fix - Fixing the settings integration with the Tour Operator Plugin
-* Fix - Fixed scripts/styles loading order
-* Fix - Fixed small issues
+## [[1.2.1]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.1) - 2019-11-13
 
-### 1.0.4
-* Dev - Added in a transient call to cache the Rates from the exchange API
-* Fix - Restricted the API calls to the frontend only reducing the number of queries.
+### Added
+- Adding the .gitattributes file to remove unnecessary files from the WordPress version.
+- Removing the lsx-currencies admin js.
 
-### 1.0.3
-* Fix - Adjusted the plugin settings link inside the LSX API Class
+### Fixed
+- Making sure the money format stays constant.
+- Fixing the reloading of prices on facet selection.
 
-### 1.0.2
-* Fix - Fixed all prefixes replaces (to_ > lsx_to_, TO_ > LSX_TO_)
 
-### 1.0.1
-* Fix - Reduced the access to server (check API key status) using transients
-* Fix - Made the API URLs dev/live dynamic using a prefix "dev-" in the API KEY
+## [[1.2.0]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.0) - 2019-09-04
 
-### 1.0.0
-* First Version
+### Added
+- Code Standards updates.
+- Added in a fallback API for exchange rates.
+- Namespacing and instances for all classes.
+- Added in an option to convert all multiple currencies to your base currency on the frontend.
+- Added in a shortcode - [lsx_currency_value value="500"].
+- Added in the option to strip the decimal places from the values.
+- Allowing the base currency to be overwitten by the WooCommerce currency if the plugin is active.
+
+
+## [[1.1.2]]()
+
+### Added
+- Added in WooCommerce integration.
+- Adding `noopener noreferrer` tags to target="_blank" links.
+- Adding the travis and codesniffer ruleset.
+- Adding a readme.txt and updating the readme.md.
+
+
+## [[1.1.1]]()
+
+### Added
+- Added compatibility with LSX Videos.
+- Added compatibility with LSX Search.
+
+### Fixed
+- Move UIX settings (visual tab) to WP Customizer.
+
+
+## [[1.1.0]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.0) - 2017-10-10
+
+### Added
+- Added compatibility with LSX 2.0.
+- New project structure.
+- UIX copied from TO 1.1 + Fixed issue with sub tabs click (settings).
+
+### Fixed
+- Fixing the settings integration with the Tour Operator Plugin.
+- Fixed scripts/styles loading order.
+- Fixed small issues.
+
+
+## [[1.0.4]]()
+
+### Added
+- Added in a transient call to cache the Rates from the exchange API.
+
+### Fixed
+- Restricted the API calls to the frontend only reducing the number of queries.
+
+
+## [[1.0.3]]()
+
+### Fixed
+- Adjusted the plugin settings link inside the LSX API Class.
+
+
+## [[1.0.2]]()
+
+### Fixed
+- Fixed all prefixes replaces (to_ > lsx_to_, TO_ > LSX_TO_).
+
+
+## [[1.0.1]]()
+
+### Fixed
+- Reduced the access to server (check API key status) using transients.
+- Made the API URLs dev/live dynamic using a prefix "dev-" in the API KEY.
+
+
+## [[1.0.0]]()
+
+### Added
+-First Version.
