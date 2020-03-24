@@ -6,6 +6,9 @@
 ### Added
 - Added in a function to get a converted value for the FacetWP Price slider when indexing and using multi currency.
 
+### Fixed
+- Fixed PHP error `money_format() expects parameter 2 to be float, string given`.
+
 ### Security
 - Updating dependencies to prevent vulnerabilities.
 - General testing to ensure compatibility with latest WordPress version (5.4).
