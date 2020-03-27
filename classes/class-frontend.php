@@ -193,7 +193,7 @@ class Frontend {
 
 			// Work out the other tags
 			$currency = '<span class="currency-icon ' . mb_strtolower( lsx_currencies()->base_currency ) . '">' . lsx_currencies()->base_currency . '</span>';
-			$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( array( '$', 'USD' ), '', money_format( $money_format, ltrim( rtrim( $value ) ) ) ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', money_format( $money_format, ltrim( rtrim( $value ) ) ) ) . '</span>';
+			$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( array( '$', 'USD' ), '', money_format( (float) $money_format, ltrim( rtrim( $value ) ) ) ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', money_format( $money_format, ltrim( rtrim( $value ) ) ) ) . '</span>';
 
 			// Check for a price type and add that in.
 			$price_type = get_post_meta( get_the_ID(), 'price_type', true );
