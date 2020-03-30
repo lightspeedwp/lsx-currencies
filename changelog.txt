@@ -1,7 +1,7 @@
 # Change log
 
 
-## [Unreleased] - Minor version 1.2.2
+## [[1.2.2]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.2) - 2020-03-30
 
 ### Added
 - Added in a function to get a converted value for the FacetWP Price slider when indexing and using multi currency.
