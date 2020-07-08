@@ -1,5 +1,9 @@
 # Change log
 
+## [[1.2.3]]() - Unreleased
+
+### Fixed
+- Removed the "float" case on the money format, which cause base currency values to convert to 0.
 
 ## [[1.2.2]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.2) - 2020-03-30
 
