@@ -85,7 +85,7 @@
     "extends": "stylelint-config-wordpress"
   },
   "dependencies": {
-    "acorn": "^5.7.4",
+    "acorn": "^7.4.0",
     "minimist": "^1.2.3"
   }
 }
