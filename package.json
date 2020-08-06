@@ -28,7 +28,7 @@
     "braces": "^=2.3.1",
     "clean-css": ">=4.1.11",
     "extend": "^=3.0.2",
-    "eslint-config-gulp": "^3.0.1",
+    "eslint-config-gulp": "^5.0.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^9.1.0",
