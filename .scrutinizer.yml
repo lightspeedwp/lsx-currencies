@@ -26,9 +26,11 @@ filter:
 build:
   nodes:
     analysis:
+      project_setup:
+        override: true
       tests:
         override:
-          - php-scrutinizer-run
+          - php-scrutinizer-run --enable-security-analysis
       dependencies:
         before:
           - composer require --dev johnpbloch/wordpress
