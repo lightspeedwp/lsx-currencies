@@ -23,3 +23,9 @@ checks:
     verify_property_names: false
 filter:
     excluded_paths: [tests/*, bin/*, assets/*, languages/* ]
+build:
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
