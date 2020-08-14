@@ -22,5 +22,4 @@ checks:
     verify_argument_usable_as_reference: false
     verify_property_names: false
 filter:
-  excluded_paths:
-    - tests/
+    excluded_dirs: [vendor, tests]
