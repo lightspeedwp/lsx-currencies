@@ -22,4 +22,4 @@ checks:
     verify_argument_usable_as_reference: false
     verify_property_names: false
 filter:
-    excluded_dirs: [vendor, tests]
+    excluded_paths: [tests/*, bin/*, assets/*, languages/* ]
