@@ -52,7 +52,7 @@ class FacetWP {
 	}
 
 	/**
-	 *	Alter the rows and include extra facets rows for the continents.
+	 *  Alter the rows and include extra facets rows for the continents.
 	 */
 	public function facetwp_index_row_data( $rows, $params ) {
 		switch ( $params['facet']['source'] ) {

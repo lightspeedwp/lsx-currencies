@@ -203,17 +203,17 @@ class Frontend {
 				case 'per_person_sharing':
 				case 'per_person_sharing_per_night':
 					$amount = $currency . $amount . ' ' . ucwords( str_replace( '_', ' ', $price_type ) );
-				break;
+				    break;
 
 				case 'total_percentage':
-					$amount .= '% ' . esc_html__( 'Off','lsx-currencies' );
+					$amount .= '% ' . esc_html__( 'Off', 'lsx-currencies' );
 					$before = str_replace( 'from', '', $before );
-				break;
+				    break;
 
 				case 'none':
 				default:
 					$amount = $currency . $amount;
-				break;
+				    break;
 			}
 
 			$return_html = $before . $prefix . $amount . $suffix . $after;
