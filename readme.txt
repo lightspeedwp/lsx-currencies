@@ -1,10 +1,10 @@
 === LSX Currencies ===
-Contributors: feedmymedia
-Donate link: https://donate.lsdev.biz/
+Contributors: feedmymedia, lightspeedwp, eleshar, krugazul, jacquesvdh, ignusvermaak
+Donate link: https://lsdev.biz/lsx/donate/
 Tags: lsx, gutenberg, currency switcher, currencies, currency converter
-Requires at least: 5.3
-Tested up to: 5.5
-Requires PHP: 7.2
+Requires at least: 5.0
+Tested up to: 5.5.1
+Requires PHP: 7.0
 Stable tag: 1.2.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
@@ -13,19 +13,15 @@ The LSX Currencies extension gives your users the ability to switch between curr
 
 == Works with the LSX Theme ==
 
-Our [theme](https://lsx.lsdev.biz/) works perfectly with the Currencies Extension. We are always updating our software to add functionality, and maintain latest security protocols.
-
-== Gutenberg Compatible Plugin ==
-
-Have you updated to the new WordPress Gutenberg editor? We've got you covered! The LSX Currencies Plugin has been optimized for the Gutenberg update.
+Our [theme](https://www.lsdev.biz/lsx/) works perfectly with the Currencies Extension. We are always updating our software to add functionality, and maintain latest security protocols.
 
 == It's free, and always will be. ==
 
-We’re firm believers in open source - that’s why the [LSX Currencies plugin](https://lsx.lsdev.biz/) is free, and that won't change. We are constantly maintaining and updating our extension so you have the latest and greatest abilities on your LSX Theme powered site.
+We’re firm believers in open source - that’s why the [LSX Currencies plugin](https://www.lsdev.biz/lsx/extensions/lsx-currencies/) is free, and that won't change. We are constantly maintaining and updating our extension so you have the latest and greatest abilities on your LSX Theme powered site.
 
 == LSX Currencies Documentation ==
 
-[LSX Currencies Documentation](https://lsx.lsdev.biz/documentation/lsx-currencies/) has everything you need to use the plugin.
+[LSX Currencies Documentation](https://www.lsdev.biz/lsx/documentation/lsx-extensions/lsx-currencies/) has everything you need to use the plugin.
 
 The plugin offers paid and free API options:
 
