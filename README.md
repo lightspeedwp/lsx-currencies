@@ -6,7 +6,7 @@
 	<a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://poser.pugx.org/woocommerce/woocommerce/license" alt="license"></a>
     <a href="http://gulpjs.com/"><img src="https://img.shields.io/badge/built%20with-gulp.js-green.svg" alt="Built with gulp.js"></a> 
     <a href="https://travis-ci.org/lightspeeddevelopment/lsx-currencies/"><img src="https://travis-ci.com/lightspeeddevelopment/lsx-currencies.svg?branch=master" alt="Build Status"></a>
-    <a href="https://lsx.lsdev.biz/"><img src="https://lsx.lsdev.biz/wp-content/uploads/2019/06/Designed-for-LSX-Theme-blue.png" alt="Made for LSX"></a>
+    <a href="https://lsx.lsdev.biz/"><img src="https://www.lsdev.biz/lsx/wp-content/uploads/2019/06/Designed-for-LSX-Theme-blue.png" alt="Made for LSX"></a>
 </p>
 
 The LSX Currencies extension gives your users the ability to switch between currencies when viewing a product or service. Choose the currencies you want to support and your base currency and you are good to go! 
