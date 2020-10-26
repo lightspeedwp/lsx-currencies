@@ -193,7 +193,7 @@ class Currencies {
 
 			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {
 				$this->app_id = $this->options['api']['openexchange_api'];
-				$this->api_url = 'http://openexchangerates.org/api/latest.json?app_id=' . $this->app_id;
+				$this->api_url = 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id;
 			}
 
 			// Currency Switcher Options.
