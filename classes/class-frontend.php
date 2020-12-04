@@ -111,7 +111,7 @@ class Frontend {
 		$prefix = '.min';
 		$src = '';
 		$script_debug = false;
-		if ( defined( 'SCRIPT_DEBUG' ) ) {
+		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
 			$prefix = '';
 			$src = 'src/';
 			$script_debug = true;
