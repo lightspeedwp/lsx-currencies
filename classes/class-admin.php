@@ -348,7 +348,7 @@ class Admin {
 	}
 
 	/**
-	 *	adds in our multiple prices field
+	 *  adds in our multiple prices field
 	 */
 	public function fields( $meta_boxes ) {
 		if ( true === lsx_currencies()->multi_prices && ! empty( lsx_currencies()->additional_currencies ) ) {
@@ -416,18 +416,18 @@ class Admin {
 		 * Panel.
 		 */
 		$wp_customize->add_panel( 'lsx_currencies', array(
-			'priority'       	=> 62,
-			'capability'     	=> 'edit_theme_options',
-			'theme_supports' 	=> '',
-			'title'				=> esc_html__( 'Currencies', 'lsx-currencies' ),
-			'description'    	=> esc_html__( 'LSX Currencies extension settings.', 'lsx-currencies' ),
+			'priority'          => 62,
+			'capability'        => 'edit_theme_options',
+			'theme_supports'    => '',
+			'title'             => esc_html__( 'Currencies', 'lsx-currencies' ),
+			'description'       => esc_html__( 'LSX Currencies extension settings.', 'lsx-currencies' ),
 		) );
 
 		/**
 		 * Section.
 		 */
 
-		$wp_customize->add_section( 'lsx_currencies_display' , array(
+		$wp_customize->add_section( 'lsx_currencies_display', array(
 			'title'       => esc_html__( 'Display', 'lsx-currencies' ),
 			'description' => esc_html__( 'LSX Currencies extension display settings.', 'lsx-currencies' ),
 			'panel'       => 'lsx_currencies',

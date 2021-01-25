@@ -8,8 +8,15 @@
 	?>
 
 	<ul class="ui-tab-nav">
-		<?php if ( false !== $display_settings_page ) { ?><li><a href="#ui-settings" class="active"><?php esc_html_e( 'Settings', 'lsx-currencies' ); ?></a></li><?php } ?>
-		<li><a href="#ui-keys" <?php if ( false === $display_settings_page ) { ?>class="active"<?php } ?>><?php esc_html_e( 'License Keys', 'lsx-currencies' ); ?></a></li>
+		<?php 
+        if ( false !== $display_settings_page ) {
+?>
+<li><a href="#ui-settings" class="active"><?php esc_html_e( 'Settings', 'lsx-currencies' ); ?></a></li><?php } ?>
+		<li><a href="#ui-keys" 
+        <?php 
+        if ( false === $display_settings_page ) {
+?>
+class="active"<?php } ?>><?php esc_html_e( 'License Keys', 'lsx-currencies' ); ?></a></li>
 	</ul>
 
 	<?php if ( false !== $display_settings_page ) { ?>
@@ -24,7 +31,11 @@
 		</div>
 	<?php } ?>
 
-	<div id="ui-keys" class="ui-tab <?php if ( false === $display_settings_page ) { ?>active<?php } ?>">
+	<div id="ui-keys" class="ui-tab 
+    <?php 
+    if ( false === $display_settings_page ) {
+?>
+active<?php } ?>">
 		<table class="form-table" style="margin-top:-13px !important;">
 			<tbody>
 				<?php
