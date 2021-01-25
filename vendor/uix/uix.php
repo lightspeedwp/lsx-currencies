@@ -99,7 +99,7 @@ class uix {
 	}
 
 	public function render_metabox( $a ) {
-		var_dump( $a );
+		//// $a );
 		die;
 	}
 

@@ -81,8 +81,7 @@ LSX_Currencies = {
 
 	switchCurrency: function(from, to, amount) {
 		if ( '1' === lsx_currencies_params.script_debug ) {
-			console.log('[LSX_Currencies.switchCurrency] from: ' + from);
-			console.log('[LSX_Currencies.switchCurrency] to: ' + to);
+			console.log('[LSX_Currencies.switchCurrency] from: ' + from + 'to: ' + to );
 		}
 
 		//If the current from price is not the base
