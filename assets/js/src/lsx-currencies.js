@@ -43,9 +43,7 @@ LSX_Currencies = {
 				strict_amount = '';
 				base_currency = lsx_currencies_params.base;
 
-			if ( '1' === lsx_currencies_params.script_debug ) {
-				base_currency = $this.findAvailableCurrency( base_currency, this );
-			}
+			base_currency = $this.findAvailableCurrency( base_currency, this );
 
 			if ( jQuery( this ).hasClass( 'woocommerce-Price-amount') ) {
                 strict_amount = jQuery(this).attr('data-price-' + $this.current_currency.toLowerCase() );
@@ -81,7 +79,8 @@ LSX_Currencies = {
 
 	switchCurrency: function(from, to, amount) {
 		if ( '1' === lsx_currencies_params.script_debug ) {
-			console.log('[LSX_Currencies.switchCurrency] from: ' + from + 'to: ' + to );
+			console.log('[LSX_Currencies.switchCurrency] from: ' + from);
+			console.log('[LSX_Currencies.switchCurrency] to: ' + to);
 		}
 
 		//If the current from price is not the base

@@ -1,9 +1,9 @@
 # Change log
 
-## [[1.2.3]]() - Unreleased
+## [[1.2.3]]() - https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.3 - ??
 
 ### Fixed
-
+-	The pricing with setting a non base currency on LSX TO post types.
 -   Removed the "float" case on the money format, which cause base currency values to convert to 0.
 
 ### Deprecated
