@@ -1,6 +1,6 @@
 # Change log
 
-## [[1.2.3]]() - https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.3 - ??
+## [[1.2.3]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.3) - 2021-02-04
 
 ### Fixed
 -	The pricing with setting a non base currency on LSX TO post types.
