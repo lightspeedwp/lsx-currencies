@@ -2155,15 +2155,15 @@
         },
         {
             "name": "wpackagist-plugin/woocommerce",
-            "version": "5.4.1",
+            "version": "5.5.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/woocommerce/",
-                "reference": "tags/5.4.1"
+                "reference": "tags/5.5.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.4.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.5.0.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
