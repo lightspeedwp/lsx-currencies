@@ -1765,6 +1765,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-11-30T07:30:19+00:00"
         },
         {
@@ -2155,15 +2156,15 @@
         },
         {
             "name": "wpackagist-plugin/woocommerce",
-            "version": "5.5.1",
+            "version": "5.5.2",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/woocommerce/",
-                "reference": "tags/5.5.1"
+                "reference": "tags/5.5.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.5.1.zip"
+                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.5.2.zip"
             },
             "require": {
                 "composer/installers": "~1.0"
