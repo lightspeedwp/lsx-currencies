@@ -1,5 +1,13 @@
 # Change log
 
+## [[1.2.4]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.4) - 2021-10-20
+
+### Fixed
+-	Changed the money_format to number_format, for PHP Deprecated functions.
+
+### Security
+-   General testing to ensure compatibility with latest WordPress version (5.8).
+
 ## [[1.2.3]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.3) - 2021-02-04
 
 ### Fixed
