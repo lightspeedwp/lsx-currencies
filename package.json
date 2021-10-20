@@ -1,6 +1,6 @@
 {
   "name": "lsx-currencies",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Currencies for LSX",
   "main": "gulpfile.js",
   "scripts": {
