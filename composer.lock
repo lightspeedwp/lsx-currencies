@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd5eb29a740d5882f3eda46d5636916c",
+    "content-hash": "38252b915347f925d685179b60377904",
     "packages": [
         {
             "name": "composer/installers",
@@ -2142,25 +2142,25 @@
                 "url": "https://downloads.wordpress.org/plugin/tour-operator.1.4.3.zip"
             },
             "require": {
-                "composer/installers": "~1.0 || ~2.0"
+                "composer/installers": "^1.0 || ^2.0"
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/tour-operator/"
         },
         {
             "name": "wpackagist-plugin/woocommerce",
-            "version": "5.9.0",
+            "version": "6.0.0",
             "source": {
                 "type": "svn",
                 "url": "https://plugins.svn.wordpress.org/woocommerce/",
-                "reference": "tags/5.9.0"
+                "reference": "tags/6.0.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://downloads.wordpress.org/plugin/woocommerce.5.9.0.zip"
+                "url": "https://downloads.wordpress.org/plugin/woocommerce.6.0.0.zip"
             },
             "require": {
-                "composer/installers": "~1.0 || ~2.0"
+                "composer/installers": "^1.0 || ^2.0"
             },
             "type": "wordpress-plugin",
             "homepage": "https://wordpress.org/plugins/woocommerce/"
@@ -2178,7 +2178,7 @@
                 "url": "https://downloads.wordpress.org/theme/lsx.2.9.5.zip"
             },
             "require": {
-                "composer/installers": "~1.0 || ~2.0"
+                "composer/installers": "^1.0 || ^2.0"
             },
             "type": "wordpress-theme",
             "homepage": "https://wordpress.org/themes/lsx/"
