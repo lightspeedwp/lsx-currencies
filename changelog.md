@@ -1,5 +1,13 @@
 # Change log
 
+## [[1.2.5]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.5) - ???
+
+### Fixed
+-	Added in additional conditions to the `facetwp_index_row_data` function to stop exmpty values breaking the saving.
+
+### Security
+-   General testing to ensure compatibility with latest WordPress version (6.0).
+
 ## [[1.2.4]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.4) - 2021-10-20
 
 ### Fixed

@@ -63,18 +63,20 @@ class FacetWP {
 					lsx_currencies()->frontend->set_defaults();
 					$additional_prices = get_post_meta( $params['defaults']['post_id'], 'additional_prices', false );
 
-					if ( ! empty( $additional_prices ) && isset( $additional_prices[0] ) && ! empty( lsx_currencies()->frontend->rates ) ) {
+					if ( ! empty( $additional_prices ) && isset( $additional_prices[0] ) && ! empty( $additional_prices[0] ) && ! empty( lsx_currencies()->frontend->rates ) ) {
 						$row_currency     = $additional_prices[0]['currency'];
 						$row_value        = $additional_prices[0]['amount'];
-						$current_currency = lsx_currencies()->frontend->current_currency;
-						$usd_value        = $row_value / lsx_currencies()->frontend->rates->$row_currency;
-						if ( $row_currency !== $current_currency ) {
-							$usd_value = $usd_value * lsx_currencies()->frontend->rates->$current_currency;
+						if ( '' !== $row_value && null !== $row_value ) {
+							$current_currency = lsx_currencies()->frontend->current_currency;
+							$usd_value        = $row_value / lsx_currencies()->frontend->rates->$row_currency;
+							if ( $row_currency !== $current_currency ) {
+								$usd_value = $usd_value * lsx_currencies()->frontend->rates->$current_currency;
+							}
+							$new_row                        = $params['defaults'];
+							$new_row['facet_value']         = round( $usd_value, 0 );
+							$new_row['facet_display_value'] = round( $usd_value, 0 );
+							$rows[]                         = $new_row;
 						}
-						$new_row                        = $params['defaults'];
-						$new_row['facet_value']         = round( $usd_value, 0 );
-						$new_row['facet_display_value'] = round( $usd_value, 0 );
-						$rows[]                         = $new_row;
 					}
 				}
 				break;
