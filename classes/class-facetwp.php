@@ -65,7 +65,7 @@ class FacetWP {
 
 					if ( ! empty( $additional_prices ) && isset( $additional_prices[0] ) && ! empty( $additional_prices[0] ) && ! empty( lsx_currencies()->frontend->rates ) ) {
 						$row_currency     = $additional_prices[0]['currency'];
-						$row_value        = $additional_prices[0]['amount'];
+						$row_value        = (int) $additional_prices[0]['amount'];
 						if ( '' !== $row_value && null !== $row_value ) {
 							$current_currency = lsx_currencies()->frontend->current_currency;
 							$usd_value        = $row_value / lsx_currencies()->frontend->rates->$row_currency;
