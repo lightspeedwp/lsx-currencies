@@ -4,6 +4,7 @@
 
 ### Fixed
 -	Added in additional conditions to the `facetwp_index_row_data` function to stop exmpty values breaking the saving.
+-	Fixing the type error while saving values for the `facetwp_index_row_data` function
 
 ### Security
 -   General testing to ensure compatibility with latest WordPress version (6.0).
