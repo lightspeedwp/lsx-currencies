@@ -12,7 +12,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wpackagist-plugin/woocommerce": "^6.0.0",
         "wpackagist-plugin/tour-operator": "^1.4.1",
-        "wpackagist-theme/lsx": "^2.8.0",
+        "wpackagist-theme/lsx": "^3.0",
         "phpcompatibility/phpcompatibility-wp": "^2.1.0"
     },
     "repositories":[{
