@@ -20,6 +20,11 @@ function lsx_currencies_get_price_html( $value = '' ) {
 	$value = preg_replace( '/[^0-9.]+/', '', $value );
 	$decimals = substr_count( $value, '.' );
 
+	$money_format = 2;
+	if ( false !== lsx_currencies()->remove_decimals ) {
+		$money_format = 0;
+	}
+
 	if ( false !== $decimals && $decimals > 1 ) {
 		$decimals--;
 		$decimals = (int) $decimals;
@@ -31,7 +36,11 @@ function lsx_currencies_get_price_html( $value = '' ) {
 
 	// Work out the other tags
 	$currency = '<span class="currency-icon ' . mb_strtolower( lsx_currencies()->base_currency ) . '">' . lsx_currencies()->base_currency . '</span>';
-	$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( 'USD', '', money_format( '%i', ltrim( rtrim( $value ) ) ) ) ) . '">' . str_replace( 'USD', '', money_format( '%i', ltrim( rtrim( $value ) ) ) ) . '</span>';
+
+	$formatted_amount = number_format( (float) $value, $money_format );
+	$formatted_amount = str_replace( array( '$', 'USD' ), '', $formatted_amount );
+
+	$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( 'USD', '', $formatted_amount ) ) . '">' . str_replace( 'USD', '', $formatted_amount ) . '</span>';
 	$price_html = '<span class="amount lsx-currencies">' . $currency . $amount . '</span>';
 	return $price_html;
 }
