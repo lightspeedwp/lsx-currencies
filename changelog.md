@@ -7,7 +7,8 @@
 -	Fixing the type error while saving values for the `facetwp_index_row_data` function
 
 ### Security
--   General testing to ensure compatibility with latest WordPress version (6.0).
+-   Removing Deprecated PHP 7.4 functions
+-   General testing to ensure compatibility with latest WordPress version (6.0.2).
 
 ## [[1.2.4]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.4) - 2021-10-20
 
