@@ -509,7 +509,7 @@ class Currencies {
 	 * @param $input html
 	 * @return mixed
 	 */
-	public function sanitize_checkbox( $input ) {
+	public static function sanitize_checkbox( $input ) {
 		return ( 1 === absint( $input ) ) ? 1 : 0;
 	}
 
@@ -519,7 +519,7 @@ class Currencies {
 	 * @param $input html
 	 * @return mixed
 	 */
-	public function sanitize_select( $input ) {
+	public static function sanitize_select( $input ) {
 		if ( is_string( $input ) || is_integer( $input ) || is_bool( $input ) ) {
 			return $input;
 		} else {
@@ -533,7 +533,7 @@ class Currencies {
 	 * @param $input html
 	 * @return mixed
 	 */
-	public function sanitize_textarea( $input ) {
+	public static function sanitize_textarea( $input ) {
 		return wp_kses_post( $input );
 	}
 
