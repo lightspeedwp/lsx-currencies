@@ -191,15 +191,22 @@ class Frontend {
 
 			setlocale( LC_MONETARY, 'en_US' );
 
+			// Set the prices to use the base currency set on the tour.
+			$currency      = lsx_currencies()->base_currency;
+			$tour_currency = get_post_meta( get_the_ID(), 'currency', true );
+			if ( false !== $tour_currency && '' !== $tour_currency ) {
+				$currency = strtoupper( $tour_currency );
+			}
+
 			// Work out the other tags.
-			$currency = '<span class="currency-icon ' . mb_strtolower( lsx_currencies()->base_currency ) . '">' . lsx_currencies()->base_currency . '</span>';
+			$currency = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
 
 			$value = ltrim( rtrim( $value ) );
 			
 			$for_value = number_format( (float) $value, $money_format );
 			$for_value = str_replace( array( '$', 'USD' ), '', $for_value );
 			
-			$amount = '<span class="value" data-price-' . lsx_currencies()->base_currency . '="' . trim( str_replace( array( '$', 'USD' ), '', $value ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', $for_value ) . '</span>';
+			$amount = '<span class="value" data-price-' . $currency . '="' . trim( str_replace( array( '$', 'USD' ), '', $value ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', $for_value ) . '</span>';
 
 			// Check for a price type and add that in.
 			$price_type = get_post_meta( get_the_ID(), 'price_type', true );
