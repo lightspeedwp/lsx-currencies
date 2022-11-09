@@ -18,9 +18,9 @@ LSX_Currencies = {
 		this.current_currency = lsx_currencies_params.current_currency;
 
 		//If the user has a previous selection, then change the amounts to that base
-		if (this.current_currency !== lsx_currencies_params.base || '1' === lsx_currencies_params.convert_to_single ) {
+		//if (this.current_currency !== lsx_currencies_params.base || '1' === lsx_currencies_params.convert_to_single ) {
 			this.checkAmounts(lsx_currencies_params.base);
-		}
+		//}
 
 		this.watchMenuSwitcher();
 
@@ -149,6 +149,7 @@ LSX_Currencies = {
 				base_currency = key;
 			}
 		}
+		console.log( base_currency );
 		return base_currency;
 	},
 };
