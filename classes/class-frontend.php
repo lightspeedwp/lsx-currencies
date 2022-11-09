@@ -306,7 +306,8 @@ class Frontend {
 	 */
 	private function render_sub_items() {
 		$sub_items = '';
-		foreach ( lsx_currencies()->additional_currencies as $key => $currency ) {
+		$additional_currencies = apply_filters( 'lsx_currencies_nav_additional_items', lsx_currencies()->additional_currencies );
+		foreach ( $additional_currencies as $key => $currency ) {
 			$hidden = '';
 			$class = '';
 
