@@ -134,6 +134,7 @@ class Frontend {
 			'convert_to_single' => lsx_currencies()->convert_to_single,
 			'script_debug'      => $script_debug,
 			'remove_decimals'   => lsx_currencies()->remove_decimals,
+			'currency_tag'      => apply_filters( 'lsx_currency_tag', true ),
 		));
 
 		wp_localize_script( 'lsx-currencies', 'lsx_currencies_params', $params );
