@@ -50,9 +50,9 @@ function lsx_currencies_get_price_html( $value = '', $post_id = false, $args = a
 	}
 
 	// Work out the other tags
-	$currency_tag = '';
+	$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
 	if ( true === $args['currency_tag'] ) {
-		$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
+		$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '"></span>';
 	}	
 
 	$formatted_amount = number_format( (float) $value, $money_format );
