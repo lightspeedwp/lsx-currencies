@@ -15,13 +15,18 @@
  * @param string $value
  * @return void
  */
-function lsx_currencies_get_price_html( $value = '', $post_id = false ) {
+function lsx_currencies_get_price_html( $value = '', $post_id = false, $args = array() ) {
 	$prefix   = '<span class="amount lsx-currencies" ';
 	$value    = preg_replace( '/[^0-9.]+/', '', $value );
 	$decimals = substr_count( $value, '.' );
 	if ( false === $post_id ) {
 		$post_id = get_the_ID();
 	}
+
+	$defaults = array(
+		'currency_tag' => true,
+	);
+	$args = wp_parse_args( $args, $defaults );
 
 	$money_format = 2;
 	if ( false !== lsx_currencies()->remove_decimals ) {
@@ -45,7 +50,10 @@ function lsx_currencies_get_price_html( $value = '', $post_id = false ) {
 	}
 
 	// Work out the other tags
-	$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
+	$currency_tag = '';
+	if ( true === $args['currency_tag'] ) {
+		$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
+	}	
 
 	$formatted_amount = number_format( (float) $value, $money_format );
 	$formatted_amount = str_replace( array( '$', 'USD' ), '', $formatted_amount );
