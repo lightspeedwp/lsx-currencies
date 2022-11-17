@@ -70,10 +70,11 @@ LSX_Currencies = {
                 jQuery(this).html(currency_span);
             } else {
                 jQuery(this).find('.value').html(new_price);
-                jQuery(this).find('.currency-icon').prop('class', '').addClass('currency-icon').addClass($this.current_currency.toLowerCase()).html($this.current_currency);
-
+                jQuery(this).find('.currency-icon').prop('class', '').addClass('currency-icon').addClass($this.current_currency.toLowerCase());
+				if ( true === lsx_currencies_params.currency_tag ) {
+					jQuery(this).find('.currency-icon').html($this.current_currency);
+				}
 			}
-
         });
 	},
 
