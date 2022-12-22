@@ -207,7 +207,7 @@ class Frontend {
 			$for_value = number_format( (float) $value, $money_format );
 			$for_value = str_replace( array( '$', 'USD' ), '', $for_value );
 			
-			$amount = '<span class="value" data-price-' . $currency . '="' . trim( str_replace( array( '$', 'USD' ), '', $value ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', $for_value ) . '</span>';
+			$amount = '<span class="value" data-price-' . esc_html( $currency ) . '="' . trim( str_replace( array( '$', 'USD' ), '', $value ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', $for_value ) . '</span>';
 
 			// Check for a price type and add that in.
 			$price_type = get_post_meta( get_the_ID(), 'price_type', true );
