@@ -173,6 +173,9 @@ class Currencies {
 
 			if ( isset( $this->options[ $settings_tab ] ) && isset( $this->options[ $settings_tab ]['currency'] ) ) {
 				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options[ $settings_tab ]['currency'], $this );
+				if ( defined( 'LSX_BASE_CURRENCY' ) ) {
+					$this->base_currency = LSX_BASE_CURRENCY;
+				}
 			}
 
 			if ( isset( $this->options[ $settings_tab ]['additional_currencies'] ) && is_array( $this->options[ $settings_tab ]['additional_currencies'] ) && ! empty( $this->options[ $settings_tab ]['additional_currencies'] ) ) {

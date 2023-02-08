@@ -49,7 +49,7 @@ class Frontend {
 	 */
 	public function __construct() {
 		if ( ! is_admin() ) {
-			add_action( 'after_setup_theme', array( $this, 'set_defaults' ), 11, 1 );
+			add_action( 'init', array( $this, 'set_defaults' ), 11, 1 );
 			add_filter( 'lsx_to_custom_field_query', array( $this, 'price_filter' ), 20, 5 );
 			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 5 );
 			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
@@ -97,7 +97,12 @@ class Frontend {
 			$this->rates_message = esc_html__( 'Success (from cache).', 'lsx-currencies' );
 		}
 		$this->current_currency = isset( $_COOKIE['lsx_currencies_choice'] ) ? sanitize_key( $_COOKIE['lsx_currencies_choice'] ) : lsx_currencies()->base_currency;
-		$this->current_currency = strtoupper( $this->current_currency );
+		if ( '' !== $this->current_currency && ! empty( $this->current_currency ) ) {
+			$this->current_currency = strtoupper( $this->current_currency );
+		} else {
+			$this->current_currency = lsx_currencies()->base_currency;
+		}
+		
 	}
 
 	/**
@@ -246,11 +251,11 @@ class Frontend {
 	 */
 	public function wp_nav_menu_items_filter( $items, $args ) {
 		if ( '' !== lsx_currencies()->menus && lsx_currencies()->menus === $args->theme_location ) {
-			if ( 'top-menu' === $args->theme_location ) {
-				$items = $this->get_menu_html( $args ) . $items;
-			} else {
+			//if ( 'top-menu' === $args->theme_location || 'top-menu-right' === $args->theme_location ) {
+				//$items = $this->get_menu_html( $args ) . $items;
+			//} else {
 				$items = $items . $this->get_menu_html( $args );
-			}
+			//}
 		}
 		return $items;
 	}

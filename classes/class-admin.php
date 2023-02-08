@@ -190,7 +190,7 @@ class Admin {
 			</th>
 			<td>
 				<?php
-				if ( ! function_exists( 'WC' ) ) {
+				//if ( ! function_exists( 'WC' ) ) {
 					?>
 					<select value="{{currency}}" name="currency">
 						<?php
@@ -211,7 +211,7 @@ class Admin {
 						?>
 					</select>
 					<?php
-				} else {
+				/*} else {
 					$currency_label = '';
 					if ( isset( lsx_currencies()->available_currencies[ lsx_currencies()->base_currency ] ) ) {
 						$currency_label = lsx_currencies()->available_currencies[ lsx_currencies()->base_currency ];
@@ -220,7 +220,7 @@ class Admin {
 					<p><?php echo wp_kses_post( lsx_currencies()->get_currency_flag( lsx_currencies()->base_currency ) ); ?> <?php echo esc_attr( $currency_label ); ?></p>
 					<p><small><?php esc_html_e( 'When WooCommerce is active, that currency is used as the base currency.', 'lsx-currencies' ); ?></small></p>
 					<?php
-				}
+				}*/
 				?>
 			</td>
 		</tr>
