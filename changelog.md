@@ -1,5 +1,10 @@
 # Change log
 
+## [[1.2.6]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.6) - In Development
+
+### Fixed 
+- The default currency not respecting the decimal restrictions.
+
 ## [[1.2.5]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.5) - 2022-12-23
 
 ### Fixed

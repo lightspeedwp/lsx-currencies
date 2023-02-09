@@ -55,6 +55,7 @@ LSX_Currencies = {
 
             if (typeof strict_amount !== typeof undefined && strict_amount !== false && '0.00' !== strict_amount && '0' !== strict_amount) {
                 new_price = strict_amount;
+				new_price = $this.formatAmount(new_price);
             } else {
                 new_price = $this.switchCurrency(base_currency, $this.current_currency, amount );
 			}
