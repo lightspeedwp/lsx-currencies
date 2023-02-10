@@ -60,7 +60,7 @@
     "randomatic": "^=3.0.0",
     "terser-webpack-plugin": "^5.0.0",
     "npm-run-all": "^4.1.5",
-    "stylelint": "^14.0.0",
+    "stylelint": "^15.0.0",
     "stylelint-config-wordpress": "^17.0.0"
   },
   "eslintConfig": {
