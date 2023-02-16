@@ -24,7 +24,7 @@
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "@babel/register": "^7.10.5",
-    "@wordpress/eslint-plugin": "^13.0.0",
+    "@wordpress/eslint-plugin": "^14.0.0",
     "braces": "^=3.0.2",
     "clean-css": ">=4.2.3",
     "extend": "^=3.0.2",
