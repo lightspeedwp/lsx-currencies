@@ -1,9 +1,12 @@
 # Change log
 
-## [[1.2.6]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.6) - In Development
+## [[1.2.6]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.6) - 2023-04-20
 
 ### Fixed 
 - The default currency not respecting the decimal restrictions.
+
+### Security
+-   General testing to ensure compatibility with latest WordPress version (6.2).
 
 ## [[1.2.5]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.5) - 2022-12-23
 
