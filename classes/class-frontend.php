@@ -171,11 +171,13 @@ class Frontend {
 			$additional_html = '';
 			$additional_prices = get_post_meta( get_the_ID(), 'additional_prices', true );
 			$prefix = '<span class="amount lsx-currencies" ';
-			do_action( 'qm/debug', $additional_prices );
-			if ( true === lsx_currencies()->multi_prices && ! empty( $additional_prices ) ) {
+	
+			if ( true === lsx_currencies()->multi_prices && ! empty( $additional_prices ) && is_array( $additional_prices ) ) {
 				
 				foreach ( $additional_prices as $a_price ) {
-					$additional_html .= ' data-price-' . $a_price['currency'] . '="' . $a_price['amount'] . '"';
+					if ( is_array( $a_price ) ) {
+						$additional_html .= ' data-price-' . $a_price['currency'] . '="' . $a_price['amount'] . '"';
+					}
 				}
 			}
 
@@ -403,7 +405,7 @@ class Frontend {
 	 * @return void
 	 */
 	public function filter_post_meta( $metadata = null, $object_id, $meta_key, $single ) {
-		if ( true === lsx_currencies()->convert_to_single && 'price' === $meta_key ) {
+		if ( true === lsx_currencies()->convert_to_single && 'price' === $meta_key && null === $metadata ) {
 			$meta_cache = wp_cache_get( $object_id, 'post_meta' );
 
 			if ( ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
