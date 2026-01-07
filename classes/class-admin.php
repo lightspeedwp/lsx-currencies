@@ -372,25 +372,34 @@ class Admin {
 							'name' => 'Base Price (' . lsx_currencies()->base_currency . ')',
 							'type' => 'text',
 						);
+
+						$currency_fields = [];
+						$currency_fields[] = array(
+							'id'   => 'amount',
+							'name' => esc_html__('Amount', 'tour-operator'),
+							'type' => 'text',
+						);
+
+						$currency_fields[] = array(
+							'id'      => 'currency',
+							'name'    => esc_html__('Currency', 'tour-operator'),
+							'type'    => 'select',
+							'options' => $currency_options,
+						);
+
 						$new_boxes[] = array(
-							'id' => 'additional_prices',
-							'name' => '',
-							'single_name' => 'Price',
-							'type' => 'group',
-							'repeatable' => true,
-							'sortable' => true,
-							'fields' => array(
-								array(
-									'id' => 'amount',
-									'name' => 'Amount',
-									'type' => 'text',
-								),
-								array(
-									'id' => 'currency',
-									'name' => 'Currency',
-									'type' => 'select',
-									'options' => $currency_options,
-								),
+							'id'          => 'additional_prices',
+							'name'        => '',
+							'single_name' => __('Price(s)', 'tour-operator'),
+							'type'        => 'group',
+							'repeatable'  => true,
+							'fields'      => $currency_fields,
+							'desc'        => '',
+							'options'     => array(
+								'group_title'   => __('Price {#}', 'tour-operator'), // since version 1.1.4, {#} gets replaced by row number
+								'add_button'    => __('Add Another', 'tour-operator'),
+								'remove_button' => __('Remove', 'tour-operator'),
+								'sortable'      => false,
 							),
 						);
 						$injected = true;

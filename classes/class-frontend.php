@@ -169,10 +169,11 @@ class Frontend {
 	public function price_filter( $return_html, $meta_key, $value, $before, $after ) {
 		if ( 'price' === $meta_key ) {
 			$additional_html = '';
-			$additional_prices = get_post_meta( get_the_ID(), 'additional_prices', false );
+			$additional_prices = get_post_meta( get_the_ID(), 'additional_prices', true );
 			$prefix = '<span class="amount lsx-currencies" ';
-
+			do_action( 'qm/debug', $additional_prices );
 			if ( true === lsx_currencies()->multi_prices && ! empty( $additional_prices ) ) {
+				
 				foreach ( $additional_prices as $a_price ) {
 					$additional_html .= ' data-price-' . $a_price['currency'] . '="' . $a_price['amount'] . '"';
 				}

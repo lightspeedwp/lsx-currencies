@@ -61,7 +61,7 @@ class FacetWP {
 				// If $rows is empty then there is no base currency set.
 				if ( true === lsx_currencies()->convert_to_single && empty( $rows ) ) {
 					lsx_currencies()->frontend->set_defaults();
-					$additional_prices = get_post_meta( $params['defaults']['post_id'], 'additional_prices', false );
+					$additional_prices = get_post_meta( $params['defaults']['post_id'], 'additional_prices', true );
 
 					if ( ! empty( $additional_prices ) && isset( $additional_prices[0] ) && ! empty( $additional_prices[0] ) && ! empty( lsx_currencies()->frontend->rates ) ) {
 						$row_currency     = $additional_prices[0]['currency'];
