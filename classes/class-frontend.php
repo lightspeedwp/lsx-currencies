@@ -410,7 +410,7 @@ class Frontend {
 
 			if ( ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
 				$metadata = '0';
-			} elseif ( isset( $meta_cache[ $meta_key ][0] ) && empty( $meta_cache[ $meta_key ] ) ) {
+			} elseif ( isset( $meta_cache[ $meta_key ][0] ) && empty( $meta_cache[ $meta_key ][0] ) ) {
 				$metadata = '0';
 			}
 		}
