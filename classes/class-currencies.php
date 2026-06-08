@@ -5,67 +5,43 @@
  * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
- * @link
- * @copyright 2019 LightSpeed
+ * @copyright 2024 LightSpeed
  */
 
 namespace lsx\currencies\classes;
 
 /**
- * The main class
+ * The main plugin class.
  */
 class Currencies {
 
 	/**
-	 * Holds instance of the class
+	 * Singleton instance.
 	 *
-	 * @var object \lsx\currencies\classes\Currencies()
+	 * @var \lsx\currencies\classes\Currencies
 	 */
 	private static $instance;
 
-	/**
-	 * Holds the admin instance
-	 *
-	 * @var object \lsx\currencies\classes\Admin()
-	 */
+	/** @var \lsx\currencies\classes\Admin */
 	public $admin;
 
-	/**
-	 * Holds the frontend instance
-	 *
-	 * @var object \lsx\currencies\classes\Frontedn()
-	 */
+	/** @var \lsx\currencies\classes\Frontend */
 	public $frontend;
 
-	/**
-	 * Holds the woocommerce instance
-	 *
-	 * @var object \lsx\currencies\classes\WooCommerce()
-	 */
+	/** @var \lsx\currencies\classes\Block */
+	public $block;
+
+	/** @var \lsx\currencies\classes\WooCommerce */
 	public $woocommerce;
 
-	/**
-	 * Holds the FacetWP instance
-	 *
-	 * @var object \lsx\currencies\classes\FacetWP()
-	 */
+	/** @var \lsx\currencies\classes\FacetWP */
 	public $facetwp;
 
-	/**
-	 * This hold the URL, it defaults to the free exchange rates.
-	 *
-	 * @var string
-	 */
-	public $api_url = 'https://api.exchangeratesapi.io/latest?base=USD';
-
-	/**
-	 * General Parameters
-	 */
 	/** @var string */
 	public $plugin_slug = 'lsx-currencies';
 
-	/** @var array */
-	public $options = false;
+	/** @var string Exchange rates API endpoint */
+	public $api_url = 'https://api.exchangeratesapi.io/latest?base=USD';
 
 	/** @var string */
 	public $base_currency = 'USD';
@@ -82,33 +58,20 @@ class Currencies {
 	/** @var array */
 	public $currency_symbols = array();
 
-	/** @var boolean */
+	/** @var bool */
 	public $multi_prices = false;
 
-	/** @var boolean */
+	/** @var bool */
 	public $convert_to_single = false;
 
-	/** @var boolean */
+	/** @var bool|string OpenExchange API key */
 	public $app_id = false;
 
-	/*  Currency Switcher Options */
-	/** @var array */
-	public $menus = false;
-
-	/** @var boolean */
-	public $display_flags = false;
-
-	/** @var string */
-	public $flag_position = 'left';
-
-	/** @var string */
-	public $switcher_symbol_position = 'right';
-
-	/** @var boolean */
+	/** @var bool */
 	public $remove_decimals = false;
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
@@ -116,12 +79,11 @@ class Currencies {
 	}
 
 	/**
-	 * Return an instance of this class.
+	 * Return singleton instance.
 	 *
-	 * @return  object
+	 * @return \lsx\currencies\classes\Currencies
 	 */
 	public static function init() {
-		// If the single instance hasn't been set, set it now.
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -129,140 +91,111 @@ class Currencies {
 	}
 
 	/**
-	 * After active plugins and pluggable functions are loaded
+	 * Load sub-classes after all plugins are loaded.
 	 */
 	public function plugins_loaded() {
 		require_once LSX_CURRENCIES_PATH . 'classes/class-admin.php';
-		$this->admin = \lsx\currencies\classes\Admin::init();
+		$this->admin = Admin::init();
 
 		require_once LSX_CURRENCIES_PATH . 'classes/class-frontend.php';
-		$this->frontend = \lsx\currencies\classes\Frontend::init();
+		$this->frontend = Frontend::init();
+
+		require_once LSX_CURRENCIES_PATH . 'classes/class-block.php';
+		$this->block = Block::init();
 
 		if ( class_exists( 'WooCommerce' ) ) {
 			require_once LSX_CURRENCIES_PATH . 'classes/class-woocommerce.php';
-			$this->woocommerce = \lsx\currencies\classes\WooCommerce::init();
+			$this->woocommerce = WooCommerce::init();
 		}
 
 		if ( class_exists( 'FacetWP' ) ) {
 			require_once LSX_CURRENCIES_PATH . 'classes/class-facetwp.php';
-			$this->facetwp = \lsx\currencies\classes\FacetWP::init();
+			$this->facetwp = FacetWP::init();
 		}
 
-		require_once LSX_CURRENCIES_PATH . '/includes/template-tags.php';
+		require_once LSX_CURRENCIES_PATH . 'includes/template-tags.php';
 	}
 
 	/**
-	 * Get the options
+	 * Read saved settings and populate instance properties.
 	 */
 	public function set_defaults() {
-		$settings_tab = 'display';
-		if ( function_exists( 'tour_operator' ) ) {
-			$options = get_option( '_lsx-to_settings', false );
-			$settings_tab = 'general';
-		} else {
-			$options = get_option( '_lsx_settings', false );
+		$options = get_option( 'lsx_currencies_settings', array() );
 
-			if ( false === $options ) {
-				$options = get_option( '_lsx_lsx-settings', false );
+		// Base currency.
+		if ( ! empty( $options['base_currency'] ) ) {
+			$this->base_currency = apply_filters( 'lsx_currencies_base_currency', sanitize_key( $options['base_currency'] ), $this );
+		}
+
+		if ( defined( 'LSX_BASE_CURRENCY' ) ) {
+			$this->base_currency = sanitize_key( LSX_BASE_CURRENCY );
+		}
+
+		// Additional currencies — stored as comma-separated string.
+		if ( ! empty( $options['additional_currencies'] ) ) {
+			$raw = sanitize_text_field( $options['additional_currencies'] );
+			$codes = array_filter( array_map( 'sanitize_key', explode( ',', $raw ) ) );
+			if ( ! empty( $codes ) ) {
+				$this->additional_currencies = array_combine( $codes, $codes );
 			}
 		}
 
-		if ( false !== $options ) {
-			$this->options = $options;
-			$this->migration_uix_to_customize();
-
-			if ( isset( $this->options[ $settings_tab ] ) && isset( $this->options[ $settings_tab ]['currency'] ) ) {
-				$this->base_currency = apply_filters( 'lsx_currencies_base_currency', $this->options[ $settings_tab ]['currency'], $this );
-				if ( defined( 'LSX_BASE_CURRENCY' ) ) {
-					$this->base_currency = LSX_BASE_CURRENCY;
-				}
-			}
-
-			if ( isset( $this->options[ $settings_tab ]['additional_currencies'] ) && is_array( $this->options[ $settings_tab ]['additional_currencies'] ) && ! empty( $this->options[ $settings_tab ]['additional_currencies'] ) ) {
-				$this->additional_currencies = $this->options[ $settings_tab ]['additional_currencies'];
-			}
-
-			if ( isset( $this->options[ $settings_tab ]['multi_price'] ) && 'on' === $this->options[ $settings_tab ]['multi_price'] ) {
-				$this->multi_prices = true;
-			}
-
-			if ( isset( $this->options[ $settings_tab ]['convert_to_single_currency'] ) && 'on' === $this->options[ $settings_tab ]['convert_to_single_currency'] ) {
-				$this->convert_to_single = true;
-			}
-
-			if ( isset( $this->options[ $settings_tab ]['remove_decimals'] ) && 'on' === $this->options[ $settings_tab ]['remove_decimals'] ) {
-				$this->remove_decimals = true;
-			}
-
-			if ( isset( $this->options['api']['openexchange_api'] ) && '' !== $this->options['api']['openexchange_api'] ) {
-				$this->app_id = $this->options['api']['openexchange_api'];
-				$this->api_url = 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id;
-			}
-
-			// Currency Switcher Options.
-			$this->menus = get_theme_mod( 'lsx_currencies_currency_menu_position', false );
-
-			if ( get_theme_mod( 'lsx_currencies_display_flags', false ) ) {
-				$this->display_flags = true;
-			}
-
-			if ( get_theme_mod( 'lsx_currencies_flag_position', false ) ) {
-				$this->flag_position = 'right';
-			}
-
-			if ( get_theme_mod( 'lsx_currencies_currency_switcher_position', false ) ) {
-				$this->switcher_symbol_position = 'left';
-			}
+		if ( ! empty( $options['multi_price'] ) ) {
+			$this->multi_prices = (bool) $options['multi_price'];
 		}
+
+		if ( ! empty( $options['convert_to_single'] ) ) {
+			$this->convert_to_single = (bool) $options['convert_to_single'];
+		}
+
+		if ( ! empty( $options['remove_decimals'] ) ) {
+			$this->remove_decimals = (bool) $options['remove_decimals'];
+		}
+
+		if ( ! empty( $options['openexchange_api'] ) ) {
+			$this->app_id = sanitize_text_field( $options['openexchange_api'] );
+			$this->api_url = esc_url_raw( 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id );
+		}
+
 		$this->available_currencies = $this->get_available_currencies();
-		$this->flag_relations = $this->get_flag_relations();
-		$this->currency_symbols = $this->get_currency_symbols();
+		$this->flag_relations       = $this->get_flag_relations();
+		$this->currency_symbols     = $this->get_currency_symbols();
 	}
 
 	/**
-	 * Returns Currency Flag for currency code provided
+	 * Returns the flag HTML span for a currency code.
 	 *
-	 * @param $key string
+	 * @param string $key ISO 4217 currency code.
 	 * @return string
 	 */
 	public function get_currency_flag( $key = 'USD' ) {
-		$key = strtoupper( $key );
-		return '<span class="flag-icon flag-icon-' . $this->flag_relations[ $key ] . '"></span> ';
+		$key = strtoupper( sanitize_key( $key ) );
+		if ( ! isset( $this->flag_relations[ $key ] ) ) {
+			return '';
+		}
+		return '<span class="flag-icon flag-icon-' . esc_attr( $this->flag_relations[ $key ] ) . '"></span> ';
 	}
 
 	/**
-	 * Get Currency symbol.
+	 * Returns the HTML symbol for a currency code.
 	 *
-	 * @param string $currency
+	 * @param string $currency ISO 4217 code.
 	 * @return string
 	 */
 	public function get_currency_symbol( $currency = '' ) {
 		if ( ! $currency ) {
 			$currency = $this->base_currency;
 		}
-		$currency_symbol = isset( $this->currency_symbols[ $currency ] ) ? $this->currency_symbols[ $currency ] : '';
-		return $currency_symbol;
+		return isset( $this->currency_symbols[ $currency ] ) ? $this->currency_symbols[ $currency ] : '';
 	}
 
 	/**
-	 * Returns an array of the available currencies
+	 * Returns the available currencies list. Paid currencies only shown when an
+	 * OpenExchange API key is configured.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function get_available_currencies() {
-
-		$paid_currencies = array(
-			'BWP' => esc_html__( 'Botswana Pula', 'lsx-currencies' ),
-			'KES' => esc_html__( 'Kenyan Shilling', 'lsx-currencies' ),
-			'LAK' => esc_html__( 'Laos Kip', 'lsx-currencies' ),
-			'MWK' => esc_html__( 'Malawian Kwacha', 'lsx-currencies' ),
-			'MZN' => esc_html__( 'Mozambique Metical', 'lsx-currencies' ),
-			'NAD' => esc_html__( 'Namibian Dollar', 'lsx-currencies' ),
-			'TZS' => esc_html__( 'Tanzania Shilling', 'lsx-currencies' ),
-			'AED' => esc_html__( 'United Arab Emirates Dirham', 'lsx-currencies' ),
-			'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
-			'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
-		);
 		$free_currencies = array(
 			'AUD' => esc_html__( 'Australian Dollar', 'lsx-currencies' ),
 			'BRL' => esc_html__( 'Brazilian Real', 'lsx-currencies' ),
@@ -286,6 +219,19 @@ class Currencies {
 			'USD' => esc_html__( 'United States Dollar', 'lsx-currencies' ),
 		);
 
+		$paid_currencies = array(
+			'BWP' => esc_html__( 'Botswana Pula', 'lsx-currencies' ),
+			'KES' => esc_html__( 'Kenyan Shilling', 'lsx-currencies' ),
+			'LAK' => esc_html__( 'Laos Kip', 'lsx-currencies' ),
+			'MWK' => esc_html__( 'Malawian Kwacha', 'lsx-currencies' ),
+			'MZN' => esc_html__( 'Mozambique Metical', 'lsx-currencies' ),
+			'NAD' => esc_html__( 'Namibian Dollar', 'lsx-currencies' ),
+			'TZS' => esc_html__( 'Tanzania Shilling', 'lsx-currencies' ),
+			'AED' => esc_html__( 'United Arab Emirates Dirham', 'lsx-currencies' ),
+			'ZMW' => esc_html__( 'Zambian Kwacha', 'lsx-currencies' ),
+			'ZWL' => esc_html__( 'Zimbabwean Dollar', 'lsx-currencies' ),
+		);
+
 		if ( false !== $this->app_id ) {
 			$free_currencies = array_merge( $free_currencies, $paid_currencies );
 			asort( $free_currencies );
@@ -295,23 +241,26 @@ class Currencies {
 	}
 
 	/**
-	 * Returns the ISO 3 code in relation to its 2 code values.
+	 * Returns ISO 4217 currency code → ISO 3166-1 alpha-2 country code mappings
+	 * used for flag icons.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function get_flag_relations() {
 		return array(
+			'AED' => 'ae',
 			'AUD' => 'au',
 			'BRL' => 'br',
-			'GBP' => 'gb',
 			'BWP' => 'bw',
 			'CAD' => 'ca',
+			'CHF' => 'ch',
 			'CNY' => 'cn',
 			'EUR' => 'eu',
+			'GBP' => 'gb',
 			'HKD' => 'hk',
-			'INR' => 'in',
 			'IDR' => 'id',
 			'ILS' => 'il',
+			'INR' => 'in',
 			'JPY' => 'jp',
 			'KES' => 'ke',
 			'LAK' => 'la',
@@ -319,260 +268,185 @@ class Currencies {
 			'MYR' => 'my',
 			'MZN' => 'mz',
 			'NAD' => 'na',
-			'NZD' => 'nz',
 			'NOK' => 'no',
+			'NZD' => 'nz',
 			'RUB' => 'ru',
-			'SGD' => 'sg',
-			'ZAR' => 'za',
 			'SEK' => 'se',
-			'CHF' => 'ch',
+			'SGD' => 'sg',
 			'TZS' => 'tz',
 			'USD' => 'us',
-			'AED' => 'ae',
+			'ZAR' => 'za',
 			'ZMW' => 'zm',
 			'ZWL' => 'zw',
 		);
 	}
 
 	/**
-	 * Returns all of the currency symbols.
+	 * Returns all currency symbols as an HTML-entity-keyed array.
+	 * Filterable via the `lsx_currencies_symbols` hook.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function get_currency_symbols() {
-		return apply_filters( 'lsx_currencies_symbols', array(
-			'AED' => '&#x62f;.&#x625;',
-			'AFN' => '&#x60b;',
-			'ALL' => 'L',
-			'AMD' => 'AMD',
-			'ANG' => '&fnof;',
-			'AOA' => 'Kz',
-			'ARS' => '&#36;',
-			'AUD' => '&#36;',
-			'AWG' => 'Afl.',
-			'AZN' => 'AZN',
-			'BAM' => 'KM',
-			'BBD' => '&#36;',
-			'BDT' => '&#2547;&nbsp;',
-			'BGN' => '&#1083;&#1074;.',
-			'BHD' => '.&#x62f;.&#x628;',
-			'BIF' => 'Fr',
-			'BMD' => '&#36;',
-			'BND' => '&#36;',
-			'BOB' => 'Bs.',
-			'BRL' => '&#82;&#36;',
-			'BSD' => '&#36;',
-			'BTC' => '&#3647;',
-			'BTN' => 'Nu.',
-			'BWP' => 'P',
-			'BYR' => 'Br',
-			'BZD' => '&#36;',
-			'CAD' => '&#36;',
-			'CDF' => 'Fr',
-			'CHF' => '&#67;&#72;&#70;',
-			'CLP' => '&#36;',
-			'CNY' => '&yen;',
-			'COP' => '&#36;',
-			'CRC' => '&#x20a1;',
-			'CUC' => '&#36;',
-			'CUP' => '&#36;',
-			'CVE' => '&#36;',
-			'CZK' => '&#75;&#269;',
-			'DJF' => 'Fr',
-			'DKK' => 'DKK',
-			'DOP' => 'RD&#36;',
-			'DZD' => '&#x62f;.&#x62c;',
-			'EGP' => 'EGP',
-			'ERN' => 'Nfk',
-			'ETB' => 'Br',
-			'EUR' => '&euro;',
-			'FJD' => '&#36;',
-			'FKP' => '&pound;',
-			'GBP' => '&pound;',
-			'GEL' => '&#x10da;',
-			'GGP' => '&pound;',
-			'GHS' => '&#x20b5;',
-			'GIP' => '&pound;',
-			'GMD' => 'D',
-			'GNF' => 'Fr',
-			'GTQ' => 'Q',
-			'GYD' => '&#36;',
-			'HKD' => '&#36;',
-			'HNL' => 'L',
-			'HRK' => 'Kn',
-			'HTG' => 'G',
-			'HUF' => '&#70;&#116;',
-			'IDR' => 'Rp',
-			'ILS' => '&#8362;',
-			'IMP' => '&pound;',
-			'INR' => '&#8377;',
-			'IQD' => '&#x639;.&#x62f;',
-			'IRR' => '&#xfdfc;',
-			'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
-			'ISK' => 'kr.',
-			'JEP' => '&pound;',
-			'JMD' => '&#36;',
-			'JOD' => '&#x62f;.&#x627;',
-			'JPY' => '&yen;',
-			'KES' => 'KSh',
-			'KGS' => '&#x441;&#x43e;&#x43c;',
-			'KHR' => '&#x17db;',
-			'KMF' => 'Fr',
-			'KPW' => '&#x20a9;',
-			'KRW' => '&#8361;',
-			'KWD' => '&#x62f;.&#x643;',
-			'KYD' => '&#36;',
-			'KZT' => 'KZT',
-			'LAK' => '&#8365;',
-			'LBP' => '&#x644;.&#x644;',
-			'LKR' => '&#xdbb;&#xdd4;',
-			'LRD' => '&#36;',
-			'LSL' => 'L',
-			'LYD' => '&#x644;.&#x62f;',
-			'MAD' => '&#x62f;.&#x645;.',
-			'MDL' => 'MDL',
-			'MGA' => 'Ar',
-			'MKD' => '&#x434;&#x435;&#x43d;',
-			'MMK' => 'Ks',
-			'MNT' => '&#x20ae;',
-			'MOP' => 'P',
-			'MRO' => 'UM',
-			'MUR' => '&#x20a8;',
-			'MVR' => '.&#x783;',
-			'MWK' => 'MK',
-			'MXN' => '&#36;',
-			'MYR' => '&#82;&#77;',
-			'MZN' => 'MT',
-			'NAD' => '&#36;',
-			'NGN' => '&#8358;',
-			'NIO' => 'C&#36;',
-			'NOK' => '&#107;&#114;',
-			'NPR' => '&#8360;',
-			'NZD' => '&#36;',
-			'OMR' => '&#x631;.&#x639;.',
-			'PAB' => 'B/.',
-			'PEN' => 'S/.',
-			'PGK' => 'K',
-			'PHP' => '&#8369;',
-			'PKR' => '&#8360;',
-			'PLN' => '&#122;&#322;',
-			'PRB' => '&#x440;.',
-			'PYG' => '&#8370;',
-			'QAR' => '&#x631;.&#x642;',
-			'RMB' => '&yen;',
-			'RON' => 'lei',
-			'RSD' => '&#x434;&#x438;&#x43d;.',
-			'RUB' => '&#8381;',
-			'RWF' => 'Fr',
-			'SAR' => '&#x631;.&#x633;',
-			'SBD' => '&#36;',
-			'SCR' => '&#x20a8;',
-			'SDG' => '&#x62c;.&#x633;.',
-			'SEK' => '&#107;&#114;',
-			'SGD' => '&#36;',
-			'SHP' => '&pound;',
-			'SLL' => 'Le',
-			'SOS' => 'Sh',
-			'SRD' => '&#36;',
-			'SSP' => '&pound;',
-			'STD' => 'Db',
-			'SYP' => '&#x644;.&#x633;',
-			'SZL' => 'L',
-			'THB' => '&#3647;',
-			'TJS' => '&#x405;&#x41c;',
-			'TMT' => 'm',
-			'TND' => '&#x62f;.&#x62a;',
-			'TOP' => 'T&#36;',
-			'TRY' => '&#8378;',
-			'TTD' => '&#36;',
-			'TWD' => '&#78;&#84;&#36;',
-			'TZS' => 'Sh',
-			'UAH' => '&#8372;',
-			'UGX' => 'UGX',
-			'USD' => '&#36;',
-			'UYU' => '&#36;',
-			'UZS' => 'UZS',
-			'VEF' => 'Bs F',
-			'VND' => '&#8363;',
-			'VUV' => 'Vt',
-			'WST' => 'T',
-			'XAF' => 'Fr',
-			'XCD' => '&#36;',
-			'XOF' => 'Fr',
-			'XPF' => 'Fr',
-			'YER' => '&#xfdfc;',
-			'ZAR' => '&#82;',
-			'ZMW' => 'ZK',
-		) );
-	}
-
-	/**
-	 * Sanitize checkbox.
-	 *
-	 * @param $input html
-	 * @return mixed
-	 */
-	public static function sanitize_checkbox( $input ) {
-		return ( 1 === absint( $input ) ) ? 1 : 0;
-	}
-
-	/**
-	 * Sanitize select.
-	 *
-	 * @param $input html
-	 * @return mixed
-	 */
-	public static function sanitize_select( $input ) {
-		if ( is_string( $input ) || is_integer( $input ) || is_bool( $input ) ) {
-			return $input;
-		} else {
-			return '';
-		}
-	}
-
-	/**
-	 * Sanitize textarea.
-	 *
-	 * @param $input html
-	 * @return mixed
-	 */
-	public static function sanitize_textarea( $input ) {
-		return wp_kses_post( $input );
-	}
-
-	/**
-	 * Migrate the old data (from UIX) to WP Customizer settings.
-	 *
-	 * @since 1.1.1
-	 */
-	public function migration_uix_to_customize() {
-		$visual_tab_migration = get_theme_mod( 'lsx_currencies_visual_tab_migration', false );
-
-		if ( empty( $visual_tab_migration ) ) {
-			if ( isset( $this->options['display'] ) ) {
-				if ( isset( $this->options['display']['currency_menu_switcher'] ) && is_array( $this->options['display']['currency_menu_switcher'] ) && ! empty( $this->options['display']['currency_menu_switcher'] ) ) {
-					$currency_menu_position = $this->options['display']['currency_menu_switcher'];
-
-					foreach ( $currency_menu_position as $key => $value ) {
-						set_theme_mod( 'lsx_currencies_currency_menu_position', $key );
-						break;
-					}
-				}
-
-				if ( isset( $this->options['display']['display_flags'] ) && 'on' === $this->options['display']['display_flags'] ) {
-					set_theme_mod( 'lsx_currencies_display_flags', true );
-				}
-
-				if ( isset( $this->options['display']['flag_position'] ) && 'on' === $this->options['display']['flag_position'] ) {
-					set_theme_mod( 'lsx_currencies_flag_position', 'right' );
-				}
-
-				if ( isset( $this->options['display']['currency_switcher_position'] ) && 'on' === $this->options['display']['currency_switcher_position'] ) {
-					set_theme_mod( 'lsx_currencies_currency_switcher_position', 'left' );
-				}
-			}
-
-			set_theme_mod( 'lsx_currencies_visual_tab_migration', true );
-		}
+		return apply_filters(
+			'lsx_currencies_symbols',
+			array(
+				'AED' => '&#x62f;.&#x625;',
+				'AFN' => '&#x60b;',
+				'ALL' => 'L',
+				'AMD' => 'AMD',
+				'ANG' => '&fnof;',
+				'AOA' => 'Kz',
+				'ARS' => '&#36;',
+				'AUD' => '&#36;',
+				'AWG' => 'Afl.',
+				'AZN' => 'AZN',
+				'BAM' => 'KM',
+				'BBD' => '&#36;',
+				'BDT' => '&#2547;&nbsp;',
+				'BGN' => '&#1083;&#1074;.',
+				'BHD' => '.&#x62f;.&#x628;',
+				'BIF' => 'Fr',
+				'BMD' => '&#36;',
+				'BND' => '&#36;',
+				'BOB' => 'Bs.',
+				'BRL' => '&#82;&#36;',
+				'BSD' => '&#36;',
+				'BTC' => '&#3647;',
+				'BTN' => 'Nu.',
+				'BWP' => 'P',
+				'BYR' => 'Br',
+				'BZD' => '&#36;',
+				'CAD' => '&#36;',
+				'CDF' => 'Fr',
+				'CHF' => '&#67;&#72;&#70;',
+				'CLP' => '&#36;',
+				'CNY' => '&yen;',
+				'COP' => '&#36;',
+				'CRC' => '&#x20a1;',
+				'CUC' => '&#36;',
+				'CUP' => '&#36;',
+				'CVE' => '&#36;',
+				'CZK' => '&#75;&#269;',
+				'DJF' => 'Fr',
+				'DKK' => 'DKK',
+				'DOP' => 'RD&#36;',
+				'DZD' => '&#x62f;.&#x62c;',
+				'EGP' => 'EGP',
+				'ERN' => 'Nfk',
+				'ETB' => 'Br',
+				'EUR' => '&euro;',
+				'FJD' => '&#36;',
+				'FKP' => '&pound;',
+				'GBP' => '&pound;',
+				'GEL' => '&#x10da;',
+				'GHS' => '&#x20b5;',
+				'GIP' => '&pound;',
+				'GMD' => 'D',
+				'GNF' => 'Fr',
+				'GTQ' => 'Q',
+				'GYD' => '&#36;',
+				'HKD' => '&#36;',
+				'HNL' => 'L',
+				'HRK' => 'Kn',
+				'HTG' => 'G',
+				'HUF' => '&#70;&#116;',
+				'IDR' => 'Rp',
+				'ILS' => '&#8362;',
+				'INR' => '&#8377;',
+				'IQD' => '&#x639;.&#x62f;',
+				'IRR' => '&#xfdfc;',
+				'ISK' => 'kr.',
+				'JMD' => '&#36;',
+				'JOD' => '&#x62f;.&#x627;',
+				'JPY' => '&yen;',
+				'KES' => 'KSh',
+				'KGS' => '&#x441;&#x43e;&#x43c;',
+				'KHR' => '&#x17db;',
+				'KMF' => 'Fr',
+				'KPW' => '&#x20a9;',
+				'KRW' => '&#8361;',
+				'KWD' => '&#x62f;.&#x643;',
+				'KYD' => '&#36;',
+				'KZT' => 'KZT',
+				'LAK' => '&#8365;',
+				'LBP' => '&#x644;.&#x644;',
+				'LKR' => '&#xdbb;&#xdd4;',
+				'LRD' => '&#36;',
+				'LSL' => 'L',
+				'LYD' => '&#x644;.&#x62f;',
+				'MAD' => '&#x62f;.&#x645;.',
+				'MDL' => 'MDL',
+				'MGA' => 'Ar',
+				'MKD' => '&#x434;&#x435;&#x43d;',
+				'MMK' => 'Ks',
+				'MNT' => '&#x20ae;',
+				'MOP' => 'P',
+				'MUR' => '&#x20a8;',
+				'MVR' => '.&#x783;',
+				'MWK' => 'MK',
+				'MXN' => '&#36;',
+				'MYR' => '&#82;&#77;',
+				'MZN' => 'MT',
+				'NAD' => '&#36;',
+				'NGN' => '&#8358;',
+				'NIO' => 'C&#36;',
+				'NOK' => '&#107;&#114;',
+				'NPR' => '&#8360;',
+				'NZD' => '&#36;',
+				'OMR' => '&#x631;.&#x639;.',
+				'PAB' => 'B/.',
+				'PEN' => 'S/.',
+				'PGK' => 'K',
+				'PHP' => '&#8369;',
+				'PKR' => '&#8360;',
+				'PLN' => '&#122;&#322;',
+				'PYG' => '&#8370;',
+				'QAR' => '&#x631;.&#x642;',
+				'RON' => 'lei',
+				'RSD' => '&#x434;&#x438;&#x43d;.',
+				'RUB' => '&#8381;',
+				'RWF' => 'Fr',
+				'SAR' => '&#x631;.&#x633;',
+				'SBD' => '&#36;',
+				'SCR' => '&#x20a8;',
+				'SDG' => '&#x62c;.&#x633;.',
+				'SEK' => '&#107;&#114;',
+				'SGD' => '&#36;',
+				'SHP' => '&pound;',
+				'SLL' => 'Le',
+				'SOS' => 'Sh',
+				'SRD' => '&#36;',
+				'SSP' => '&pound;',
+				'STD' => 'Db',
+				'SYP' => '&#x644;.&#x633;',
+				'SZL' => 'L',
+				'THB' => '&#3647;',
+				'TJS' => '&#x405;&#x41c;',
+				'TMT' => 'm',
+				'TND' => '&#x62f;.&#x62a;',
+				'TOP' => 'T&#36;',
+				'TRY' => '&#8378;',
+				'TTD' => '&#36;',
+				'TWD' => '&#78;&#84;&#36;',
+				'TZS' => 'Sh',
+				'UAH' => '&#8372;',
+				'UGX' => 'UGX',
+				'USD' => '&#36;',
+				'UYU' => '&#36;',
+				'UZS' => 'UZS',
+				'VEF' => 'Bs F',
+				'VND' => '&#8363;',
+				'VUV' => 'Vt',
+				'WST' => 'T',
+				'XAF' => 'Fr',
+				'XCD' => '&#36;',
+				'XOF' => 'Fr',
+				'XPF' => 'Fr',
+				'YER' => '&#xfdfc;',
+				'ZAR' => '&#82;',
+				'ZMW' => 'ZK',
+			)
+		);
 	}
 }
