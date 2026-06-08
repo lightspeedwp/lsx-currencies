@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lsx-currencies/currency-switcher",
+  "version": "2.0.0",
+  "title": "Currency Switcher",
+  "category": "widgets",
+  "icon": "money-alt",
+  "description": "A currency switcher that lets visitors choose their preferred display currency.",
+  "keywords": [
+    "currency",
+    "switcher",
+    "money",
+    "tour operator"
+  ],
+  "textdomain": "lsx-currencies",
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right"
+    ],
+    "color": {
+      "background": true,
+      "text": true,
+      "link": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true,
+      "blockGap": true
+    },
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    },
+    "interactivity": true
+  },
+  "attributes": {
+    "displayFlags": {
+      "type": "boolean",
+      "default": true
+    },
+    "flagPosition": {
+      "type": "string",
+      "default": "left"
+    },
+    "symbolPosition": {
+      "type": "string",
+      "default": "right"
+    },
+    "layout": {
+      "type": "string",
+      "default": "horizontal"
+    },
+    "showCurrentOnly": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style-index.css",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php"
+}

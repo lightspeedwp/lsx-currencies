@@ -1,5 +1,36 @@
 # Change log
 
+## [2.0.0] - 2026-06-08
+
+### Added
+- **Currency Switcher block** (`lsx-currencies/currency-switcher`) — a proper Gutenberg block replacing the old menu-injection approach. Supports appearance settings (flags, flag position, symbol position, horizontal/vertical layout, collapsed mode) via the block inspector. Server-side rendered via `render.php`; no PHP shortcode required.
+- **Tour Operator admin integration** — plugin settings are now available as a "Currencies" submenu page under the Tour Operator menu (falls back to Settings when Tour Operator is not active).
+- `class-block.php` — handles block registration (`register_block_type()`) and passes exchange-rate params to the frontend view script.
+
+### Changed
+- **Settings storage** migrated from the old UIX/Customizer multi-key approach to a single flat `lsx_currencies_settings` WordPress option.
+- Frontend currency switching rewritten in **vanilla JavaScript** (no jQuery, no jquery-cookie). Uses native cookie helpers and the money.js + accounting.js libraries for price conversion.
+- All admin field outputs and form saves now use proper nonces, `sanitize_key()`, `sanitize_text_field()`, `esc_attr()`, and `esc_html()` throughout.
+- `class-woocommerce.php` — data-price attribute injection now uses `esc_attr()` to prevent XSS.
+- `class-frontend.php` — data-price allowlist in `wp_kses_allowed_html` is now built dynamically from the enabled currencies list.
+- `lsx-currencies.php` — version bumped to 2.0.0, sets `Requires at least: 7.0` and `Requires PHP: 8.0`.
+- Build tooling replaced: Gulp removed, `@wordpress/scripts` (webpack) introduced for block compilation.
+
+### Removed
+- Old menu-injection currency switcher (`wp_nav_menu_items` filter) — replaced by the block.
+- `[lsx_currency_value]` shortcode — replaced by the block.
+- UIX framework admin pages and Customizer settings.
+- `classes/deprecated/class-lsx-currencies.php` — legacy backwards-compatibility class.
+- `includes/settings/` template partials — replaced by the new admin class.
+- `assets/js/src/lsx-currencies.js` and `lsx-currencies-admin.js` — replaced by `src/blocks/currency-switcher/view.js`.
+
+### Security
+- All user inputs sanitized and nonce-verified throughout the admin.
+- API URL constructed with `esc_url_raw()` before remote requests.
+- Block render output escaped with `esc_attr()` / `esc_html()` at every interpolation point.
+- Cookie read (`lsx_currencies_choice`) sanitized with `sanitize_key()`.
+- WordPress 7.0 compatibility verified.
+
 ## [[1.2.7]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.7) - 2023-08-09
 
 ### Security
