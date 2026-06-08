@@ -1,37 +1,29 @@
 <?php
 /**
- * LSX Currency Frontend Class
+ * LSX Currencies WooCommerce Integration
  *
  * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
- * @link
- * @copyright 2019 LightSpeed
+ * @copyright 2024 LightSpeed
  */
 
 namespace lsx\currencies\classes;
 
 /**
- * Holds the WooCommerce Integrations
+ * Injects currency conversion data attributes into WooCommerce price output.
  */
 class WooCommerce {
 
 	/**
-	 * Holds instance of the class
+	 * Singleton instance.
 	 *
-	 * @var object \lsx\currencies\classes\WooCommerce()
+	 * @var \lsx\currencies\classes\WooCommerce
 	 */
 	private static $instance;
 
 	/**
-	 * Holds the current currency.
-	 *
-	 * @var boolean
-	 */
-	public $currency = false;
-
-	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public function __construct() {
 		add_filter( 'wc_price', array( $this, 'price_filter' ), 300, 3 );
@@ -39,12 +31,11 @@ class WooCommerce {
 	}
 
 	/**
-	 * Return an instance of this class.
+	 * Return singleton instance.
 	 *
-	 * @return  object
+	 * @return \lsx\currencies\classes\WooCommerce
 	 */
 	public static function init() {
-		// If the single instance hasn't been set, set it now.
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -52,42 +43,37 @@ class WooCommerce {
 	}
 
 	/**
-	 * Filter the WooCommerce Price.
+	 * Adds a data-price-{CURRENCY} attribute and lsx-currencies class to WooCommerce
+	 * price HTML so the frontend JS can perform currency conversion on it.
 	 *
-	 * @param $return mixed
-	 * @param $price string
-	 * @param $args array
-	 *
-	 * @return mixed
+	 * @param string $return Rendered price HTML.
+	 * @param float  $price  Raw price value.
+	 * @param array  $args   wc_price() arguments.
+	 * @return string
 	 */
 	public function price_filter( $return, $price, $args ) {
-		if ( '' !== $price ) {
-			$return = str_replace( 'class', 'data-price-' . lsx_currencies()->base_currency . '=' . $price . ' class', $return );
-			$return = str_replace( 'woocommerce-Price-amount', 'woocommerce-Price-amount lsx-currencies', $return );
+		if ( '' === (string) $price ) {
+			return $return;
 		}
+
+		$currency  = esc_attr( lsx_currencies()->base_currency );
+		$raw_price = esc_attr( (float) $price );
+
+		// Inject data attribute before the existing class attribute.
+		$return = str_replace(
+			'class="woocommerce-Price-amount',
+			'data-price-' . $currency . '="' . $raw_price . '" class="woocommerce-Price-amount lsx-currencies',
+			$return
+		);
+
 		return $return;
 	}
 
 	/**
-	 * @param $cart_subtotal
-	 * @param $compound
-	 * @param $obj
+	 * Sync the LSX Currencies base currency to the WooCommerce store currency.
 	 *
-	 * @return mixed
-	 */
-	public function cart_subtotal( $cart_subtotal, $compound, $obj ) {
-
-		$return = str_replace( 'class', 'data-price-' . $this->currency . '=' . $price . ' class', $return );
-		$return = str_replace( 'woocommerce-Price-amount', 'woocommerce-Price-amount lsx-currencies', $return );
-
-		return $cart_subtotal;
-	}
-
-	/**
-	 * Make sure our base currency is set to the same as woocommerce.
-	 *
-	 * @param string $currency
-	 * @return void
+	 * @param string $currency Current base currency code.
+	 * @return string
 	 */
 	public function set_base_currency( $currency ) {
 		return get_woocommerce_currency();
