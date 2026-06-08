@@ -1,0 +1,125 @@
+/**
+ * Currency Switcher Block — Styles (Editor + Frontend)
+ *
+ * @package LSX Currencies
+ */
+
+.wp-block-lsx-currencies-currency-switcher,
+.lsx-currency-switcher {
+	display: block;
+
+	.lsx-currency-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	&.lsx-layout-vertical .lsx-currency-list {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	&.lsx-layout-horizontal .lsx-currency-list {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.lsx-currency-item {
+		margin: 0;
+		padding: 0;
+
+		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.25em;
+			text-decoration: none;
+			padding: 0.25em 0.5em;
+			border-radius: 3px;
+			transition: opacity 0.15s ease;
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+
+		&.lsx-currency-current a {
+			font-weight: 600;
+		}
+	}
+
+	.flag-icon {
+		display: inline-block;
+		width: 1.333em;
+		height: 1em;
+		background-size: cover;
+		background-position: center;
+		border-radius: 2px;
+		vertical-align: middle;
+		flex-shrink: 0;
+	}
+
+	.lsx-currency-symbol {
+		display: inline-block;
+		opacity: 0.7;
+		font-size: 0.85em;
+		vertical-align: middle;
+	}
+
+	.lsx-currency-label {
+		vertical-align: middle;
+	}
+
+	// Editor-only note
+	.lsx-currencies-editor-note {
+		font-size: 0.8em;
+		color: #757575;
+		margin-top: 0.75em;
+		margin-bottom: 0;
+		font-style: italic;
+	}
+}
+
+// Collapsed (show-current-only) mode
+.wp-block-lsx-currencies-currency-switcher.lsx-show-current-only {
+	position: relative;
+
+	.lsx-currency-list {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		background: #fff;
+		border: 1px solid rgba(0, 0, 0, 0.15);
+		border-radius: 4px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		z-index: 100;
+		min-width: 140px;
+		flex-direction: column;
+		padding: 0.25em 0;
+
+		.lsx-currency-item a {
+			padding: 0.4em 0.75em;
+		}
+	}
+
+	&.lsx-switcher-open .lsx-currency-list {
+		display: flex;
+	}
+
+	.lsx-currency-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25em;
+		cursor: pointer;
+		padding: 0.25em 0.5em;
+		user-select: none;
+
+		.lsx-caret {
+			font-size: 0.7em;
+			margin-left: 0.2em;
+		}
+	}
+}
