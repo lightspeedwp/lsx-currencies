@@ -117,43 +117,47 @@ class Currencies {
 	}
 
 	/**
-	 * Read saved settings and populate instance properties.
+	 * Read saved settings from lsx_to_settings (Tour Operator's option) and
+	 * populate instance properties. Our fields are registered via
+	 * Admin::add_settings_fields() so they are saved there alongside TO's own
+	 * settings.
 	 */
 	public function set_defaults() {
-		$options = get_option( 'lsx_currencies_settings', array() );
+		$options = get_option( 'lsx_to_settings', array() );
 
-		// Base currency.
-		if ( ! empty( $options['base_currency'] ) ) {
-			$this->base_currency = apply_filters( 'lsx_currencies_base_currency', sanitize_key( $options['base_currency'] ), $this );
+		// Base currency — uses the existing Tour Operator 'currency' field.
+		if ( ! empty( $options['currency'] ) ) {
+			$this->base_currency = apply_filters( 'lsx_currencies_base_currency', sanitize_key( $options['currency'] ), $this );
 		}
 
 		if ( defined( 'LSX_BASE_CURRENCY' ) ) {
-			$this->base_currency = sanitize_key( LSX_BASE_CURRENCY );
+			$this->base_currency = sanitize_key( \LSX_BASE_CURRENCY );
 		}
 
-		// Additional currencies — stored as comma-separated string.
-		if ( ! empty( $options['additional_currencies'] ) ) {
-			$raw = sanitize_text_field( $options['additional_currencies'] );
-			$codes = array_filter( array_map( 'sanitize_key', explode( ',', $raw ) ) );
+		// Additional currencies — stored as a comma-separated string by the
+		// multi-checkbox field rendered in Admin::currency_settings().
+		if ( ! empty( $options['lsx_currencies_additional'] ) ) {
+			$raw   = sanitize_text_field( $options['lsx_currencies_additional'] );
+			$codes = array_filter( array_map( 'strtoupper', array_map( 'sanitize_key', explode( ',', $raw ) ) ) );
 			if ( ! empty( $codes ) ) {
 				$this->additional_currencies = array_combine( $codes, $codes );
 			}
 		}
 
-		if ( ! empty( $options['multi_price'] ) ) {
-			$this->multi_prices = (bool) $options['multi_price'];
+		if ( ! empty( $options['lsx_currencies_multi_price'] ) ) {
+			$this->multi_prices = (bool) $options['lsx_currencies_multi_price'];
 		}
 
-		if ( ! empty( $options['convert_to_single'] ) ) {
-			$this->convert_to_single = (bool) $options['convert_to_single'];
+		if ( ! empty( $options['lsx_currencies_convert_to_single'] ) ) {
+			$this->convert_to_single = (bool) $options['lsx_currencies_convert_to_single'];
 		}
 
-		if ( ! empty( $options['remove_decimals'] ) ) {
-			$this->remove_decimals = (bool) $options['remove_decimals'];
+		if ( ! empty( $options['lsx_currencies_remove_decimals'] ) ) {
+			$this->remove_decimals = (bool) $options['lsx_currencies_remove_decimals'];
 		}
 
-		if ( ! empty( $options['openexchange_api'] ) ) {
-			$this->app_id = sanitize_text_field( $options['openexchange_api'] );
+		if ( ! empty( $options['lsx_currencies_openexchange_api'] ) ) {
+			$this->app_id  = sanitize_text_field( $options['lsx_currencies_openexchange_api'] );
 			$this->api_url = esc_url_raw( 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id );
 		}
 

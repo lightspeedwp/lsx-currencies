@@ -2,6 +2,14 @@
 /**
  * LSX Currencies Admin Class
  *
+ * Integrates with the Tour Operator settings page using the same hooks and
+ * field-registration pattern as lsx\admin\Settings:
+ *
+ *  - `lsx_to_settings_fields`                  → registers fields so they are
+ *                                                 saved by TO's save_settings().
+ *  - `lsx_to_framework_dashboard_tab_content`  → renders fields inside the
+ *                                                 General settings page table.
+ *
  * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
@@ -11,7 +19,7 @@
 namespace lsx\currencies\classes;
 
 /**
- * Manages the admin settings page integrated under the Tour Operator menu.
+ * Registers currency fields into the Tour Operator settings page.
  */
 class Admin {
 
@@ -23,33 +31,14 @@ class Admin {
 	private static $instance;
 
 	/**
-	 * Option key used to store all plugin settings.
-	 *
-	 * @var string
-	 */
-	const OPTION_KEY = 'lsx_currencies_settings';
-
-	/**
-	 * Nonce action used when saving settings.
-	 *
-	 * @var string
-	 */
-	const NONCE_ACTION = 'lsx_currencies_settings_save';
-
-	/**
-	 * Nonce field name.
-	 *
-	 * @var string
-	 */
-	const NONCE_FIELD = 'lsx_currencies_nonce';
-
-	/**
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'add_settings_page' ), 110 );
-		add_action( 'admin_init', array( $this, 'save_settings' ), 1 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		// Add our fields to the TO save loop so they are persisted in lsx_to_settings.
+		add_filter( 'lsx_to_settings_fields', array( $this, 'add_settings_fields' ) );
+
+		// Register render hooks inside create_settings_page, mirroring the TO pattern.
+		add_action( 'admin_menu', array( $this, 'create_settings_page' ), 110 );
 	}
 
 	/**
@@ -65,223 +54,151 @@ class Admin {
 	}
 
 	/**
-	 * Register the Currencies submenu under the Tour Operator admin menu.
-	 * Falls back to the Settings menu when Tour Operator is not active.
+	 * Register render hooks for the TO settings page sections.
+	 * Mirrors the pattern used in lsx\admin\Settings::create_settings_page().
 	 */
-	public function add_settings_page() {
-		$parent = function_exists( 'tour_operator' ) ? 'tour-operator' : 'options-general.php';
-
-		add_submenu_page(
-			$parent,
-			esc_html__( 'Currency Settings', 'lsx-currencies' ),
-			esc_html__( 'Currencies', 'lsx-currencies' ),
-			'manage_options',
-			'lsx-currencies-settings',
-			array( $this, 'render_settings_page' )
-		);
-	}
-
-	/**
-	 * Enqueue admin-only CSS on our settings page.
-	 *
-	 * @param string $hook Current admin page hook.
-	 */
-	public function enqueue_assets( $hook ) {
-		if ( false === strpos( $hook, 'lsx-currencies-settings' ) ) {
+	public function create_settings_page() {
+		if ( ! is_admin() ) {
 			return;
 		}
-		wp_enqueue_style(
-			'lsx-currencies-admin',
-			LSX_CURRENCIES_URL . 'assets/css/lsx-currencies-admin.css',
-			array(),
-			LSX_CURRENCIES_VER
-		);
+
+		// Render additional currency checkboxes in the 'currency' section (priority 20,
+		// after TO's own currency fields at priority 11).
+		add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'currency_settings' ), 20, 1 );
+
+		// Render OpenExchangeRates API key in the 'api' section (priority 20,
+		// after TO's Google Maps key at priority 15).
+		add_action( 'lsx_to_framework_dashboard_tab_content', array( $this, 'api_settings' ), 20, 1 );
 	}
 
 	/**
-	 * Output the settings page HTML.
+	 * Inject our fields into the TO settings-fields array so they are included
+	 * in save_settings() and written to lsx_to_settings.
+	 *
+	 * Using type 'custom' for lsx_currencies_additional means output_fields()
+	 * hits the default: branch and renders nothing — we render it ourselves.
+	 * The remaining fields (checkbox / text) are rendered by output_fields()
+	 * automatically when TO processes the 'currency' and 'api' sections.
+	 *
+	 * @param array $fields Existing settings fields.
+	 * @return array
 	 */
-	public function render_settings_page() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'lsx-currencies' ) );
+	public function add_settings_fields( array $fields ) {
+		// ── Currency section ──────────────────────────────────────────────────
+		$fields['currency']['lsx_currencies_additional'] = array(
+			'label'   => esc_html__( 'Additional Currencies', 'lsx-currencies' ),
+			'type'    => 'custom', // rendered manually; output_fields() skips unknown types
+			'default' => '',
+		);
+
+		$fields['currency']['lsx_currencies_multi_price'] = array(
+			'label'   => esc_html__( 'Enable Multiple Prices', 'lsx-currencies' ),
+			'desc'    => esc_html__( 'Allow per-currency pricing on tour posts via the additional_prices meta field.', 'lsx-currencies' ),
+			'type'    => 'checkbox',
+			'default' => 0,
+		);
+
+		$fields['currency']['lsx_currencies_convert_to_single'] = array(
+			'label'   => esc_html__( 'Convert to Single Currency', 'lsx-currencies' ),
+			'desc'    => esc_html__( 'Convert all prices to the base currency using live exchange rates.', 'lsx-currencies' ),
+			'type'    => 'checkbox',
+			'default' => 0,
+		);
+
+		$fields['currency']['lsx_currencies_remove_decimals'] = array(
+			'label'   => esc_html__( 'Remove Decimals', 'lsx-currencies' ),
+			'desc'    => esc_html__( 'Round all displayed prices to the nearest whole number.', 'lsx-currencies' ),
+			'type'    => 'checkbox',
+			'default' => 0,
+		);
+
+		// ── API section ───────────────────────────────────────────────────────
+		$fields['api']['lsx_currencies_openexchange_api'] = array(
+			'label'   => esc_html__( 'OpenExchangeRates API Key', 'lsx-currencies' ),
+			'desc'    => esc_html__( 'Optional. Unlocks additional currencies. Leave blank to use the free exchange-rate endpoint.', 'lsx-currencies' ),
+			'type'    => 'text',
+			'default' => '',
+		);
+
+		return $fields;
+	}
+
+	/**
+	 * Renders the additional-currencies multi-checkbox field in the 'currency'
+	 * section of the TO General settings tab.
+	 *
+	 * The checkboxes update a hidden <input name="lsx_currencies_additional"> with
+	 * a comma-separated string so that TO's save_settings() can pick it up via
+	 * sanitize_text_field( $_POST['lsx_currencies_additional'] ).
+	 *
+	 * @param string $tab Current section identifier.
+	 */
+	public function currency_settings( $tab ) {
+		if ( 'currency' !== $tab ) {
+			return;
 		}
 
-		$options    = get_option( self::OPTION_KEY, array() );
-		$currencies = lsx_currencies()->get_available_currencies();
+		$options     = get_option( 'lsx_to_settings', array() );
+		$saved_raw   = isset( $options['lsx_currencies_additional'] ) ? $options['lsx_currencies_additional'] : '';
+		$saved_codes = array_filter( array_map( 'sanitize_key', explode( ',', $saved_raw ) ) );
+		$currencies  = lsx_currencies()->get_available_currencies();
 		?>
-		<div class="wrap lsx-currencies-settings">
-			<h1><?php esc_html_e( 'Currency Settings', 'lsx-currencies' ); ?></h1>
+		<tr class="form-field lsx_currencies_additional">
+			<th scope="row"><?php esc_html_e( 'Additional Currencies', 'lsx-currencies' ); ?></th>
+			<td>
+				<input type="hidden"
+					name="lsx_currencies_additional"
+					id="lsx_currencies_additional_value"
+					value="<?php echo esc_attr( $saved_raw ); ?>">
 
-			<?php
-			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			if ( isset( $_GET['settings-updated'] ) && '1' === sanitize_key( $_GET['settings-updated'] ) ) :
-				?>
-				<div class="notice notice-success is-dismissible">
-					<p><?php esc_html_e( 'Settings saved.', 'lsx-currencies' ); ?></p>
+				<div class="lsx-currencies-checkboxes">
+					<?php foreach ( $currencies as $code => $label ) :
+						$code    = sanitize_key( $code );
+						$checked = in_array( $code, $saved_codes, true ) ? 'checked="checked"' : '';
+						?>
+						<label style="display:inline-block;margin:0 12px 8px 0;">
+							<input type="checkbox"
+								class="lsx-currency-check"
+								data-code="<?php echo esc_attr( strtoupper( $code ) ); ?>"
+								<?php echo $checked; ?>>
+							<?php echo esc_html( strtoupper( $code ) . ' &mdash; ' . $label ); ?>
+						</label>
+					<?php endforeach; ?>
 				</div>
-			<?php endif; ?>
+				<br>
+				<small><?php esc_html_e( 'Currencies visitors can switch to using the Currency Switcher block.', 'lsx-currencies' ); ?></small>
 
-			<form method="post" action="">
-				<?php wp_nonce_field( self::NONCE_ACTION, self::NONCE_FIELD ); ?>
-
-				<h2><?php esc_html_e( 'General', 'lsx-currencies' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<tbody>
-						<?php echo wp_kses_post( $this->base_currency_field( $options, $currencies ) ); ?>
-						<?php echo wp_kses_post( $this->additional_currencies_field( $options, $currencies ) ); ?>
-						<?php echo wp_kses_post( $this->checkbox_field( $options, 'multi_price', esc_html__( 'Enable Multiple Prices', 'lsx-currencies' ), esc_html__( 'Allow per-currency pricing on tour posts (uses the additional_prices post meta).', 'lsx-currencies' ) ) ); ?>
-						<?php echo wp_kses_post( $this->checkbox_field( $options, 'convert_to_single', esc_html__( 'Convert to Single Currency', 'lsx-currencies' ), esc_html__( 'Convert all prices to the base currency using live exchange rates.', 'lsx-currencies' ) ) ); ?>
-						<?php echo wp_kses_post( $this->checkbox_field( $options, 'remove_decimals', esc_html__( 'Remove Decimals', 'lsx-currencies' ), esc_html__( 'Round all displayed prices to the nearest whole number.', 'lsx-currencies' ) ) ); ?>
-					</tbody>
-				</table>
-
-				<h2><?php esc_html_e( 'Exchange Rate API', 'lsx-currencies' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<tbody>
-						<?php echo wp_kses_post( $this->text_field( $options, 'openexchange_api', esc_html__( 'OpenExchangeRates API Key', 'lsx-currencies' ), esc_html__( 'Enter your API key to unlock additional currencies. Leave blank to use the free exchange rate endpoint.', 'lsx-currencies' ) ) ); ?>
-					</tbody>
-				</table>
-
-				<?php submit_button( esc_html__( 'Save Settings', 'lsx-currencies' ) ); ?>
-			</form>
-		</div>
+				<script>
+				( function () {
+					var hidden = document.getElementById( 'lsx_currencies_additional_value' );
+					if ( ! hidden ) { return; }
+					document.querySelectorAll( '.lsx-currency-check' ).forEach( function ( cb ) {
+						cb.addEventListener( 'change', function () {
+							var codes = [];
+							document.querySelectorAll( '.lsx-currency-check:checked' ).forEach( function ( c ) {
+								codes.push( c.dataset.code );
+							} );
+							hidden.value = codes.join( ',' );
+						} );
+					} );
+				} )();
+				</script>
+			</td>
+		</tr>
 		<?php
 	}
 
 	/**
-	 * Handle settings save on admin_init.
-	 */
-	public function save_settings() {
-		if ( ! isset( $_POST[ self::NONCE_FIELD ] ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST[ self::NONCE_FIELD ] ) ), self::NONCE_ACTION ) ) {
-			wp_die( esc_html__( 'Security check failed.', 'lsx-currencies' ) );
-		}
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to save these settings.', 'lsx-currencies' ) );
-		}
-
-		$saved = array(
-			'base_currency'         => isset( $_POST['base_currency'] ) ? sanitize_key( wp_unslash( $_POST['base_currency'] ) ) : 'USD',
-			'additional_currencies' => '',
-			'multi_price'           => isset( $_POST['multi_price'] ) ? '1' : '0',
-			'convert_to_single'     => isset( $_POST['convert_to_single'] ) ? '1' : '0',
-			'remove_decimals'       => isset( $_POST['remove_decimals'] ) ? '1' : '0',
-			'openexchange_api'      => isset( $_POST['openexchange_api'] ) ? sanitize_text_field( wp_unslash( $_POST['openexchange_api'] ) ) : '',
-		);
-
-		// Additional currencies come in as an array of checked currency codes.
-		if ( ! empty( $_POST['additional_currencies'] ) && is_array( $_POST['additional_currencies'] ) ) {
-			$allowed                        = array_keys( lsx_currencies()->get_available_currencies() );
-			$checked                        = array_map( 'sanitize_key', wp_unslash( $_POST['additional_currencies'] ) );
-			$valid                          = array_intersect( $checked, $allowed );
-			$saved['additional_currencies'] = implode( ',', $valid );
-		}
-
-		update_option( self::OPTION_KEY, $saved );
-
-		$redirect = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : admin_url( 'admin.php?page=lsx-currencies-settings' );
-		wp_safe_redirect( add_query_arg( 'settings-updated', '1', $redirect ) );
-		exit;
-	}
-
-	// -------------------------------------------------------------------------
-	// Field renderers
-	// -------------------------------------------------------------------------
-
-	/**
-	 * Renders the base currency select field.
+	 * Renders the OpenExchangeRates API key in the 'api' section.
+	 * The field is also registered in add_settings_fields() as type 'text', so
+	 * TO's output_fields() renders it automatically — this hook is a no-op kept
+	 * for parity with the TO pattern (useful if custom rendering is needed later).
 	 *
-	 * @param array $options    Saved options.
-	 * @param array $currencies Available currencies.
-	 * @return string
+	 * @param string $tab Current section identifier.
 	 */
-	private function base_currency_field( array $options, array $currencies ) {
-		$current = isset( $options['base_currency'] ) ? $options['base_currency'] : 'USD';
-		$html    = '<tr class="form-field base-currency">';
-		$html   .= '<th scope="row"><label for="base_currency">' . esc_html__( 'Base Currency', 'lsx-currencies' ) . '</label></th>';
-		$html   .= '<td><select name="base_currency" id="base_currency">';
-		foreach ( $currencies as $code => $label ) {
-			$html .= '<option value="' . esc_attr( $code ) . '"' . selected( $current, $code, false ) . '>' . esc_html( $code . ' — ' . $label ) . '</option>';
-		}
-		$html .= '</select>';
-		$html .= '<br /><small>' . esc_html__( 'The default currency used for pricing.', 'lsx-currencies' ) . '</small>';
-		$html .= '</td></tr>';
-		return $html;
-	}
-
-	/**
-	 * Renders the additional currencies checkboxes.
-	 *
-	 * @param array $options    Saved options.
-	 * @param array $currencies Available currencies.
-	 * @return string
-	 */
-	private function additional_currencies_field( array $options, array $currencies ) {
-		$saved_raw = isset( $options['additional_currencies'] ) ? $options['additional_currencies'] : '';
-		$saved     = array_filter( array_map( 'sanitize_key', explode( ',', $saved_raw ) ) );
-
-		$html  = '<tr class="form-field additional-currencies">';
-		$html .= '<th scope="row">' . esc_html__( 'Additional Currencies', 'lsx-currencies' ) . '</th>';
-		$html .= '<td>';
-
-		foreach ( $currencies as $code => $label ) {
-			$checked = in_array( $code, $saved, true ) ? 'checked="checked"' : '';
-			$html   .= '<label style="display:block;margin-bottom:4px;">';
-			$html   .= '<input type="checkbox" name="additional_currencies[]" value="' . esc_attr( $code ) . '" ' . $checked . ' /> ';
-			$html   .= esc_html( $code . ' — ' . $label );
-			$html   .= '</label>';
-		}
-
-		$html .= '<br /><small>' . esc_html__( 'Currencies visitors can switch to using the Currency Switcher block.', 'lsx-currencies' ) . '</small>';
-		$html .= '</td></tr>';
-		return $html;
-	}
-
-	/**
-	 * Renders a generic checkbox field.
-	 *
-	 * @param array  $options Saved options.
-	 * @param string $key     Option key.
-	 * @param string $label   Field label.
-	 * @param string $desc    Description text.
-	 * @return string
-	 */
-	private function checkbox_field( array $options, $key, $label, $desc = '' ) {
-		$checked = ! empty( $options[ $key ] ) ? 'checked="checked"' : '';
-		$html    = '<tr class="form-field ' . esc_attr( $key ) . '">';
-		$html   .= '<th scope="row"><label for="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th>';
-		$html   .= '<td>';
-		$html   .= '<input type="checkbox" name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="1" ' . $checked . ' />';
-		if ( $desc ) {
-			$html .= '<br /><small>' . esc_html( $desc ) . '</small>';
-		}
-		$html .= '</td></tr>';
-		return $html;
-	}
-
-	/**
-	 * Renders a generic text input field.
-	 *
-	 * @param array  $options Saved options.
-	 * @param string $key     Option key.
-	 * @param string $label   Field label.
-	 * @param string $desc    Description text.
-	 * @return string
-	 */
-	private function text_field( array $options, $key, $label, $desc = '' ) {
-		$value = isset( $options[ $key ] ) ? $options[ $key ] : '';
-		$html  = '<tr class="form-field ' . esc_attr( $key ) . '">';
-		$html .= '<th scope="row"><label for="' . esc_attr( $key ) . '">' . esc_html( $label ) . '</label></th>';
-		$html .= '<td>';
-		$html .= '<input type="text" name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" class="regular-text" />';
-		if ( $desc ) {
-			$html .= '<br /><small>' . esc_html( $desc ) . '</small>';
-		}
-		$html .= '</td></tr>';
-		return $html;
+	public function api_settings( $tab ) {
+		// The 'lsx_currencies_openexchange_api' text field is already rendered by
+		// TO's output_fields() at priority 15. Nothing extra needed here.
+		return;
 	}
 }
