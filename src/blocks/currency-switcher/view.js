@@ -2,9 +2,15 @@
  * Currency Switcher Block — Frontend View Script
  *
  * Handles currency switching on the frontend using vanilla JS.
- * Reads/writes the selected currency to a cookie and converts all
- * price spans (.amount.lsx-currencies) on the page using money.js
- * and accounting.js (enqueued via class-block.php).
+ * Works with the navigation-submenu HTML structure output by render.php:
+ *   - Top-level: <a> or <button> inside <li.wp-block-navigation-item.has-child>
+ *   - Submenu items: <a data-lsx-currency="CODE"> inside
+ *     <ul.wp-block-navigation__submenu-container>
+ *
+ * On currency selection:
+ *   1. Write cookie.
+ *   2. Convert all price spans (.amount.lsx-currencies) via money.js + accounting.js.
+ *   3. Swap the top-level label and rebuild the submenu in-place (no page reload).
  *
  * @package LSX Currencies
  */
@@ -15,15 +21,9 @@
 	'use strict';
 
 	// -------------------------------------------------------------------------
-	// Cookie helpers (no jQuery dependency)
+	// Cookie helpers
 	// -------------------------------------------------------------------------
 
-	/**
-	 * Read a cookie value by name.
-	 *
-	 * @param {string} name Cookie name.
-	 * @return {string|null}
-	 */
 	function getCookie( name ) {
 		const value = '; ' + document.cookie;
 		const parts = value.split( '; ' + name + '=' );
@@ -33,13 +33,6 @@
 		return null;
 	}
 
-	/**
-	 * Write a cookie.
-	 *
-	 * @param {string} name  Cookie name.
-	 * @param {string} value Cookie value.
-	 * @param {number} days  Expiry in days (default 30).
-	 */
 	function setCookie( name, value, days ) {
 		const d = new Date();
 		d.setTime( d.getTime() + ( ( days || 30 ) * 24 * 60 * 60 * 1000 ) );
@@ -53,18 +46,12 @@
 	// Helpers
 	// -------------------------------------------------------------------------
 
-	/**
-	 * Sanitise a currency code to uppercase letters only (max 3 chars).
-	 *
-	 * @param {string} raw Raw input.
-	 * @return {string}
-	 */
 	function sanitiseCurrencyCode( raw ) {
 		return String( raw ).replace( /[^A-Za-z]/g, '' ).toUpperCase().slice( 0, 3 );
 	}
 
 	// -------------------------------------------------------------------------
-	// Core logic
+	// Price conversion
 	// -------------------------------------------------------------------------
 
 	const params = ( typeof lsx_currencies_params !== 'undefined' ) ? lsx_currencies_params : null;
@@ -75,55 +62,39 @@
 
 	const decimalPlaces = params.removeDecimals ? 0 : 2;
 
-	/**
-	 * Re-render all price spans for the given currency.
-	 *
-	 * @param {string} targetCurrency ISO 4217 code.
-	 */
 	function updatePrices( targetCurrency ) {
 		if ( typeof fx === 'undefined' || typeof accounting === 'undefined' ) {
 			return;
 		}
 
-		const amounts = document.querySelectorAll( '.amount.lsx-currencies' );
-
-		amounts.forEach( function ( wrapper ) {
+		document.querySelectorAll( '.amount.lsx-currencies' ).forEach( function ( wrapper ) {
 			const valueEl = wrapper.querySelector( '.value' );
 			if ( ! valueEl ) {
 				return;
 			}
 
-			// Try to read a pre-stored data-price-{CURRENCY} attribute first.
-			const dataKey = 'data-price-' + targetCurrency;
-			const rawAttr = wrapper.getAttribute( dataKey ) || valueEl.getAttribute( dataKey );
-
-			let convertedAmount;
+			const dataKey   = 'data-price-' + targetCurrency;
+			const rawAttr   = wrapper.getAttribute( dataKey ) || valueEl.getAttribute( dataKey );
+			let converted;
 
 			if ( rawAttr !== null && rawAttr !== '' ) {
-				convertedAmount = parseFloat( rawAttr );
+				converted = parseFloat( rawAttr );
 			} else {
-				// Fall back to live conversion via money.js.
 				const basePriceAttr = 'data-price-' + params.base;
 				const basePrice = parseFloat(
 					wrapper.getAttribute( basePriceAttr ) ||
 					valueEl.getAttribute( basePriceAttr ) ||
 					0
 				);
-
 				try {
-					convertedAmount = fx( basePrice )
-						.from( params.base )
-						.to( targetCurrency );
+					converted = fx( basePrice ).from( params.base ).to( targetCurrency );
 				} catch ( e ) {
-					convertedAmount = basePrice;
+					converted = basePrice;
 				}
 			}
 
-			// Format using accounting.js.
-			const symbol = ( params.symbols && params.symbols[ targetCurrency ] ) ? params.symbols[ targetCurrency ] : targetCurrency;
-			valueEl.textContent = accounting.formatNumber( convertedAmount, decimalPlaces );
+			valueEl.textContent = accounting.formatNumber( converted, decimalPlaces );
 
-			// Update the currency icon if present.
 			const iconEl = wrapper.querySelector( '.currency-icon' );
 			if ( iconEl ) {
 				iconEl.className = 'currency-icon ' + targetCurrency.toLowerCase();
@@ -132,108 +103,166 @@
 		} );
 	}
 
+	// -------------------------------------------------------------------------
+	// Switcher DOM update
+	//
+	// The switcher is a server-rendered <li class="wp-block-navigation-item has-child">.
+	// When the visitor picks a new currency we:
+	//   a) update the top-level label (text + flag class)
+	//   b) remove the newly selected <li> from the submenu
+	//   c) insert a new <li> for the previously current currency into the submenu
+	// -------------------------------------------------------------------------
+
 	/**
-	 * Set the active visual state on switcher links.
+	 * Build the label HTML for a currency code.
+	 * Reads display options from data attributes on the switcher <li>.
 	 *
-	 * @param {string} currency ISO 4217 code.
+	 * @param {string}  code        ISO 4217 code (uppercase).
+	 * @param {string}  flagKey     Flag-icon suffix or ''.
+	 * @param {boolean} displayFlags
+	 * @param {string}  flagPosition 'left' | 'right'
+	 * @return {string} HTML string.
 	 */
-	function setActiveSwitcher( currency ) {
-		const items = document.querySelectorAll( '.lsx-currency-item' );
-		items.forEach( function ( item ) {
-			const link = item.querySelector( 'a' );
-			if ( ! link ) {
-				return;
-			}
-			const href = link.getAttribute( 'href' ) || '';
-			const code = sanitiseCurrencyCode( href.replace( '#', '' ) );
-			if ( code === currency ) {
-				item.classList.add( 'lsx-currency-current' );
-				link.setAttribute( 'aria-current', 'true' );
-			} else {
-				item.classList.remove( 'lsx-currency-current' );
-				link.removeAttribute( 'aria-current' );
+	function buildLabelHTML( code, flagKey, displayFlags, flagPosition ) {
+		const flagSpan = ( displayFlags && flagKey )
+			? '<span class="flag-icon flag-icon-' + flagKey + '" aria-hidden="true"></span>'
+			: '';
+
+		let html = '';
+		if ( displayFlags && flagKey && flagPosition === 'left' ) {
+			html += flagSpan + ' ';
+		}
+		html += '<span class="wp-block-navigation-item__label">' + code + '</span>';
+		if ( displayFlags && flagKey && flagPosition === 'right' ) {
+			html += ' ' + flagSpan;
+		}
+		return html;
+	}
+
+	/**
+	 * Update a single currency switcher block.
+	 *
+	 * @param {Element} switcherLi  The <li class="wp-block-navigation-item has-child"> element.
+	 * @param {string}  newCurrency Newly selected ISO 4217 code.
+	 * @param {string}  oldCurrent  Previously active ISO 4217 code.
+	 */
+	function updateSwitcher( switcherLi, newCurrency, oldCurrent ) {
+		const displayFlags  = switcherLi.dataset.displayFlags === '1';
+		const flagPosition  = switcherLi.dataset.flagPosition || 'left';
+		const flagRelations = JSON.parse( switcherLi.dataset.flagRelations || '{}' );
+
+		// ── Update top-level label ────────────────────────────────────────────
+		const topContent = switcherLi.querySelector( ':scope > .wp-block-navigation-item__content' );
+		if ( topContent ) {
+			const newFlagKey = flagRelations[ newCurrency ] || '';
+			topContent.innerHTML = buildLabelHTML( newCurrency, newFlagKey, displayFlags, flagPosition );
+			topContent.setAttribute( 'href', '#' + newCurrency.toLowerCase() );
+		}
+
+		// ── Rebuild submenu ───────────────────────────────────────────────────
+		const submenu = switcherLi.querySelector( ':scope > .wp-block-navigation__submenu-container' );
+		if ( ! submenu ) {
+			return;
+		}
+
+		// Remove the newly selected currency from the submenu.
+		const toRemove = submenu.querySelector( 'a[data-lsx-currency="' + newCurrency + '"]' );
+		if ( toRemove ) {
+			toRemove.closest( 'li' )?.remove();
+		}
+
+		// Add the previously active currency into the submenu if it is not already there.
+		const alreadyPresent = submenu.querySelector( 'a[data-lsx-currency="' + oldCurrent + '"]' );
+		if ( ! alreadyPresent ) {
+			const oldFlagKey = flagRelations[ oldCurrent ] || '';
+			const li = document.createElement( 'li' );
+			li.className = 'wp-block-navigation-item wp-block-navigation-link';
+			const a = document.createElement( 'a' );
+			a.className = 'wp-block-navigation-item__content';
+			a.href = '#' + oldCurrent.toLowerCase();
+			a.dataset.lsxCurrency = oldCurrent;
+			a.innerHTML = buildLabelHTML( oldCurrent, oldFlagKey, displayFlags, flagPosition );
+			li.appendChild( a );
+			submenu.appendChild( li );
+
+			// Attach click handler to the newly inserted item.
+			attachItemHandler( switcherLi, a );
+		}
+	}
+
+	// Track the live current currency across all switchers.
+	let activeCurrency = sanitiseCurrencyCode(
+		getCookie( 'lsx_currencies_choice' ) || params.current || params.base
+	);
+
+	function switchCurrency( newCode ) {
+		const code = sanitiseCurrencyCode( newCode );
+		if ( ! code || code === activeCurrency ) {
+			return;
+		}
+
+		const previous = activeCurrency;
+		activeCurrency = code;
+
+		setCookie( 'lsx_currencies_choice', code );
+		updatePrices( code );
+
+		document.querySelectorAll( '.wp-block-lsx-currencies-currency-switcher' ).forEach( function ( switcher ) {
+			updateSwitcher( switcher, code, previous );
+		} );
+	}
+
+	// -------------------------------------------------------------------------
+	// Click handler attachment
+	// -------------------------------------------------------------------------
+
+	function attachItemHandler( switcherLi, linkEl ) {
+		linkEl.addEventListener( 'click', function ( e ) {
+			e.preventDefault();
+			const code = sanitiseCurrencyCode( linkEl.dataset.lsxCurrency || '' );
+			if ( code ) {
+				switchCurrency( code );
+				// Close the submenu (navigation block manages aria-expanded state via its own JS;
+				// simulate a blur to allow it to close naturally).
+				switcherLi.classList.remove( 'is-menu-open' );
+				const toggle = switcherLi.querySelector( '.wp-block-navigation-submenu__toggle' );
+				if ( toggle && toggle.getAttribute( 'aria-expanded' ) === 'true' ) {
+					toggle.click();
+				}
 			}
 		} );
 	}
 
-	/**
-	 * Switch to the given currency: update cookie, prices, and UI.
-	 *
-	 * @param {string} currency ISO 4217 code.
-	 */
-	function switchCurrency( currency ) {
-		const code = sanitiseCurrencyCode( currency );
-		if ( ! code ) {
-			return;
-		}
-		setCookie( 'lsx_currencies_choice', code );
-		updatePrices( code );
-		setActiveSwitcher( code );
+	function attachSwitcherHandlers( switcherLi ) {
+		switcherLi.querySelectorAll( 'a[data-lsx-currency]' ).forEach( function ( link ) {
+			attachItemHandler( switcherLi, link );
+		} );
 	}
 
 	// -------------------------------------------------------------------------
-	// Initialise money.js once DOM is ready
+	// Initialise
 	// -------------------------------------------------------------------------
 
 	function init() {
-		if ( typeof fx === 'undefined' ) {
-			return;
+		if ( typeof fx !== 'undefined' ) {
+			fx.base  = 'USD';
+			fx.rates = params.rates || {};
 		}
 
-		// Configure money.js.
-		fx.base  = 'USD'; // Exchange rates API always returns USD as base.
-		fx.rates = params.rates || {};
+		const stored = getCookie( 'lsx_currencies_choice' );
+		if ( stored ) {
+			activeCurrency = sanitiseCurrencyCode( stored );
+		}
 
-		// Determine current currency.
-		const stored   = getCookie( 'lsx_currencies_choice' );
-		const current  = sanitiseCurrencyCode( stored || params.current || params.base );
+		if ( typeof fx !== 'undefined' && typeof accounting !== 'undefined' ) {
+			updatePrices( activeCurrency );
+		}
 
-		// Initial render.
-		updatePrices( current );
-		setActiveSwitcher( current );
-
-		// -----------------------------------------------------------------------
-		// Attach click handlers to all currency switcher links.
-		// -----------------------------------------------------------------------
-		document.querySelectorAll( '.lsx-currency-switcher' ).forEach( function ( switcher ) {
-			const showCurrentOnly = switcher.classList.contains( 'lsx-show-current-only' );
-
-			// Toggle open/close for collapsed mode.
-			if ( showCurrentOnly ) {
-				const toggle = switcher.querySelector( '.lsx-currency-toggle' );
-				if ( toggle ) {
-					toggle.addEventListener( 'click', function ( e ) {
-						e.preventDefault();
-						switcher.classList.toggle( 'lsx-switcher-open' );
-					} );
-				}
-
-				// Close on outside click.
-				document.addEventListener( 'click', function ( e ) {
-					if ( ! switcher.contains( e.target ) ) {
-						switcher.classList.remove( 'lsx-switcher-open' );
-					}
-				} );
-			}
-
-			// Currency link clicks.
-			switcher.querySelectorAll( '.lsx-currency-item a' ).forEach( function ( link ) {
-				link.addEventListener( 'click', function ( e ) {
-					e.preventDefault();
-					const href = link.getAttribute( 'href' ) || '';
-					const code = sanitiseCurrencyCode( href.replace( '#', '' ) );
-					if ( code ) {
-						switchCurrency( code );
-						if ( showCurrentOnly ) {
-							switcher.classList.remove( 'lsx-switcher-open' );
-						}
-					}
-				} );
-			} );
+		document.querySelectorAll( '.wp-block-lsx-currencies-currency-switcher' ).forEach( function ( switcher ) {
+			attachSwitcherHandlers( switcher );
 		} );
 	}
 
-	// Run after DOM + enqueued scripts (money.js / accounting.js) are ready.
 	if ( document.readyState === 'loading' ) {
 		document.addEventListener( 'DOMContentLoaded', init );
 	} else {

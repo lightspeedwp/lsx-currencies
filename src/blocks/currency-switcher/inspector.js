@@ -5,11 +5,7 @@
  */
 
 import { InspectorControls } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	ToggleControl,
-	SelectControl,
-} from '@wordpress/components';
+import { PanelBody, ToggleControl, SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -21,21 +17,11 @@ import { __ } from '@wordpress/i18n';
  * @return {JSX.Element} Inspector panel.
  */
 export default function Inspector( { attributes, setAttributes } ) {
-	const { displayFlags, flagPosition, symbolPosition, layout, showCurrentOnly } = attributes;
+	const { displayFlags, flagPosition, showSymbol } = attributes;
 
 	return (
 		<InspectorControls>
 			<PanelBody title={ __( 'Appearance', 'lsx-currencies' ) } initialOpen={ true }>
-				<SelectControl
-					label={ __( 'Layout', 'lsx-currencies' ) }
-					value={ layout }
-					options={ [
-						{ label: __( 'Horizontal', 'lsx-currencies' ), value: 'horizontal' },
-						{ label: __( 'Vertical', 'lsx-currencies' ), value: 'vertical' },
-					] }
-					onChange={ ( value ) => setAttributes( { layout: value } ) }
-				/>
-
 				<ToggleControl
 					label={ __( 'Show Currency Flags', 'lsx-currencies' ) }
 					checked={ displayFlags }
@@ -54,22 +40,11 @@ export default function Inspector( { attributes, setAttributes } ) {
 					/>
 				) }
 
-				<SelectControl
-					label={ __( 'Currency Symbol Position', 'lsx-currencies' ) }
-					value={ symbolPosition }
-					options={ [
-						{ label: __( 'After code', 'lsx-currencies' ), value: 'right' },
-						{ label: __( 'Before code', 'lsx-currencies' ), value: 'left' },
-						{ label: __( 'Hidden', 'lsx-currencies' ), value: 'none' },
-					] }
-					onChange={ ( value ) => setAttributes( { symbolPosition: value } ) }
-				/>
-
 				<ToggleControl
-					label={ __( 'Show Current Currency Only', 'lsx-currencies' ) }
-					help={ __( 'Collapses to a single item that expands on click.', 'lsx-currencies' ) }
-					checked={ showCurrentOnly }
-					onChange={ ( value ) => setAttributes( { showCurrentOnly: value } ) }
+					label={ __( 'Show Currency Symbol', 'lsx-currencies' ) }
+					help={ __( 'Display the currency symbol (e.g. $, €) alongside the code.', 'lsx-currencies' ) }
+					checked={ showSymbol }
+					onChange={ ( value ) => setAttributes( { showSymbol: value } ) }
 				/>
 			</PanelBody>
 		</InspectorControls>

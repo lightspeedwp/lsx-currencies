@@ -4,38 +4,54 @@
   "name": "lsx-currencies/currency-switcher",
   "version": "2.0.0",
   "title": "Currency Switcher",
-  "category": "widgets",
+  "category": "design",
+  "parent": [
+    "core/navigation"
+  ],
   "icon": "money-alt",
-  "description": "A currency switcher that lets visitors choose their preferred display currency.",
+  "description": "A currency switcher that lets visitors choose their preferred display currency. Place inside a Navigation block.",
   "keywords": [
     "currency",
     "switcher",
     "money",
-    "tour operator"
+    "navigation"
   ],
   "textdomain": "lsx-currencies",
+  "usesContext": [
+    "textColor",
+    "customTextColor",
+    "backgroundColor",
+    "customBackgroundColor",
+    "overlayTextColor",
+    "customOverlayTextColor",
+    "overlayBackgroundColor",
+    "customOverlayBackgroundColor",
+    "fontSize",
+    "customFontSize",
+    "showSubmenuIcon",
+    "openSubmenusOnClick",
+    "submenuVisibility",
+    "style"
+  ],
   "supports": {
     "html": false,
-    "align": [
-      "left",
-      "center",
-      "right"
-    ],
-    "color": {
-      "background": true,
-      "text": true,
-      "link": true
-    },
-    "spacing": {
-      "padding": true,
-      "margin": true,
-      "blockGap": true
-    },
+    "reusable": false,
     "typography": {
       "fontSize": true,
-      "lineHeight": true
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
     },
-    "interactivity": true
+    "interactivity": {
+      "clientNavigation": true
+    }
   },
   "attributes": {
     "displayFlags": {
@@ -46,15 +62,7 @@
       "type": "string",
       "default": "left"
     },
-    "symbolPosition": {
-      "type": "string",
-      "default": "right"
-    },
-    "layout": {
-      "type": "string",
-      "default": "horizontal"
-    },
-    "showCurrentOnly": {
+    "showSymbol": {
       "type": "boolean",
       "default": false
     }
