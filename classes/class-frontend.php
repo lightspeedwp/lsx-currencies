@@ -104,7 +104,11 @@ class Frontend {
 		// Resolve current currency from cookie.
 		$cookie = isset( $_COOKIE['lsx_currencies_choice'] ) ? sanitize_key( $_COOKIE['lsx_currencies_choice'] ) : '';
 		if ( '' !== $cookie ) {
-			$this->current_currency = strtoupper( $cookie );
+			$uppercased         = strtoupper( $cookie );
+			$available          = lsx_currencies()->available_currencies;
+			$this->current_currency = ( is_array( $available ) && array_key_exists( $uppercased, $available ) )
+				? $uppercased
+				: lsx_currencies()->base_currency;
 		} else {
 			$this->current_currency = lsx_currencies()->base_currency;
 		}
