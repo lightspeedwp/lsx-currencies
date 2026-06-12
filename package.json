@@ -1,10 +1,12 @@
 {
   "name": "lsx-currencies",
-  "version": "1.2.7",
-  "description": "Currencies for LSX",
-  "main": "gulpfile.js",
+  "version": "2.0.0",
+  "description": "Currencies for LSX and Tour Operator",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "lint:style": "wp-scripts lint-style"
   },
   "repository": {
     "type": "git",
@@ -12,7 +14,9 @@
   },
   "keywords": [
     "lsx",
-    "addon"
+    "addon",
+    "currencies",
+    "tour-operator"
   ],
   "author": "LightSpeed",
   "license": "GPL-3.0",
@@ -21,68 +25,7 @@
   },
   "homepage": "https://github.com/lightspeeddevelopment/lsx-currencies#readme",
   "devDependencies": {
-    "@babel/core": "^7.11.4",
-    "@babel/preset-env": "^7.11.0",
-    "@babel/register": "^7.10.5",
-    "@wordpress/eslint-plugin": "^25.0.0",
-    "braces": "^=3.0.2",
-    "clean-css": ">=4.2.3",
-    "extend": "^=3.0.2",
-    "eslint-config-gulp": "^6.0.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^7.0.0",
-    "eslint-plugin-standard": "^5.0.0",
-    "eslint": "^10.0.0",
-    "gulp": "^5.0.0",
-    "gulp-autoprefixer": "^10.0.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-gettext": "^0.3.0",
-    "gulp-eslint": "^6.0.0",
-    "gulp-jshint": "^2.1.0",
-    "gulp-minify-css": "^1.2.4",
-    "gulp-plumber": "^1.2.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-rtlcss": "^2.0.0",
-    "gulp-sass": "^6.0.0",
-    "gulp-sort": "^2.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-uglify": "^3.0.2",
-    "gulp-util": "^3.0.8",
-    "gulp-wp-pot": "^2.4.3",
-    "gulp-zip": "^6.0.0",
-    "jshint": "^2.12.0",
-    "lodash": "^=4.17.20",
-    "lodash.template": "^=4.5.0",
-    "map-stream": "^0.0.7",
-    "minimatch": "^=10.0.1",
-    "randomatic": "^=3.0.0",
-    "terser-webpack-plugin": "^5.0.0",
-    "npm-run-all": "^4.1.5",
-    "stylelint": "^17.0.0",
-    "stylelint-config-wordpress": "^17.0.0"
-  },
-  "eslintConfig": {
-    "extends": "plugin:@wordpress/eslint-plugin/recommended",
-    "root": true,
-    "env": {
-      "browser": true,
-      "node": true,
-      "es6": true
-    },
-    "globals": {
-      "jQuery": "readonly",
-      "wp": "readonly"
-    }
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "jest-expect-message"
-    ]
-  },
-  "stylelint": {
-    "extends": "stylelint-config-wordpress"
+    "@wordpress/scripts": "^30.0.0"
   },
   "dependencies": {
     "acorn": "^8.0.1",

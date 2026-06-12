@@ -1,81 +1,66 @@
 <?php
 /**
- * SCPO Engine
+ * LSX Currencies Template Tags
  *
- * @package   LSX Testimonials
+ * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
- * @link
- * @copyright 2018 LightSpeed
+ * @copyright 2024 LightSpeed
  */
 
 /**
- * Wraps your price in the currency html
+ * Returns the currency-wrapped HTML for a given price value.
+ * Useful for theme template files that display prices outside of tour custom field queries.
  *
- * @param string $value
- * @return void
+ * @param string    $value   Raw price string (numeric, may contain symbols).
+ * @param int|false $post_id Post ID for currency override lookup. Defaults to current post.
+ * @param array     $args    Options. 'currency_tag' (bool) — show/hide currency code label.
+ * @return string
  */
 function lsx_currencies_get_price_html( $value = '', $post_id = false, $args = array() ) {
-	$prefix   = '<span class="amount lsx-currencies" ';
-	$value    = preg_replace( '/[^0-9.]+/', '', $value );
-	$decimals = substr_count( $value, '.' );
+	if ( ! function_exists( 'lsx_currencies' ) ) {
+		return '';
+	}
+
+	$value = preg_replace( '/[^0-9.]+/', '', $value );
+
+	// Handle multiple decimal points — keep only the last one.
+	$decimal_count = substr_count( $value, '.' );
+	if ( $decimal_count > 1 ) {
+		$value = preg_replace( '/' . preg_quote( '.', '/' ) . '/', '', $value, $decimal_count - 1 );
+	}
+
 	if ( false === $post_id ) {
 		$post_id = get_the_ID();
 	}
 
-	$defaults = array(
-		'currency_tag' => true,
+	$args = wp_parse_args(
+		$args,
+		array( 'currency_tag' => true )
 	);
-	$args = wp_parse_args( $args, $defaults );
 
-	$money_format = 2;
-	if ( false !== lsx_currencies()->remove_decimals ) {
-		$money_format = 0;
-	}
+	$money_format = lsx_currencies()->remove_decimals ? 0 : 2;
 
-	if ( false !== $decimals && $decimals > 1 ) {
-		$decimals--;
-		$decimals = (int) $decimals;
-		$value = preg_replace( '/' . preg_quote( '.', '/' ) . '/', '', $value, $decimals );
-	}
-	$prefix .= '>';
-	$suffix = '</span>';
-	setlocale( LC_MONETARY, 'en_US' );
-
-	// Set the prices to use the base currency set on the tour.
+	// Determine the applicable currency for this post.
 	$currency      = lsx_currencies()->base_currency;
-	$tour_currency = get_post_meta( $post_id, 'currency', true );
-	if ( false !== $tour_currency && '' !== $tour_currency ) {
-		$currency = strtoupper( $tour_currency );
+	$tour_currency = get_post_meta( (int) $post_id, 'currency', true );
+	if ( ! empty( $tour_currency ) ) {
+		$currency = strtoupper( sanitize_key( $tour_currency ) );
 	}
 
-	// Work out the other tags
-	$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
-	if ( true !== $args['currency_tag'] ) {
-		$currency_tag = '<span class="currency-icon ' . mb_strtolower( $currency ) . '"></span>';
-	}	
+	// Currency label span.
+	if ( ! empty( $args['currency_tag'] ) ) {
+		$currency_span = '<span class="currency-icon ' . esc_attr( strtolower( $currency ) ) . '">' . esc_html( $currency ) . '</span>';
+	} else {
+		$currency_span = '<span class="currency-icon ' . esc_attr( strtolower( $currency ) ) . '"></span>';
+	}
 
-	$formatted_amount = number_format( (float) $value, $money_format );
-	$formatted_amount = str_replace( array( '$', 'USD' ), '', $formatted_amount );
+	$price_float      = (float) $value;
+	$formatted_amount = number_format( $price_float, $money_format );
 
-	$amount = '<span class="value" data-price-' . $currency . '="' . trim( str_replace( 'USD', '', $formatted_amount ) ) . '">' . str_replace( 'USD', '', $formatted_amount ) . '</span>';
-	$price_html = '<span class="amount lsx-currencies">' . $currency_tag . $amount . '</span>';
-	return $price_html;
+	$amount_span = '<span class="value" data-price-' . esc_attr( $currency ) . '="' . esc_attr( $price_float ) . '">'
+		. esc_html( $formatted_amount )
+		. '</span>';
+
+	return '<span class="amount lsx-currencies">' . $currency_span . $amount_span . '</span>';
 }
-
-/**
- * A shortcode to wrap a value in your content
- *
- * @param array $atts
- * @return void
- */
-function lsx_currency_value( $atts ) {
-	$a = shortcode_atts(
-		array(
-			'value' => '0.00',
-		),
-		$atts
-	);
-	return lsx_currencies_get_price_html( $a['value'] );
-}
-add_shortcode( 'lsx_currency_value', 'lsx_currency_value' );

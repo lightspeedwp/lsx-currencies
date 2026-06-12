@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "lsx-currencies/currency-switcher",
+  "version": "2.0.0",
+  "title": "Currency Switcher",
+  "category": "design",
+  "parent": [
+    "core/navigation"
+  ],
+  "icon": "money-alt",
+  "description": "A currency switcher that lets visitors choose their preferred display currency. Place inside a Navigation block.",
+  "keywords": [
+    "currency",
+    "switcher",
+    "money",
+    "navigation"
+  ],
+  "textdomain": "lsx-currencies",
+  "usesContext": [
+    "textColor",
+    "customTextColor",
+    "backgroundColor",
+    "customBackgroundColor",
+    "overlayTextColor",
+    "customOverlayTextColor",
+    "overlayBackgroundColor",
+    "customOverlayBackgroundColor",
+    "fontSize",
+    "customFontSize",
+    "showSubmenuIcon",
+    "openSubmenusOnClick",
+    "submenuVisibility",
+    "style"
+  ],
+  "supports": {
+    "html": false,
+    "reusable": false,
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true,
+      "__experimentalFontFamily": true,
+      "__experimentalFontWeight": true,
+      "__experimentalFontStyle": true,
+      "__experimentalTextTransform": true,
+      "__experimentalTextDecoration": true,
+      "__experimentalLetterSpacing": true,
+      "__experimentalDefaultControls": {
+        "fontSize": true
+      }
+    },
+    "interactivity": {
+      "clientNavigation": true
+    }
+  },
+  "attributes": {
+    "showSymbol": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "render": "file:./render.php"
+}

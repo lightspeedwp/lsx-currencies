@@ -1,70 +1,67 @@
 <?php
 /**
- * LSX Currency Frontend Class
+ * LSX Currencies Frontend Class
  *
  * @package   LSX Currencies
  * @author    LightSpeed
  * @license   GPL3
- * @link
- * @copyright 2019 LightSpeed
+ * @copyright 2024 LightSpeed
  */
 
 namespace lsx\currencies\classes;
 
 /**
- * The frontend classes
+ * Handles frontend price-wrapping and exchange-rate fetching.
+ * Currency switching UI is now provided by the currency-switcher block (view.js).
  */
 class Frontend {
 
 	/**
-	 * Holds instance of the class
+	 * Singleton instance.
 	 *
-	 * @var object \lsx\currencies\classes\Admin()
+	 * @var \lsx\currencies\classes\Frontend
 	 */
 	private static $instance;
 
 	/**
-	 * This will hold the rates with a base currency of USD.
+	 * Live exchange rates object fetched from the API (base = USD).
 	 *
-	 * @var boolean
+	 * @var object|false
 	 */
 	public $rates = false;
 
 	/**
-	 * This will hold the rates error message.
+	 * Human-readable status message for the last rate fetch.
 	 *
-	 * @var boolean
+	 * @var string
 	 */
-	public $rates_message = false;
+	public $rates_message = '';
 
 	/**
-	 * This is the current currency selected, default to the base currency.
+	 * Currently selected currency (uppercased ISO 4217 code).
 	 *
-	 * @var boolean
+	 * @var string
 	 */
-	public $current_currency = false;
+	public $current_currency = '';
 
 	/**
-	 * Constructor
+	 * Constructor.
 	 */
 	public function __construct() {
 		if ( ! is_admin() ) {
-			add_action( 'init', array( $this, 'set_defaults' ), 11, 1 );
+			add_action( 'init', array( $this, 'set_defaults' ), 11 );
 			add_filter( 'lsx_to_custom_field_query', array( $this, 'price_filter' ), 20, 5 );
-			add_action( 'wp_enqueue_scripts', array( $this, 'assets' ), 5 );
-			add_filter( 'wp_nav_menu_items', array( $this, 'wp_nav_menu_items_filter' ), 10, 2 );
 			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
 			add_filter( 'get_post_metadata', array( $this, 'filter_post_meta' ), 100, 4 );
 		}
 	}
 
 	/**
-	 * Return an instance of this class.
+	 * Return singleton instance.
 	 *
-	 * @return  object
+	 * @return \lsx\currencies\classes\Frontend
 	 */
 	public static function init() {
-		// If the single instance hasn't been set, set it now.
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -72,341 +69,202 @@ class Frontend {
 	}
 
 	/**
-	 * Constructor
+	 * Fetch exchange rates (cached for 12 hours) and resolve current currency.
 	 */
 	public function set_defaults() {
-		$this->rates_message = esc_html__( 'Error: API key isn\'t set.', 'lsx-currencies' );
 		$this->rates = get_transient( 'lsx_currencies_rates' );
-		if ( false === $this->rates ) {
-			$rates         = wp_remote_retrieve_body( wp_safe_remote_get( lsx_currencies()->api_url ) );
-			$decoded_rates = json_decode( $rates );
 
-			if ( is_wp_error( $rates ) ) {
-				$this->rates_message = $rates->get_error_message();
-			} elseif ( ! empty( $decoded_rates->error ) ) {
-				$this->rates_message = $decoded_rates->description;
-			} elseif ( empty( $rates ) ) {
-				$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
+		if ( false === $this->rates ) {
+			$api_url  = esc_url_raw( lsx_currencies()->api_url );
+			$response = wp_safe_remote_get( $api_url, array( 'timeout' => 10 ) );
+
+			if ( is_wp_error( $response ) ) {
+				$this->rates_message = $response->get_error_message();
 			} else {
-				$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
-				set_transient( 'lsx_currencies_rates', $decoded_rates->rates, 60 * 60 * 12 );
-				do_action( 'lsx_currencies_rates_refreshed' );
-				$this->rates = $decoded_rates->rates;
+				$body    = wp_remote_retrieve_body( $response );
+				$decoded = json_decode( $body );
+
+				if ( ! empty( $decoded->error ) ) {
+					$this->rates_message = sanitize_text_field( $decoded->description );
+				} elseif ( empty( $body ) ) {
+					$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
+				} elseif ( is_object( $decoded ) && isset( $decoded->rates ) ) {
+					$this->rates         = $decoded->rates;
+					$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
+					set_transient( 'lsx_currencies_rates', $this->rates, 12 * HOUR_IN_SECONDS );
+					do_action( 'lsx_currencies_rates_refreshed' );
+				} else {
+					$this->rates_message = esc_html__( 'Error: Invalid API response format.', 'lsx-currencies' );
+				}
 			}
 		} else {
 			$this->rates_message = esc_html__( 'Success (from cache).', 'lsx-currencies' );
 		}
-		$this->current_currency = isset( $_COOKIE['lsx_currencies_choice'] ) ? sanitize_key( $_COOKIE['lsx_currencies_choice'] ) : lsx_currencies()->base_currency;
-		if ( '' !== $this->current_currency && ! empty( $this->current_currency ) ) {
-			$this->current_currency = strtoupper( $this->current_currency );
+
+		// Resolve current currency from cookie.
+		$cookie = isset( $_COOKIE['lsx_currencies_choice'] ) ? sanitize_key( $_COOKIE['lsx_currencies_choice'] ) : '';
+		if ( '' !== $cookie ) {
+			$uppercased         = strtoupper( $cookie );
+			$available          = lsx_currencies()->available_currencies;
+			$this->current_currency = ( is_array( $available ) && array_key_exists( $uppercased, $available ) )
+				? $uppercased
+				: lsx_currencies()->base_currency;
 		} else {
 			$this->current_currency = lsx_currencies()->base_currency;
 		}
-		
+
+		if ( lsx_currencies()->convert_to_single ) {
+			$this->current_currency = lsx_currencies()->base_currency;
+		}
 	}
 
 	/**
-	 * Enques the assets
-	 */
-	public function assets() {
-		wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCIES_URL . 'assets/js/vendor/money.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
-		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCIES_URL . 'assets/js/vendor/accounting.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
-		wp_enqueue_script( 'lsx-jquery-cookie', LSX_CURRENCIES_URL . 'assets/js/vendor/cookie.min.js', array( 'jquery' ), LSX_CURRENCIES_VER, true );
-
-		$prefix = '.min';
-		$src = '';
-		$script_debug = false;
-		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
-			$prefix = '';
-			$src = 'src/';
-			$script_debug = true;
-		}
-		wp_enqueue_script( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/js/' . $src . 'lsx-currencies' . $prefix . '.js', array( 'jquery', 'lsx-moneyjs', 'lsx-accountingjs', 'lsx-jquery-cookie' ), LSX_CURRENCIES_VER, true );
-
-		$base_currency = lsx_currencies()->base_currency;
-		$current_currency = $this->current_currency;
-		if ( true === lsx_currencies()->convert_to_single ) {
-			$current_currency = $base_currency;
-		}
-
-		$params = apply_filters( 'lsx_currencies_js_params', array(
-			'current_currency'  => $current_currency,
-			'currency_symbols'  => $this->get_available_symbols(),
-			'rates'             => $this->rates,
-			'rates_message'     => $this->rates_message,
-			'base'              => $base_currency,
-			'flags'             => lsx_currencies()->display_flags,
-			'convert_to_single' => lsx_currencies()->convert_to_single,
-			'script_debug'      => $script_debug,
-			'remove_decimals'   => lsx_currencies()->remove_decimals,
-			'currency_tag'      => apply_filters( 'lsx_currency_tag', true ),
-		));
-
-		wp_localize_script( 'lsx-currencies', 'lsx_currencies_params', $params );
-
-		wp_enqueue_style( 'lsx-currencies', LSX_CURRENCIES_URL . 'assets/css/lsx-currencies.css', array(), LSX_CURRENCIES_VER );
-		wp_style_add_data( 'lsx-currencies', 'rtl', 'replace' );
-	}
-
-	/**
-	 * Returns all of the available symbols.
+	 * Returns the symbols array for enabled additional currencies.
 	 *
-	 * @return array
+	 * @return array<string,string>
 	 */
 	public function get_available_symbols() {
-		$symbols = array();
-		if ( false !== lsx_currencies()->additional_currencies && ! empty( lsx_currencies()->additional_currencies ) ) {
-			foreach ( lsx_currencies()->additional_currencies as $key => $currency ) {
-				$symbols[ $key ] = lsx_currencies()->currency_symbols[ $key ];
+		$symbols             = array();
+		$additional_currencies = lsx_currencies()->additional_currencies;
+		$all_symbols           = lsx_currencies()->currency_symbols;
+
+		if ( ! empty( $additional_currencies ) ) {
+			foreach ( $additional_currencies as $code => $label ) {
+				$code = strtoupper( sanitize_key( $code ) );
+				if ( isset( $all_symbols[ $code ] ) ) {
+					$symbols[ $code ] = $all_symbols[ $code ];
+				}
 			}
 		}
+
 		return $symbols;
 	}
 
 	/**
-	 * Adds in the required currency conversion tags
+	 * Wraps tour `price` field values in currency-conversion markup.
+	 * Hooked on `lsx_to_custom_field_query` from the Tour Operator plugin.
+	 *
+	 * @param string $return_html Existing field HTML.
+	 * @param string $meta_key    Meta key being rendered.
+	 * @param string $value       Raw meta value.
+	 * @param string $before      HTML prepended before the field.
+	 * @param string $after       HTML appended after the field.
+	 * @return string
 	 */
 	public function price_filter( $return_html, $meta_key, $value, $before, $after ) {
-		if ( 'price' === $meta_key ) {
-			$additional_html = '';
-			$additional_prices = get_post_meta( get_the_ID(), 'additional_prices', false );
-			$prefix = '<span class="amount lsx-currencies" ';
-
-			if ( true === lsx_currencies()->multi_prices && ! empty( $additional_prices ) ) {
-				foreach ( $additional_prices as $a_price ) {
-					$additional_html .= ' data-price-' . $a_price['currency'] . '="' . $a_price['amount'] . '"';
-				}
-			}
-
-			$value = preg_replace( '/[^0-9.]+/', '', $value );
-			$decimals = substr_count( $value, '.' );
-
-			if ( false !== $decimals && $decimals > 1 ) {
-				$decimals--;
-				$decimals = (int) $decimals;
-				$value = preg_replace( '/' . preg_quote( '.', '/' ) . '/', '', $value, $decimals );
-			}
-
-			$money_format = 2;
-			if ( false !== lsx_currencies()->remove_decimals ) {
-				$money_format = 0;
-			}
-
-			$prefix .= '>';
-			$suffix = '</span>';
-
-			setlocale( LC_MONETARY, 'en_US' );
-
-			// Set the prices to use the base currency set on the tour.
-			$currency      = lsx_currencies()->base_currency;
-			$tour_currency = get_post_meta( get_the_ID(), 'currency', true );
-			if ( false !== $tour_currency && '' !== $tour_currency ) {
-				$currency = strtoupper( $tour_currency );
-			}
-
-			// Work out the other tags.
-			$currency = '<span class="currency-icon ' . mb_strtolower( $currency ) . '">' . $currency . '</span>';
-
-			$value = ltrim( rtrim( $value ) );
-			
-			$for_value = number_format( (float) $value, $money_format );
-			$for_value = str_replace( array( '$', 'USD' ), '', $for_value );
-			
-			$amount = '<span class="value" data-price-' . strip_tags( $currency ) . '="' . trim( str_replace( array( '$', 'USD' ), '', $value ) ) . '" ' . $additional_html . '>' . str_replace( array( '$', 'USD' ), '', $for_value ) . '</span>';
-
-			// Check for a price type and add that in.
-			$price_type = get_post_meta( get_the_ID(), 'price_type', true );
-
-			switch ( $price_type ) {
-				case 'per_person_per_night':
-				case 'per_person_sharing':
-				case 'per_person_sharing_per_night':
-					$amount = $currency . $amount . ' ' . ucwords( str_replace( '_', ' ', $price_type ) );
-				    break;
-
-				case 'total_percentage':
-					$amount .= '% ' . esc_html__( 'Off', 'lsx-currencies' );
-					$before = str_replace( 'from', '', $before );
-				    break;
-
-				case 'none':
-				default:
-					$amount = $currency . $amount;
-				    break;
-			}
-
-			$return_html = $before . $prefix . $amount . $suffix . $after;
+		if ( 'price' !== $meta_key ) {
+			return $return_html;
 		}
+
+		// Strip non-numeric characters (except decimal point).
+		$value = preg_replace( '/[^0-9.]+/', '', $value );
+
+		// Handle values with multiple decimal points.
+		$decimal_count = substr_count( $value, '.' );
+		if ( $decimal_count > 1 ) {
+			$value = preg_replace( '/' . preg_quote( '.', '/' ) . '/', '', $value, $decimal_count - 1 );
+		}
+
+		$money_format = lsx_currencies()->remove_decimals ? 0 : 2;
+
+		// Determine currency for this specific post.
+		$currency      = lsx_currencies()->base_currency;
+		$tour_currency = get_post_meta( get_the_ID(), 'currency', true );
+		if ( ! empty( $tour_currency ) ) {
+			$currency = strtoupper( sanitize_key( $tour_currency ) );
+		}
+
+		// Build additional data attributes for per-currency prices.
+		$additional_html    = '';
+		$additional_prices  = get_post_meta( get_the_ID(), 'additional_prices', true );
+		if ( lsx_currencies()->multi_prices && is_array( $additional_prices ) && ! empty( $additional_prices ) ) {
+			$allowed_codes = array_keys( lsx_currencies()->available_currencies );
+			foreach ( $additional_prices as $a_price ) {
+				if ( empty( $a_price['currency'] ) || empty( $a_price['amount'] ) ) {
+					continue;
+				}
+				$a_code = strtoupper( sanitize_key( $a_price['currency'] ) );
+				if ( ! in_array( $a_code, $allowed_codes, true ) ) {
+					continue;
+				}
+				$a_amount         = (float) $a_price['amount'];
+				$additional_html .= ' data-price-' . esc_attr( $a_code ) . '="' . esc_attr( $a_amount ) . '"';
+			}
+		}
+
+		// Price value span.
+		$price_attr = (float) $value;
+		$formatted  = number_format( $price_attr, $money_format );
+
+		$currency_span = '<span class="currency-icon ' . esc_attr( strtolower( $currency ) ) . '">' . esc_html( $currency ) . '</span>';
+
+		$amount_span = '<span class="value" data-price-' . esc_attr( $currency ) . '="' . esc_attr( $price_attr ) . '"' . $additional_html . '>'
+			. esc_html( $formatted )
+			. '</span>';
+
+		// Optionally append price type label.
+		$price_type = get_post_meta( get_the_ID(), 'price_type', true );
+		switch ( $price_type ) {
+			case 'per_person_per_night':
+			case 'per_person_sharing':
+			case 'per_person_sharing_per_night':
+				$amount = $currency_span . $amount_span . ' ' . esc_html( ucwords( str_replace( '_', ' ', $price_type ) ) );
+				break;
+
+			case 'total_percentage':
+				$amount = $amount_span . '%&nbsp;' . esc_html__( 'Off', 'lsx-currencies' );
+				$before = str_replace( 'from', '', $before );
+				break;
+
+			case 'none':
+			default:
+				$amount = $currency_span . $amount_span;
+				break;
+		}
+
+		$wrapper     = '<span class="amount lsx-currencies">' . $amount . '</span>';
+		$return_html = $before . $wrapper . $after;
 
 		return $return_html;
 	}
 
 	/**
-	 * Filter on the 'wp_nav_menu_items' hook, that potentially adds a currency switcher to the item of some menus.
+	 * Extends the wp_kses allowed HTML list to include data-price-* attributes
+	 * on span elements so price HTML is not stripped when passed through wp_kses_post().
 	 *
-	 * @param $items string
-	 * @param $args object
-	 *
-	 * @return string
-	 */
-	public function wp_nav_menu_items_filter( $items, $args ) {
-		if ( '' !== lsx_currencies()->menus && lsx_currencies()->menus === $args->theme_location ) {
-			//if ( 'top-menu' === $args->theme_location || 'top-menu-right' === $args->theme_location ) {
-				//$items = $this->get_menu_html( $args ) . $items;
-			//} else {
-				$items = $items . $this->get_menu_html( $args );
-			//}
-		}
-		return $items;
-	}
-
-	/**
-	 * Returns the HTML string of the language switcher for a given menu.
-	 *
-	 * @param $args object
-	 *
-	 * @return string
-	 */
-	private function get_menu_html( $args ) {
-		if ( empty( lsx_currencies()->additional_currencies ) ) {
-			return '';
-		}
-
-		$items = '';
-		$items .= '<li class="menu-item menu-item-currency menu-item-currency-current menu-item-has-children dropdown">';
-		$items .= isset( $args->before ) ? $args->before : '';
-		$items .= '<a class="current symbol-' . lsx_currencies()->switcher_symbol_position . '" href="#' . strtolower( $this->current_currency ) . '">';
-		$items .= isset( $args->link_before ) ? $args->link_before : '';
-
-		if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
-			$items .= lsx_currencies()->get_currency_flag( $this->current_currency );
-		}
-
-		if ( 'left' === lsx_currencies()->switcher_symbol_position ) {
-			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
-		}
-
-		$items .= $this->current_currency;
-
-		if ( 'right' === lsx_currencies()->switcher_symbol_position ) {
-			$items .= '<span class="currency-icon ' . strtolower( $this->current_currency ) . '"></span>';
-		}
-
-		if ( ! empty( lsx_currencies()->display_flags ) && 'right' === lsx_currencies()->flag_position ) {
-			$items .= lsx_currencies()->get_currency_flag( $this->current_currency );
-		}
-
-		$items .= isset( $args->link_after ) ? $args->link_after : '';
-		$items .= '<span class="caret"></span></a>';
-		$items .= isset( $args->after ) ? $args->after : '';
-		$items .= $this->render_sub_items();
-		$items .= '</li>';
-		return $items;
-	}
-	/**
-	 * Returns the HTML string of the language switcher for a given menu.
-	 *
-	 * @param object $args
-	 *
-	 * @return string
-	 */
-	private function render_sub_items() {
-		$sub_items = '';
-		$additional_currencies = apply_filters( 'lsx_currencies_nav_additional_items', lsx_currencies()->additional_currencies );
-		foreach ( $additional_currencies as $key => $currency ) {
-			$hidden = '';
-			$class = '';
-
-			if ( $this->current_currency === $key ) {
-				$hidden = 'style="display:none";';
-				$class = 'hidden';
-			}
-
-			$sub_items .= '<li ' . $hidden . ' class="' . $class . ' menu-item menu-item-currency ' . lsx_currencies()->switcher_symbol_position . '">';
-			$sub_items .= '<a class=" symbol-' . lsx_currencies()->switcher_symbol_position . '" href="#' . strtolower( $key ) . '">';
-
-			if ( ! empty( lsx_currencies()->display_flags ) && 'left' === lsx_currencies()->flag_position ) {
-				$sub_items .= lsx_currencies()->get_currency_flag( $key );
-			}
-
-			if ( 'left' === lsx_currencies()->switcher_symbol_position ) {
-				$sub_items .= '<span class="currency-icon ' . strtolower( $key ) . '"></span>';
-			}
-
-			$sub_items .= ucwords( $key );
-
-			if ( 'right' === lsx_currencies()->switcher_symbol_position ) {
-				$sub_items .= '<span class="currency-icon ' . strtolower( $key ) . '"></span>';
-			}
-
-			if ( ! empty( lsx_currencies()->display_flags ) && 'right' === lsx_currencies()->flag_position ) {
-				$sub_items .= lsx_currencies()->get_currency_flag( $key );
-			}
-
-			$sub_items .= '</a></li>';
-		}
-
-		$sub_items = '<ul class="sub-menu submenu-currency dropdown-menu">' . $sub_items . '</ul>';
-		return $sub_items;
-	}
-
-	/**
-	 * Allow data params for Slick slider addon.
+	 * @param array        $allowedtags Allowed tags array.
+	 * @param string|array $context     Context string or 'post'.
+	 * @return array
 	 */
 	public function wp_kses_allowed_html( $allowedtags, $context ) {
 		if ( ! isset( $allowedtags['span'] ) ) {
 			$allowedtags['span'] = array();
 		}
 
-		$allowedtags['span']['data-price-AUD'] = true;
-		$allowedtags['span']['data-price-BRL'] = true;
-		$allowedtags['span']['data-price-GBP'] = true;
-		$allowedtags['span']['data-price-BWP'] = true;
-		$allowedtags['span']['data-price-CAD'] = true;
-		$allowedtags['span']['data-price-CNY'] = true;
-		$allowedtags['span']['data-price-EUR'] = true;
-		$allowedtags['span']['data-price-HKD'] = true;
-		$allowedtags['span']['data-price-INR'] = true;
-		$allowedtags['span']['data-price-IDR'] = true;
-		$allowedtags['span']['data-price-ILS'] = true;
-		$allowedtags['span']['data-price-JPY'] = true;
-		$allowedtags['span']['data-price-KES'] = true;
-		$allowedtags['span']['data-price-LAK'] = true;
-		$allowedtags['span']['data-price-MWK'] = true;
-		$allowedtags['span']['data-price-MYR'] = true;
-		$allowedtags['span']['data-price-MZN'] = true;
-		$allowedtags['span']['data-price-NAD'] = true;
-		$allowedtags['span']['data-price-NZD'] = true;
-		$allowedtags['span']['data-price-NOK'] = true;
-		$allowedtags['span']['data-price-RUB'] = true;
-		$allowedtags['span']['data-price-SGD'] = true;
-		$allowedtags['span']['data-price-ZAR'] = true;
-		$allowedtags['span']['data-price-SEK'] = true;
-		$allowedtags['span']['data-price-CHF'] = true;
-		$allowedtags['span']['data-price-TZS'] = true;
-		$allowedtags['span']['data-price-USD'] = true;
-		$allowedtags['span']['data-price-AED'] = true;
-		$allowedtags['span']['data-price-ZMW'] = true;
-		$allowedtags['span']['data-price-ZWL'] = true;
+		$codes = array_keys( lsx_currencies()->available_currencies );
+		foreach ( $codes as $code ) {
+			$code = strtoupper( sanitize_key( $code ) );
+			$allowedtags['span'][ 'data-price-' . $code ] = true;
+		}
 
 		return $allowedtags;
 	}
 
 	/**
-	 * Allow empty prices if the convert to single currency is active.
+	 * Returns '0' for empty price meta when convert_to_single is enabled,
+	 * so that price blocks still render something to convert.
 	 *
-	 * @param null $metadata
-	 * @param string $object_id
-	 * @param string $meta_key
-	 * @param boolean $single
-	 * @return void
+	 * @param mixed  $metadata  Existing metadata (null = not intercepted).
+	 * @param int    $object_id Post ID.
+	 * @param string $meta_key  Meta key.
+	 * @param bool   $single    Whether to return a single value.
+	 * @return mixed
 	 */
-	public function filter_post_meta( $metadata = null, $object_id, $meta_key, $single ) {
-		if ( true === lsx_currencies()->convert_to_single && 'price' === $meta_key ) {
+	public function filter_post_meta( $metadata, $object_id, $meta_key, $single ) {
+		if ( lsx_currencies()->convert_to_single && 'price' === $meta_key ) {
 			$meta_cache = wp_cache_get( $object_id, 'post_meta' );
-
 			if ( ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
-				$metadata = '0';
+				return '0';
 			}
 		}
 		return $metadata;
