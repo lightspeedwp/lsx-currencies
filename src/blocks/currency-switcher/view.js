@@ -114,13 +114,19 @@
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Build the label HTML for a currency code.
+	 * Build the label HTML for a currency code, optionally including the symbol.
 	 *
-	 * @param {string} code ISO 4217 code (uppercase).
+	 * @param {string}  code       ISO 4217 code (uppercase).
+	 * @param {boolean} showSymbol Whether to append the currency symbol.
 	 * @return {string} HTML string.
 	 */
-	function buildLabelHTML( code ) {
-		return '<span class="wp-block-navigation-item__label">' + code + '</span>';
+	function buildLabelHTML( code, showSymbol ) {
+		let html = '<span class="wp-block-navigation-item__label">' + code;
+		if ( showSymbol && params.symbols && params.symbols[ code ] ) {
+			html += ' <span class="lsx-currency-symbol" aria-hidden="true">' + params.symbols[ code ] + '</span>';
+		}
+		html += '</span>';
+		return html;
 	}
 
 	/**
@@ -131,10 +137,12 @@
 	 * @param {string}  oldCurrent  Previously active ISO 4217 code.
 	 */
 	function updateSwitcher( switcherLi, newCurrency, oldCurrent ) {
+		const showSymbol = switcherLi.dataset.showSymbol === '1';
+
 		// ── Update top-level label ────────────────────────────────────────────
 		const topContent = switcherLi.querySelector( ':scope > .wp-block-navigation-item__content' );
 		if ( topContent ) {
-			topContent.innerHTML = buildLabelHTML( newCurrency );
+			topContent.innerHTML = buildLabelHTML( newCurrency, showSymbol );
 			topContent.setAttribute( 'href', '#' + newCurrency.toLowerCase() );
 		}
 
@@ -159,7 +167,7 @@
 			a.className = 'wp-block-navigation-item__content';
 			a.href = '#' + oldCurrent.toLowerCase();
 			a.dataset.lsxCurrency = oldCurrent;
-			a.innerHTML = buildLabelHTML( oldCurrent );
+			a.innerHTML = buildLabelHTML( oldCurrent, showSymbol );
 			li.appendChild( a );
 			submenu.appendChild( li );
 

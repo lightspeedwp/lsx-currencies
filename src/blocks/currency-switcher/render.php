@@ -131,6 +131,8 @@ $wrapper_attributes = get_block_wrapper_attributes(
 		'data-wp-on--pointerleave' => 'actions.closeMenuOnHover',
 		'data-wp-watch'            => 'callbacks.initMenu',
 		'tabindex'                 => '-1',
+		// Data used by view.js when rebuilding labels after a currency switch.
+		'data-show-symbol'         => $show_symbol ? '1' : '0',
 	)
 );
 
