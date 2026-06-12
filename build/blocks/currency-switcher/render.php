@@ -2,14 +2,14 @@
 /**
  * Currency Switcher Block — Server-side render.
  *
- * Outputs HTML that mirrors core/navigation-submenu so the currency switcher
- * integrates seamlessly into the navigation block's existing styling and
- * interactive submenu behaviour.
+ * Mirrors core/navigation-submenu output exactly, including all Interactivity
+ * API directives, so the currency switcher participates in the navigation
+ * block's open/close behaviour without any extra JS.
  *
- * Variables provided by register_block_type():
- *   $attributes  (array)   Block attributes.
- *   $content     (string)  Inner block content (unused).
- *   $block       (WP_Block) Block instance (used for context).
+ * Variables provided by WordPress:
+ *   $attributes  (array)    Block attributes.
+ *   $content     (string)   Inner block content (unused — no inner blocks).
+ *   $block       (WP_Block) Block instance, used for context.
  *
  * @package LSX Currencies
  */
@@ -28,25 +28,24 @@ $display_flags    = ! empty( $attributes['displayFlags'] );
 $flag_position    = isset( $attributes['flagPosition'] ) ? sanitize_key( $attributes['flagPosition'] ) : 'left';
 $show_symbol      = ! empty( $attributes['showSymbol'] );
 
-// Build the full list: base first, then additional currencies.
+// Full list: base currency first, then additional.
 $all_currencies = array_merge( array( $base_currency => $base_currency ), (array) $currencies );
 
-// Need at least two currencies to show a switcher.
+// Require at least two currencies.
 if ( count( $all_currencies ) < 2 ) {
 	return;
 }
 
-// Determine currently selected currency from cookie.
+// Determine selected currency from cookie; fall back to base.
 $current = $base_currency;
 if ( isset( $_COOKIE['lsx_currencies_choice'] ) ) {
 	$current = strtoupper( sanitize_key( $_COOKIE['lsx_currencies_choice'] ) );
 }
-// Ensure the selected currency is in our list; fall back to base.
 if ( ! array_key_exists( $current, $all_currencies ) ) {
 	$current = $base_currency;
 }
 
-// Build the list of non-selected (submenu) currencies.
+// Non-selected currencies go in the submenu.
 $submenu_currencies = array_filter(
 	$all_currencies,
 	function ( $code ) use ( $current ) {
@@ -55,46 +54,97 @@ $submenu_currencies = array_filter(
 	ARRAY_FILTER_USE_KEY
 );
 
-// ── Context from the parent navigation block ──────────────────────────────────
-$context           = $block->context;
-$open_on_click     = ! empty( $context['openSubmenusOnClick'] );
-$show_submenu_icon = isset( $context['showSubmenuIcon'] ) ? (bool) $context['showSubmenuIcon'] : true;
+// ── Context from parent navigation block ─────────────────────────────────────
+$nav_context = $block->context;
 
-// ── Wrapper <li> classes (mirrors navigation-submenu) ────────────────────────
-$li_classes = array( 'wp-block-navigation-item', 'has-child' );
+// Inline block_core_navigation_submenu_get_submenu_visibility() logic.
+// Priority: legacy boolean openSubmenusOnClick → new submenuVisibility enum.
+$deprecated_open_on_click = isset( $nav_context['openSubmenusOnClick'] ) ? $nav_context['openSubmenusOnClick'] : null;
+if ( null !== $deprecated_open_on_click ) {
+	$computed_visibility = ! empty( $deprecated_open_on_click ) ? 'click' : 'hover';
+} else {
+	$computed_visibility = isset( $nav_context['submenuVisibility'] ) ? $nav_context['submenuVisibility'] : 'hover';
+}
+
+$show_submenu_icon       = isset( $nav_context['showSubmenuIcon'] ) && $nav_context['showSubmenuIcon'];
+$open_on_click           = 'click' === $computed_visibility;
+$open_on_hover           = 'hover' === $computed_visibility;
+$open_on_hover_and_click = $open_on_hover && $show_submenu_icon; // matches core logic exactly
+
+// ── Font sizes from context ───────────────────────────────────────────────────
+$font_size_classes = array();
+$font_size_styles  = '';
+if ( ! empty( $nav_context['fontSize'] ) ) {
+	$font_size_classes[] = 'has-' . sanitize_html_class( $nav_context['fontSize'] ) . '-font-size';
+} elseif ( ! empty( $nav_context['style']['typography']['fontSize'] ) ) {
+	$font_size_styles = sprintf( 'font-size:%s;', esc_attr( $nav_context['style']['typography']['fontSize'] ) );
+}
+
+// ── <li> CSS classes (mirrors navigation-submenu exactly) ────────────────────
+$li_classes = array_merge( array( 'wp-block-navigation-item', 'has-child' ), $font_size_classes );
 
 if ( $open_on_click ) {
 	$li_classes[] = 'open-on-click';
-} else {
+}
+if ( $open_on_hover_and_click ) {
 	$li_classes[] = 'open-on-hover-click';
 }
+if ( 'always' === $computed_visibility ) {
+	$li_classes[] = 'open-always';
+}
+// 'wp-block-navigation-submenu' is the block CSS class for core/navigation-submenu;
+// we add it so themes/plugins targeting that class also style our switcher.
+$li_classes[] = 'wp-block-navigation-submenu';
 
-// Inherit colour/typography classes from navigation context where possible.
-if ( ! empty( $context['textColor'] ) ) {
-	$li_classes[] = 'has-text-color';
-	$li_classes[] = 'has-' . sanitize_html_class( $context['textColor'] ) . '-color';
-}
-if ( ! empty( $context['backgroundColor'] ) ) {
-	$li_classes[] = 'has-background';
-	$li_classes[] = 'has-' . sanitize_html_class( $context['backgroundColor'] ) . '-background-color';
-}
-if ( ! empty( $context['fontSize'] ) ) {
-	$li_classes[] = 'has-' . sanitize_html_class( $context['fontSize'] ) . '-font-size';
-}
-
-$wrapper_attributes = get_block_wrapper_attributes(
+// ── Interactivity API context JSON for core/navigation store ──────────────────
+$wp_context_json = wp_json_encode(
 	array(
-		'class'               => implode( ' ', $li_classes ),
-		'data-display-flags'  => $display_flags ? '1' : '0',
-		'data-flag-position'  => esc_attr( $flag_position ),
-		'data-flag-relations' => wp_json_encode( $flag_relations ),
+		'submenuOpenedBy' => array(
+			'click' => false,
+			'hover' => false,
+			'focus' => false,
+		),
+		'type'          => 'submenu',
+		'modal'         => null,
+		'previousFocus' => null,
 	)
 );
 
-// ── SVG caret (identical to core/navigation-submenu) ─────────────────────────
-$caret_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" role="presentation" aria-hidden="true" focusable="false"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5"/></svg>';
+// ── Aria label ────────────────────────────────────────────────────────────────
+$aria_label = sprintf(
+	/* translators: %s: current currency code shown in the navigation. */
+	__( '%s submenu', 'lsx-currencies' ),
+	esc_html( $current )
+);
 
-// ── Helper: render a currency label with optional flag and/or symbol ─────────
+// ── <li> wrapper attributes ───────────────────────────────────────────────────
+// get_block_wrapper_attributes() also adds the block's own CSS class
+// (wp-block-lsx-currencies-currency-switcher) which is used by view.js.
+$wrapper_attributes = get_block_wrapper_attributes(
+	array(
+		'class'                    => implode( ' ', $li_classes ),
+		'style'                    => $font_size_styles,
+		// Interactivity API — all directives reference the core/navigation store
+		// so this element participates in the navigation's hover/click/focus state machine.
+		'data-wp-context'          => $wp_context_json,
+		'data-wp-interactive'      => 'core/navigation',
+		'data-wp-on--focusout'     => 'actions.handleMenuFocusout',
+		'data-wp-on--keydown'      => 'actions.handleMenuKeydown',
+		'data-wp-on--pointerenter' => 'actions.openMenuOnHover',
+		'data-wp-on--pointerleave' => 'actions.closeMenuOnHover',
+		'data-wp-watch'            => 'callbacks.initMenu',
+		'tabindex'                 => '-1',
+		// Data used by view.js for dynamic DOM updates when switching currency.
+		'data-display-flags'       => $display_flags ? '1' : '0',
+		'data-flag-position'       => $flag_position,
+		'data-flag-relations'      => wp_json_encode( $flag_relations ),
+	)
+);
+
+// ── SVG caret — identical to block_core_shared_navigation_render_submenu_icon() ──
+$caret_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5"></path></svg>';
+
+// ── Label helper ──────────────────────────────────────────────────────────────
 $render_label = function ( $code ) use ( $display_flags, $flag_position, $flag_relations, $currency_symbols, $show_symbol ) {
 	$code     = strtoupper( sanitize_key( $code ) );
 	$flag_key = isset( $flag_relations[ $code ] ) ? $flag_relations[ $code ] : '';
@@ -102,18 +152,13 @@ $render_label = function ( $code ) use ( $display_flags, $flag_position, $flag_r
 		? '<span class="flag-icon flag-icon-' . esc_attr( $flag_key ) . '" aria-hidden="true"></span>'
 		: '';
 
-	$symbol_html = '';
-	if ( $show_symbol && ! empty( $currency_symbols[ $code ] ) ) {
-		$symbol_html = '<span class="lsx-currency-symbol" aria-hidden="true">' . esc_html( $currency_symbols[ $code ] ) . '</span>';
-	}
-
 	$label = '';
 	if ( $display_flags && $flag_key && 'left' === $flag_position ) {
 		$label .= $flag . ' ';
 	}
 	$label .= '<span class="wp-block-navigation-item__label">' . esc_html( $code );
-	if ( $show_symbol ) {
-		$label .= ' ' . $symbol_html;
+	if ( $show_symbol && ! empty( $currency_symbols[ $code ] ) ) {
+		$label .= ' <span class="lsx-currency-symbol" aria-hidden="true">' . esc_html( $currency_symbols[ $code ] ) . '</span>';
 	}
 	$label .= '</span>';
 	if ( $display_flags && $flag_key && 'right' === $flag_position ) {
@@ -121,42 +166,67 @@ $render_label = function ( $code ) use ( $display_flags, $flag_position, $flag_r
 	}
 	return $label;
 };
+
+// ── Submenu <ul> CSS classes + overlay colours from context ───────────────────
+// Matches the colour-class logic in navigation-submenu's wp_apply_colors_support() call.
+$submenu_classes = array( 'wp-block-navigation__submenu-container', 'wp-block-navigation-submenu' );
+$submenu_style   = '';
+
+if ( ! empty( $nav_context['overlayTextColor'] ) ) {
+	$submenu_classes[] = 'has-text-color';
+	$submenu_classes[] = 'has-' . sanitize_html_class( $nav_context['overlayTextColor'] ) . '-color';
+}
+if ( ! empty( $nav_context['customOverlayTextColor'] ) ) {
+	$submenu_classes[] = 'has-text-color';
+	$submenu_style    .= 'color:' . esc_attr( $nav_context['customOverlayTextColor'] ) . ';';
+}
+if ( ! empty( $nav_context['overlayBackgroundColor'] ) ) {
+	$submenu_classes[] = 'has-background';
+	$submenu_classes[] = 'has-' . sanitize_html_class( $nav_context['overlayBackgroundColor'] ) . '-background-color';
+}
+if ( ! empty( $nav_context['customOverlayBackgroundColor'] ) ) {
+	$submenu_classes[] = 'has-background';
+	$submenu_style    .= 'background-color:' . esc_attr( $nav_context['customOverlayBackgroundColor'] ) . ';';
+}
 ?>
 <li <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() is safe. ?>>
 
 	<?php if ( $open_on_click ) : ?>
-		<?php /* Open-on-click: top-level is a button, caret is a separate <span> */ ?>
-		<button class="wp-block-navigation-item__content wp-block-navigation-submenu__toggle"
-			aria-label="<?php esc_attr_e( 'Currency switcher', 'lsx-currencies' ); ?>"
-			aria-expanded="false"
-			aria-haspopup="true">
+		<?php /* open-on-click: top-level is a <button> that toggles the submenu */ ?>
+		<button
+			aria-label="<?php echo esc_attr( $aria_label ); ?>"
+			class="wp-block-navigation-item__content wp-block-navigation-submenu__toggle"
+			data-wp-bind--aria-expanded="state.isMenuOpen"
+			data-wp-on--click="actions.toggleMenuOnClick"
+			aria-expanded="false">
 			<?php echo $render_label( $current ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</button>
-		<?php if ( $show_submenu_icon ) : ?>
-			<span class="wp-block-navigation__submenu-icon">
-				<?php echo $caret_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</span>
+		<?php if ( ! empty( $submenu_currencies ) ) : ?>
+			<span class="wp-block-navigation__submenu-icon"><?php echo $caret_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 		<?php endif; ?>
 
 	<?php else : ?>
-		<?php /* Open-on-hover / always: top-level is an <a>, caret is a <button> */ ?>
-		<a class="wp-block-navigation-item__content"
-			href="#<?php echo esc_attr( strtolower( $current ) ); ?>">
+		<?php /* open-on-hover / always: top-level is an <a>, optional caret <button> */ ?>
+		<a class="wp-block-navigation-item__content" href="#<?php echo esc_attr( strtolower( $current ) ); ?>">
 			<?php echo $render_label( $current ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 		</a>
-		<?php if ( $show_submenu_icon ) : ?>
-			<button class="wp-block-navigation__submenu-icon wp-block-navigation-submenu__toggle"
-				aria-label="<?php esc_attr_e( 'Currency switcher', 'lsx-currencies' ); ?>"
-				aria-expanded="false"
-				aria-haspopup="true">
+		<?php if ( $show_submenu_icon && ! empty( $submenu_currencies ) ) : ?>
+			<button
+				aria-label="<?php echo esc_attr( $aria_label ); ?>"
+				class="wp-block-navigation__submenu-icon wp-block-navigation-submenu__toggle"
+				data-wp-bind--aria-expanded="state.isMenuOpen"
+				data-wp-on--click="actions.toggleMenuOnClick"
+				aria-expanded="false">
 				<?php echo $caret_svg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			</button>
 		<?php endif; ?>
-
 	<?php endif; ?>
 
 	<?php if ( ! empty( $submenu_currencies ) ) : ?>
-		<ul class="wp-block-navigation__submenu-container">
+		<ul
+			data-wp-on--focus="actions.openMenuOnFocus"
+			class="<?php echo esc_attr( implode( ' ', $submenu_classes ) ); ?>"
+			<?php if ( $submenu_style ) : ?>style="<?php echo esc_attr( $submenu_style ); ?>"<?php endif; ?>>
 			<?php foreach ( $submenu_currencies as $code => $code_val ) :
 				$code = strtoupper( sanitize_key( $code ) );
 				?>
