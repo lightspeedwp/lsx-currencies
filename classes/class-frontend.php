@@ -263,7 +263,7 @@ class Frontend {
 	public function filter_post_meta( $metadata, $object_id, $meta_key, $single ) {
 		if ( lsx_currencies()->convert_to_single && 'price' === $meta_key ) {
 			$meta_cache = wp_cache_get( $object_id, 'post_meta' );
-			if ( ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
+			if ( ! is_array( $meta_cache ) || ! isset( $meta_cache[ $meta_key ] ) || '' === $meta_cache[ $meta_key ] ) {
 				return '0';
 			}
 		}
