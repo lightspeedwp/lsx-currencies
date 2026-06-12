@@ -123,12 +123,13 @@ class Currencies {
 		$options = get_option( 'lsx_to_settings', array() );
 
 		// Base currency — uses the existing Tour Operator 'currency' field.
+		// strtoupper() ensures the code matches money.js rate keys (e.g. 'ZAR' not 'zar').
 		if ( ! empty( $options['currency'] ) ) {
-			$this->base_currency = apply_filters( 'lsx_currencies_base_currency', sanitize_key( $options['currency'] ), $this );
+			$this->base_currency = strtoupper( apply_filters( 'lsx_currencies_base_currency', sanitize_key( $options['currency'] ), $this ) );
 		}
 
 		if ( defined( 'LSX_BASE_CURRENCY' ) ) {
-			$this->base_currency = sanitize_key( \LSX_BASE_CURRENCY );
+			$this->base_currency = strtoupper( sanitize_key( \LSX_BASE_CURRENCY ) );
 		}
 
 		// Additional currencies — stored as a comma-separated string by the
