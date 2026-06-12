@@ -88,11 +88,13 @@ class Frontend {
 					$this->rates_message = sanitize_text_field( $decoded->description );
 				} elseif ( empty( $body ) ) {
 					$this->rates_message = esc_html__( 'Error: API response is empty.', 'lsx-currencies' );
-				} else {
+				} elseif ( is_object( $decoded ) && isset( $decoded->rates ) ) {
 					$this->rates         = $decoded->rates;
 					$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
 					set_transient( 'lsx_currencies_rates', $this->rates, 12 * HOUR_IN_SECONDS );
 					do_action( 'lsx_currencies_rates_refreshed' );
+				} else {
+					$this->rates_message = esc_html__( 'Error: Invalid API response format.', 'lsx-currencies' );
 				}
 			}
 		} else {
@@ -170,9 +172,8 @@ class Frontend {
 
 		// Build additional data attributes for per-currency prices.
 		$additional_html    = '';
-		$additional_prices  = get_post_meta( get_the_ID(), 'additional_prices', false );
-
-		if ( lsx_currencies()->multi_prices && ! empty( $additional_prices ) ) {
+		$additional_prices  = get_post_meta( get_the_ID(), 'additional_prices', true );
+		if ( lsx_currencies()->multi_prices && is_array( $additional_prices ) && ! empty( $additional_prices ) ) {
 			$allowed_codes = array_keys( lsx_currencies()->available_currencies );
 			foreach ( $additional_prices as $a_price ) {
 				if ( empty( $a_price['currency'] ) || empty( $a_price['amount'] ) ) {
