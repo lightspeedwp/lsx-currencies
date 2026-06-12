@@ -54,21 +54,12 @@
     }
   },
   "attributes": {
-    "displayFlags": {
-      "type": "boolean",
-      "default": true
-    },
-    "flagPosition": {
-      "type": "string",
-      "default": "left"
-    },
     "showSymbol": {
       "type": "boolean",
       "default": false
     }
   },
   "editorScript": "file:./index.js",
-  "style": "file:./style-index.css",
   "viewScript": "file:./view.js",
   "render": "file:./render.php"
 }

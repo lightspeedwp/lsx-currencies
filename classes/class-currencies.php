@@ -53,9 +53,6 @@ class Currencies {
 	public $available_currencies = array();
 
 	/** @var array */
-	public $flag_relations = array();
-
-	/** @var array */
 	public $currency_symbols = array();
 
 	/** @var bool */
@@ -162,22 +159,7 @@ class Currencies {
 		}
 
 		$this->available_currencies = $this->get_available_currencies();
-		$this->flag_relations       = $this->get_flag_relations();
 		$this->currency_symbols     = $this->get_currency_symbols();
-	}
-
-	/**
-	 * Returns the flag HTML span for a currency code.
-	 *
-	 * @param string $key ISO 4217 currency code.
-	 * @return string
-	 */
-	public function get_currency_flag( $key = 'USD' ) {
-		$key = strtoupper( sanitize_key( $key ) );
-		if ( ! isset( $this->flag_relations[ $key ] ) ) {
-			return '';
-		}
-		return '<span class="flag-icon flag-icon-' . esc_attr( $this->flag_relations[ $key ] ) . '"></span> ';
 	}
 
 	/**
@@ -242,47 +224,6 @@ class Currencies {
 		}
 
 		return $free_currencies;
-	}
-
-	/**
-	 * Returns ISO 4217 currency code → ISO 3166-1 alpha-2 country code mappings
-	 * used for flag icons.
-	 *
-	 * @return array<string,string>
-	 */
-	public function get_flag_relations() {
-		return array(
-			'AED' => 'ae',
-			'AUD' => 'au',
-			'BRL' => 'br',
-			'BWP' => 'bw',
-			'CAD' => 'ca',
-			'CHF' => 'ch',
-			'CNY' => 'cn',
-			'EUR' => 'eu',
-			'GBP' => 'gb',
-			'HKD' => 'hk',
-			'IDR' => 'id',
-			'ILS' => 'il',
-			'INR' => 'in',
-			'JPY' => 'jp',
-			'KES' => 'ke',
-			'LAK' => 'la',
-			'MWK' => 'mw',
-			'MYR' => 'my',
-			'MZN' => 'mz',
-			'NAD' => 'na',
-			'NOK' => 'no',
-			'NZD' => 'nz',
-			'RUB' => 'ru',
-			'SEK' => 'se',
-			'SGD' => 'sg',
-			'TZS' => 'tz',
-			'USD' => 'us',
-			'ZAR' => 'za',
-			'ZMW' => 'zm',
-			'ZWL' => 'zw',
-		);
 	}
 
 	/**

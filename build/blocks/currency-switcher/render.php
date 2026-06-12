@@ -22,10 +22,7 @@ if ( ! function_exists( 'lsx_currencies' ) ) {
 
 $currencies       = lsx_currencies()->additional_currencies;
 $base_currency    = lsx_currencies()->base_currency;
-$flag_relations   = lsx_currencies()->flag_relations;
 $currency_symbols = lsx_currencies()->currency_symbols;
-$display_flags    = ! empty( $attributes['displayFlags'] );
-$flag_position    = isset( $attributes['flagPosition'] ) ? sanitize_key( $attributes['flagPosition'] ) : 'left';
 $show_symbol      = ! empty( $attributes['showSymbol'] );
 
 // Full list: base currency first, then additional.
@@ -134,10 +131,6 @@ $wrapper_attributes = get_block_wrapper_attributes(
 		'data-wp-on--pointerleave' => 'actions.closeMenuOnHover',
 		'data-wp-watch'            => 'callbacks.initMenu',
 		'tabindex'                 => '-1',
-		// Data used by view.js for dynamic DOM updates when switching currency.
-		'data-display-flags'       => $display_flags ? '1' : '0',
-		'data-flag-position'       => $flag_position,
-		'data-flag-relations'      => wp_json_encode( $flag_relations ),
 	)
 );
 
@@ -145,25 +138,13 @@ $wrapper_attributes = get_block_wrapper_attributes(
 $caret_svg = '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" focusable="false"><path d="M1.50002 4L6.00002 8L10.5 4" stroke-width="1.5"></path></svg>';
 
 // ── Label helper ──────────────────────────────────────────────────────────────
-$render_label = function ( $code ) use ( $display_flags, $flag_position, $flag_relations, $currency_symbols, $show_symbol ) {
-	$code     = strtoupper( sanitize_key( $code ) );
-	$flag_key = isset( $flag_relations[ $code ] ) ? $flag_relations[ $code ] : '';
-	$flag     = ( $display_flags && $flag_key )
-		? '<span class="flag-icon flag-icon-' . esc_attr( $flag_key ) . '" aria-hidden="true"></span>'
-		: '';
-
-	$label = '';
-	if ( $display_flags && $flag_key && 'left' === $flag_position ) {
-		$label .= $flag . ' ';
-	}
-	$label .= '<span class="wp-block-navigation-item__label">' . esc_html( $code );
+$render_label = function ( $code ) use ( $currency_symbols, $show_symbol ) {
+	$code  = strtoupper( sanitize_key( $code ) );
+	$label = '<span class="wp-block-navigation-item__label">' . esc_html( $code );
 	if ( $show_symbol && ! empty( $currency_symbols[ $code ] ) ) {
 		$label .= ' <span class="lsx-currency-symbol" aria-hidden="true">' . esc_html( $currency_symbols[ $code ] ) . '</span>';
 	}
 	$label .= '</span>';
-	if ( $display_flags && $flag_key && 'right' === $flag_position ) {
-		$label .= ' ' . $flag;
-	}
 	return $label;
 };
 

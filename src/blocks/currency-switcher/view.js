@@ -108,35 +108,19 @@
 	//
 	// The switcher is a server-rendered <li class="wp-block-navigation-item has-child">.
 	// When the visitor picks a new currency we:
-	//   a) update the top-level label (text + flag class)
+	//   a) update the top-level label text
 	//   b) remove the newly selected <li> from the submenu
 	//   c) insert a new <li> for the previously current currency into the submenu
 	// -------------------------------------------------------------------------
 
 	/**
 	 * Build the label HTML for a currency code.
-	 * Reads display options from data attributes on the switcher <li>.
 	 *
-	 * @param {string}  code        ISO 4217 code (uppercase).
-	 * @param {string}  flagKey     Flag-icon suffix or ''.
-	 * @param {boolean} displayFlags
-	 * @param {string}  flagPosition 'left' | 'right'
+	 * @param {string} code ISO 4217 code (uppercase).
 	 * @return {string} HTML string.
 	 */
-	function buildLabelHTML( code, flagKey, displayFlags, flagPosition ) {
-		const flagSpan = ( displayFlags && flagKey )
-			? '<span class="flag-icon flag-icon-' + flagKey + '" aria-hidden="true"></span>'
-			: '';
-
-		let html = '';
-		if ( displayFlags && flagKey && flagPosition === 'left' ) {
-			html += flagSpan + ' ';
-		}
-		html += '<span class="wp-block-navigation-item__label">' + code + '</span>';
-		if ( displayFlags && flagKey && flagPosition === 'right' ) {
-			html += ' ' + flagSpan;
-		}
-		return html;
+	function buildLabelHTML( code ) {
+		return '<span class="wp-block-navigation-item__label">' + code + '</span>';
 	}
 
 	/**
@@ -147,15 +131,10 @@
 	 * @param {string}  oldCurrent  Previously active ISO 4217 code.
 	 */
 	function updateSwitcher( switcherLi, newCurrency, oldCurrent ) {
-		const displayFlags  = switcherLi.dataset.displayFlags === '1';
-		const flagPosition  = switcherLi.dataset.flagPosition || 'left';
-		const flagRelations = JSON.parse( switcherLi.dataset.flagRelations || '{}' );
-
 		// ── Update top-level label ────────────────────────────────────────────
 		const topContent = switcherLi.querySelector( ':scope > .wp-block-navigation-item__content' );
 		if ( topContent ) {
-			const newFlagKey = flagRelations[ newCurrency ] || '';
-			topContent.innerHTML = buildLabelHTML( newCurrency, newFlagKey, displayFlags, flagPosition );
+			topContent.innerHTML = buildLabelHTML( newCurrency );
 			topContent.setAttribute( 'href', '#' + newCurrency.toLowerCase() );
 		}
 
@@ -174,14 +153,13 @@
 		// Add the previously active currency into the submenu if it is not already there.
 		const alreadyPresent = submenu.querySelector( 'a[data-lsx-currency="' + oldCurrent + '"]' );
 		if ( ! alreadyPresent ) {
-			const oldFlagKey = flagRelations[ oldCurrent ] || '';
 			const li = document.createElement( 'li' );
 			li.className = 'wp-block-navigation-item wp-block-navigation-link';
 			const a = document.createElement( 'a' );
 			a.className = 'wp-block-navigation-item__content';
 			a.href = '#' + oldCurrent.toLowerCase();
 			a.dataset.lsxCurrency = oldCurrent;
-			a.innerHTML = buildLabelHTML( oldCurrent, oldFlagKey, displayFlags, flagPosition );
+			a.innerHTML = buildLabelHTML( oldCurrent );
 			li.appendChild( a );
 			submenu.appendChild( li );
 
