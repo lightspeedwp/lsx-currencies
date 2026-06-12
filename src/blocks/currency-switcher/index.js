@@ -110,9 +110,6 @@ function Edit( { attributes, setAttributes } ) {
 					) ) }
 				</ul>
 
-				<p className="lsx-currencies-editor-note">
-					{ __( 'Live currencies are configured in Tour Operator → Currencies settings.', 'lsx-currencies' ) }
-				</p>
 			</li>
 		</>
 	);
