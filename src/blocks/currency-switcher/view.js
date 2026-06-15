@@ -123,7 +123,11 @@
 	function buildLabelHTML( code, showSymbol ) {
 		let html = '<span class="wp-block-navigation-item__label">' + code;
 		if ( showSymbol && params.symbols && params.symbols[ code ] ) {
-			html += ' <span class="lsx-currency-symbol" aria-hidden="true">' + params.symbols[ code ] + '</span>';
+			const symbolSpan = document.createElement( 'span' );
+			symbolSpan.className = 'lsx-currency-symbol';
+			symbolSpan.setAttribute( 'aria-hidden', 'true' );
+			symbolSpan.textContent = params.symbols[ code ];
+			html += ' ' + symbolSpan.outerHTML;
 		}
 		html += '</span>';
 		return html;
