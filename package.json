@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/lightspeeddevelopment/lsx-currencies#readme",
   "devDependencies": {
-    "@babel/core": "^7.11.4",
+    "@babel/core": "^8.0.0",
     "@babel/preset-env": "^8.0.0",
     "@babel/register": "^7.10.5",
     "@wordpress/eslint-plugin": "^25.0.0",
