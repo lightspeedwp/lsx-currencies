@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/core": "^8.0.0",
     "@babel/preset-env": "^8.0.0",
-    "@babel/register": "^7.10.5",
+    "@babel/register": "^8.0.0",
     "@wordpress/eslint-plugin": "^25.0.0",
     "braces": "^=3.0.2",
     "clean-css": ">=4.2.3",
