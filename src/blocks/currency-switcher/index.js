@@ -27,7 +27,7 @@ const Caret = () => (
 		aria-hidden="true"
 		focusable="false"
 	>
-		<path d="M1.50002 4L6.00002 8L10.5 4" strokeWidth="1.5" />
+		<path d="M1.50002 4L6.00002 8L10.5 4" stroke="currentColor" strokeWidth="1.5" />
 	</svg>
 );
 

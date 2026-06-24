@@ -89,8 +89,23 @@ class Block {
 		);
 
 		// money.js and accounting.js are still needed on the page for price conversion.
-		wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCIES_URL . 'assets/js/vendor/money.min.js', array(), LSX_CURRENCIES_VER, true );
-		wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCIES_URL . 'assets/js/vendor/accounting.min.js', array(), LSX_CURRENCIES_VER, true );
+		$vendor_dir  = LSX_CURRENCIES_PATH . 'assets/js/vendor/';
+		$money_path  = $vendor_dir . 'money.min.js';
+		$acctg_path  = $vendor_dir . 'accounting.min.js';
+
+		if ( file_exists( $money_path ) ) {
+			wp_enqueue_script( 'lsx-moneyjs', LSX_CURRENCIES_URL . 'assets/js/vendor/money.min.js', array(), LSX_CURRENCIES_VER, true );
+		} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'LSX Currencies: vendor file missing — ' . $money_path );
+		}
+
+		if ( file_exists( $acctg_path ) ) {
+			wp_enqueue_script( 'lsx-accountingjs', LSX_CURRENCIES_URL . 'assets/js/vendor/accounting.min.js', array(), LSX_CURRENCIES_VER, true );
+		} elseif ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+			error_log( 'LSX Currencies: vendor file missing — ' . $acctg_path );
+		}
 
 		// Pass params to the block's view script.
 		$handle = 'lsx-currencies-currency-switcher-view-script';
