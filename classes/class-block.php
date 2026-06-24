@@ -80,7 +80,7 @@ class Block {
 			array(
 				'base'              => $base_currency,
 				'current'           => $current_currency,
-				'rates'             => $frontend->rates ?: new \stdClass(),
+				'rates'             => $frontend->rates ?: array(),
 				'symbols'           => $frontend->get_available_symbols(),
 				'removeDecimals'    => lsx_currencies()->remove_decimals,
 				'convertToSingle'   => lsx_currencies()->convert_to_single,

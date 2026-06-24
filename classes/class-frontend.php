@@ -129,7 +129,7 @@ class Frontend {
 		$all_symbols           = lsx_currencies()->currency_symbols;
 
 		if ( ! empty( $additional_currencies ) ) {
-			foreach ( $additional_currencies as $code => $label ) {
+			foreach ( array_keys( $additional_currencies ) as $code ) {
 				$code = strtoupper( sanitize_key( $code ) );
 				if ( isset( $all_symbols[ $code ] ) ) {
 					$symbols[ $code ] = $all_symbols[ $code ];

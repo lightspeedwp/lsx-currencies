@@ -154,13 +154,12 @@ class Admin {
 				<div class="lsx-currencies-checkboxes">
 					<?php foreach ( $currencies as $code => $label ) :
 						$code    = sanitize_key( $code );
-						$checked = in_array( $code, $saved_codes, true ) ? 'checked="checked"' : '';
 						?>
 						<label style="display:inline-block;margin:0 12px 8px 0;">
 							<input type="checkbox"
 								class="lsx-currency-check"
 								data-code="<?php echo esc_attr( strtoupper( $code ) ); ?>"
-								<?php echo $checked; ?>>
+								<?php checked( in_array( $code, $saved_codes, true ) ); ?>>
 							<?php echo esc_html( strtoupper( $code ) . ' &mdash; ' . $label ); ?>
 						</label>
 					<?php endforeach; ?>
