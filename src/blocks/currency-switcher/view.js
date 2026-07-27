@@ -235,7 +235,7 @@
 
 	function init() {
 		if ( typeof fx !== 'undefined' ) {
-			fx.base  = 'USD';
+			fx.base  = params.base || 'USD';
 			fx.rates = params.rates || {};
 		}
 

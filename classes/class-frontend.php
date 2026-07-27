@@ -91,7 +91,7 @@ class Frontend {
 				} elseif ( is_object( $decoded ) && isset( $decoded->rates ) ) {
 					$this->rates         = $decoded->rates;
 					$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
-					set_transient( 'lsx_currencies_rates', $this->rates, 12 * HOUR_IN_SECONDS );
+					set_transient( 'lsx_currencies_rates', $this->rates, 24 * HOUR_IN_SECONDS );
 					do_action( 'lsx_currencies_rates_refreshed' );
 				} else {
 					$this->rates_message = esc_html__( 'Error: Invalid API response format.', 'lsx-currencies' );
