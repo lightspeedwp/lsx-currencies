@@ -69,12 +69,19 @@ class Frontend {
 	}
 
 	/**
-	 * Fetch exchange rates (cached for 12 hours) and resolve current currency.
+	 * Fetch exchange rates and resolve current currency.
+	 *
+	 * Rates are persisted in a regular option (not a transient) so a failed
+	 * API request can never wipe out the last known good values — we only
+	 * ever overwrite them on a successful response. A separate "updated at"
+	 * option gates how often we attempt a refresh (every 24 hours).
 	 */
 	public function set_defaults() {
-		$this->rates = get_transient( 'lsx_currencies_rates' );
+		$this->rates  = get_option( 'lsx_currencies_rates', false );
+		$last_updated = (int) get_option( 'lsx_currencies_rates_updated', 0 );
+		$needs_refresh = ( false === $this->rates ) || ( ( time() - $last_updated ) >= DAY_IN_SECONDS );
 
-		if ( false === $this->rates ) {
+		if ( $needs_refresh ) {
 			$api_url  = esc_url_raw( lsx_currencies()->api_url );
 			$response = wp_safe_remote_get( $api_url, array( 'timeout' => 10 ) );
 
@@ -91,7 +98,8 @@ class Frontend {
 				} elseif ( is_object( $decoded ) && isset( $decoded->rates ) ) {
 					$this->rates         = $decoded->rates;
 					$this->rates_message = esc_html__( 'Success (new request).', 'lsx-currencies' );
-					set_transient( 'lsx_currencies_rates', $this->rates, 24 * HOUR_IN_SECONDS );
+					update_option( 'lsx_currencies_rates', $this->rates, false );
+					update_option( 'lsx_currencies_rates_updated', time(), false );
 					do_action( 'lsx_currencies_rates_refreshed' );
 				} else {
 					$this->rates_message = esc_html__( 'Error: Invalid API response format.', 'lsx-currencies' );
