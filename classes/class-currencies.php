@@ -154,10 +154,15 @@ class Currencies {
 			$this->remove_decimals = (bool) $options['lsx_currencies_remove_decimals'];
 		}
 
-		if ( ! empty( $options['lsx_currencies_openexchange_api'] ) ) {
+		if ( defined( 'LSX_CURRENCIES_API_KEY' ) ) {
+			$this->app_id  = sanitize_text_field( LSX_CURRENCIES_API_KEY );
+		} else if ( ! empty( $options['lsx_currencies_openexchange_api'] ) ) {
 			$this->app_id  = sanitize_text_field( $options['lsx_currencies_openexchange_api'] );
-			$this->api_url = esc_url_raw( 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id );
+		} else {
+			return false;
 		}
+
+		$this->api_url = esc_url_raw( 'https://openexchangerates.org/api/latest.json?app_id=' . $this->app_id );
 
 		$this->available_currencies = $this->get_available_currencies();
 		$this->currency_symbols     = $this->get_currency_symbols();
