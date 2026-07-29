@@ -8,16 +8,17 @@
  *
  * Variables provided by WordPress:
  *   $attributes  (array)    Block attributes.
- */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
  *   $content     (string)   Inner block content (unused — no inner blocks).
  *   $block       (WP_Block) Block instance, used for context.
  *
  * @package LSX Currencies
  */
+
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Block render.php: variables are file-scoped, not global.
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 if ( ! function_exists( 'lsx_currencies' ) ) {
 	return;

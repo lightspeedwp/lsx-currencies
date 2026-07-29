@@ -14,6 +14,8 @@
  * @package LSX Currencies
  */
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Block render.php: variables are file-scoped, not global.
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
