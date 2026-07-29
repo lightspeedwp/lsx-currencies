@@ -150,7 +150,7 @@ $render_label = function ( $code ) use ( $currency_symbols, $show_symbol ) {
 	$code  = strtoupper( sanitize_key( $code ) );
 	$label = '<span class="wp-block-navigation-item__label">' . esc_html( $code );
 	if ( $show_symbol && ! empty( $currency_symbols[ $code ] ) ) {
-		$label .= ' <span class="lsx-currency-symbol" aria-hidden="true">' . esc_html( $currency_symbols[ $code ] ) . '</span>';
+		$label .= ' <span class="lsx-currency-symbol" aria-hidden="true">' . $currency_symbols[ $code ] . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Symbols are HTML entities from the plugin's own hardcoded array; esc_html() would double-encode them.
 	}
 	$label .= '</span>';
 	return $label;
