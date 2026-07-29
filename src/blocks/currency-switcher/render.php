@@ -14,6 +14,11 @@
  * @package LSX Currencies
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+
 if ( ! function_exists( 'lsx_currencies' ) ) {
 	return;
 }

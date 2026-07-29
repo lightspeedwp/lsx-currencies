@@ -8,6 +8,10 @@
  * @copyright 2024 LightSpeed
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Returns the currency-wrapped HTML for a given price value.
  * Useful for theme template files that display prices outside of tour custom field queries.

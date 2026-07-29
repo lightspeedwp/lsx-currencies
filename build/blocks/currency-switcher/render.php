@@ -8,6 +8,11 @@
  *
  * Variables provided by WordPress:
  *   $attributes  (array)    Block attributes.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
  *   $content     (string)   Inner block content (unused — no inner blocks).
  *   $block       (WP_Block) Block instance, used for context.
  *

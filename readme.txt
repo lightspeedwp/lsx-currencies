@@ -2,10 +2,10 @@
 Contributors: feedmymedia, lightspeedwp, eleshar, krugazul, jacquesvdh, ignusvermaak
 Donate link: https://lsdev.biz/lsx/donate/
 Tags: lsx, gutenberg, currency switcher, currencies, currency converter
-Requires at least: 5.0
-Tested up to: 6.3
-Requires PHP: 7.4
-Stable tag: 1.2.7
+Requires at least: 7.0
+Tested up to: 7.0
+Requires PHP: 8.0
+Stable tag: 2.0.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -17,7 +17,7 @@ Choose the currencies you want to support and your base currency and you are goo
 
 == Works with the LSX Theme ==
 
-Our [theme](https://www.lsdev.biz/lsx/) works perfectly with the Currencies Extension. We are always updating our software to add functionality, and maintain latest security protocols.
+The [LSX Theme](https://www.lsdev.biz/lsx/) works perfectly with the Currencies Extension. We are always updating our software to add functionality, and maintain latest security protocols.
 
 == It's free, and always will be. ==
 
@@ -52,5 +52,12 @@ If you're a developer who's spotted a bug issue and have a fix, or simply have f
 
 == Changelog ==
 
+= 2.0.0 =
+* Major rewrite: adopted namespaced class architecture under `lsx\currencies\classes`.
+* Replaced Gulp build tooling with wp-scripts.
+* Added Currency Switcher Gutenberg block (replaces legacy widget/shortcode).
+* Exchange rates now persisted in a regular option so a failed API request never wipes cached values.
+* Added WooCommerce and FacetWP integration classes.
+* Requires WordPress 7.0+ and PHP 8.0+.
 
-==
+[Full changelog on GitHub](https://github.com/lightspeeddevelopment/lsx-currencies/blob/master/changelog.md).
