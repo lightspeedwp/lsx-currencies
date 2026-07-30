@@ -1,5 +1,58 @@
 # Change log
 
+## [Unreleased]
+
+### Fixed
+- Exchange rate fetching in `class-frontend.php` now persists rates via `get_option()`/`update_option()` instead of `set_transient()`/`get_transient()`, so a failed OpenExchangeRates API request can no longer wipe out the last known good rates — the cached values now only get overwritten on a successful response.
+- A new `lsx_currencies_rates_updated` option tracks the last successful fetch time and gates the refresh interval (24 hours), replacing the transient's built-in expiry which was previously set to 12 hours instead of the intended 24.
+
+## [2.0.0] - 2026-06-12
+
+### Added
+- **Currency Switcher block** (`lsx-currencies/currency-switcher`) restricted to `core/navigation` via `"parent": ["core/navigation"]` in `block.json`. The block mimics `core/navigation-submenu` output exactly — current currency is the top-level navigation item, non-selected currencies appear in the dropdown submenu.
+- Full **WordPress Interactivity API** integration: the rendered `<li>` carries `data-wp-interactive="core/navigation"`, `data-wp-context` (submenu state JSON), and all `data-wp-on--*` event handlers so the navigation block's native hover/click/focus open-close behaviour works without any extra JavaScript.
+- Toggle button wired to the navigation store via `data-wp-bind--aria-expanded="state.isMenuOpen"` and `data-wp-on--click="actions.toggleMenuOnClick"`; submenu `<ul>` carries `data-wp-on--focus="actions.openMenuOnFocus"`.
+- `submenuVisibility` context handling with full backward-compat for the deprecated `openSubmenusOnClick` boolean, matching WordPress core migration logic.
+- Overlay colour classes on the submenu `<ul>` from `overlayTextColor` / `overlayBackgroundColor` navigation context.
+- **Optional currency symbol display** — `showSymbol` block attribute; symbol is rendered server-side and also injected client-side on currency switch (no page reload required).
+- `class-block.php` — handles block registration (`register_block_type()`) and passes exchange-rate params including symbols to the frontend view script via `wp_add_inline_script()`.
+- **Tour Operator admin integration** — currency and API settings are injected directly into the Tour Operator settings page using `lsx_to_settings_fields` filter and `lsx_to_framework_dashboard_tab_content` action, matching the existing TO hook pattern exactly.
+
+### Changed
+- **Settings storage** now uses the Tour Operator `lsx_to_settings` option. Base currency reads from the existing TO `currency` field; additional currencies and display options are stored under `lsx_currencies_*` keys in the same option.
+- Block `"parent": ["core/navigation"]` restricts insertion to the navigation block only; `"category": "design"` matches navigation-submenu.
+- Frontend currency switching rewritten in **vanilla JS** (no jQuery). Uses native cookie helpers, money.js + accounting.js for conversion. Switching updates prices and swaps the submenu DOM in-place with no page reload.
+- `base_currency` now stored and passed as uppercase (e.g. `ZAR` not `zar`) — fixes money.js rate-key lookup failures that silently fell back to the base price.
+- All admin field outputs and form saves now use proper nonces, `sanitize_key()`, `sanitize_text_field()`, `esc_attr()`, and `esc_html()` throughout.
+- `class-woocommerce.php` — data-price attribute injection uses `esc_attr()` to prevent XSS.
+- `class-frontend.php` — data-price allowlist in `wp_kses_allowed_html` built dynamically from enabled currencies; removed menu-injection methods.
+- `lsx-currencies.php` — version 2.0.0, `Requires at least: 7.0`, `Requires PHP: 8.0`.
+- Build tooling replaced: Gulp removed, `@wordpress/scripts` (webpack) introduced.
+- SVG caret matches core exactly — no `role="presentation"` attribute.
+
+### Removed
+- Flag icon functionality entirely — `displayFlags`, `flagPosition` block attributes; `get_flag_relations()`, `get_currency_flag()`, `$flag_relations` from `Currencies` class; `style.scss` (navigation block owns all structural CSS).
+- Old menu-injection currency switcher (`wp_nav_menu_items` filter) — replaced by the block.
+- `[lsx_currency_value]` shortcode — replaced by the block.
+- UIX framework admin pages and Customizer settings.
+- `classes/deprecated/class-lsx-currencies.php` — legacy backwards-compatibility class.
+- `includes/settings/` template partials — replaced by the new admin class.
+- `assets/js/src/lsx-currencies.js` and `lsx-currencies-admin.js` — replaced by `src/blocks/currency-switcher/view.js`.
+- Block layout and `showCurrentOnly` inspector controls (navigation block handles layout).
+
+### Fixed
+- `FacetWP` class: `posts_per_page` for the tours query changed from string `'-1'` to integer `-1`.
+- Currency-switcher block render: symbol output no longer double-encoded — symbols are the plugin's own hardcoded HTML-entity strings, so they're now output as-is (with a documented `phpcs:ignore`) instead of passing through a second `esc_html()`.
+- `en_EN`/`en_US` language files regenerated under the `lsx-currencies-*` naming convention (old unprefixed `languages/en_EN.*` files removed); `languages/lsx-currencies.pot` regenerated to match current strings.
+
+### Security
+- All user inputs sanitized and nonce-verified throughout the admin.
+- API URL constructed with `esc_url_raw()` before remote requests.
+- Block render output escaped with `esc_attr()` / `esc_html()` at every interpolation point.
+- Cookie read (`lsx_currencies_choice`) sanitized with `sanitize_key()` then uppercased.
+- Added `ABSPATH` direct-access guards to `includes/template-tags.php` and the currency-switcher block's `render.php`.
+- WordPress 7.0 compatibility verified.
+
 ## [[1.2.7]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.7) - 2023-08-09
 
 ### Security
