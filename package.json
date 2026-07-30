@@ -6,7 +6,10 @@
     "build": "wp-scripts build",
     "start": "wp-scripts start",
     "lint:js": "wp-scripts lint-js",
-    "lint:style": "wp-scripts lint-style"
+    "lint:style": "wp-scripts lint-style",
+ 	"build-pot": "wp i18n make-pot . languages/lsx-currencies.pot --exclude=node_modules,vendor,build",
+    "build-mopo": "rm -R languages/lsx-currencies-en_EN.mo && cp languages/lsx-currencies.pot languages/lsx-currencies-en_EN.po && wp i18n make-mo languages",
+    "translate-US": "cp languages/lsx-currencies-en_EN.po languages/lsx-currencies-en_US.po && cp languages/lsx-currencies-en_EN.mo languages/lsx-currencies-en_US.mo"
   },
   "repository": {
     "type": "git",
