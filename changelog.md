@@ -40,11 +40,17 @@
 - `assets/js/src/lsx-currencies.js` and `lsx-currencies-admin.js` — replaced by `src/blocks/currency-switcher/view.js`.
 - Block layout and `showCurrentOnly` inspector controls (navigation block handles layout).
 
+### Fixed
+- `FacetWP` class: `posts_per_page` for the tours query changed from string `'-1'` to integer `-1`.
+- Currency-switcher block render: symbol output no longer double-encoded — symbols are the plugin's own hardcoded HTML-entity strings, so they're now output as-is (with a documented `phpcs:ignore`) instead of passing through a second `esc_html()`.
+- `en_EN`/`en_US` language files regenerated under the `lsx-currencies-*` naming convention (old unprefixed `languages/en_EN.*` files removed); `languages/lsx-currencies.pot` regenerated to match current strings.
+
 ### Security
 - All user inputs sanitized and nonce-verified throughout the admin.
 - API URL constructed with `esc_url_raw()` before remote requests.
 - Block render output escaped with `esc_attr()` / `esc_html()` at every interpolation point.
 - Cookie read (`lsx_currencies_choice`) sanitized with `sanitize_key()` then uppercased.
+- Added `ABSPATH` direct-access guards to `includes/template-tags.php` and the currency-switcher block's `render.php`.
 - WordPress 7.0 compatibility verified.
 
 ## [[1.2.7]](https://github.com/lightspeeddevelopment/lsx-currencies/releases/tag/1.2.7) - 2023-08-09
