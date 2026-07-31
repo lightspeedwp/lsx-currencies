@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/lightspeeddevelopment/lsx-currencies#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^30.0.0"
+    "@wordpress/scripts": "^33.0.0"
   },
   "dependencies": {
     "acorn": "^8.0.1",
